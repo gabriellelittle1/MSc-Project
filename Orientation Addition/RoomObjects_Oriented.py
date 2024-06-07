@@ -125,7 +125,7 @@ class Room:
         
         return penalty
     
-    def add(self, list_of_funcs, figsize = (12, 8)):
+    def add(self, list_of_funcs, figsize = (12, 8), orientation = 0):
 
         fig, axes = plt.subplots(1, 2, figsize = figsize)
 
@@ -154,7 +154,7 @@ class Room:
                 axes[0].text(obj.position[0] + 0.05, obj.position[1] + 0.05, obj.name, fontsize=10)
 
         for func in list_of_funcs:
-            func(self)
+            func(self, orientation = orientation)
         
         if self.moving_objects:
             for obj in self.moving_objects:
