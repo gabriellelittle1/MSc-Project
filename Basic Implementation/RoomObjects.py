@@ -21,12 +21,17 @@ class Room:
         self.center = (width/2, length/2)
 
     def find(self, name):
+
+        """ Find an object by name in the room."""
         for obj in self.fixed_objects + self.moving_objects:
             if obj.name == name:
                 return obj
         return None
     
     def find_all(self, name):
+        
+        """ Find all objects by name in the room."""
+
         objects = []
         for obj in self.fixed_objects + self.moving_objects:
             if obj.name == name:
@@ -34,6 +39,9 @@ class Room:
         return objects
     
     def count(self, name):
+
+        """ Count the number of objects by name in the room."""
+
         counter = 0
         for obj in self.fixed_objects + self.moving_objects:
             if obj.name == name:
@@ -42,12 +50,16 @@ class Room:
     
     def boundary_constraint(self, x, y, object, weight = 3):
 
+        """ Constraint: Boundary Constraint (Room Walls) """
+
         w, l = object.width, object.length
         W, L = self.width, self.length
         
         return weight * (np.maximum(0, w/2 - x)**2 + np.maximum(0, x + w/2 - W)**2 + np.maximum(0, l/2 - y)**2 + np.maximum(0, y + l/2 - L)**2)
     
     def intersection_constraint(self, x, y, object, weight = 2):
+
+        """ Constraint: Intersection Constraint """
 
         value = 0
         w, l = object.width, object.length
@@ -62,7 +74,8 @@ class Room:
     
     def balance_constraint(self, x, y, object, weight = 1):
 
-        ## Constraint: Room Balance
+        """ Constraint: Room Balance """
+
         center_of_mass = object.width*object.length*np.array([x, y])
         total_weight = object.width*object.length
         
@@ -76,6 +89,8 @@ class Room:
         return weight * c_balance
     
     def add(self, list_of_funcs, figsize = (12, 8)):
+
+        """ Add objects to the room in a given order. """
 
         fig, axes = plt.subplots(1, 2, figsize = figsize)
 
@@ -124,6 +139,8 @@ class Room:
 
 
     def draw(self):
+
+        """ Draw the room with all objects. """
         
         fig, ax = plt.subplots()
         ax.set_xlim(-1, self.width + 1)
@@ -150,5 +167,3 @@ class Room:
 
         plt.show()
         return
-
-

@@ -32,19 +32,9 @@ class Object:
     
     def get_back_corners(self, point = None):
         
-        if not point:
-            theta = self.orientation
-        else:
-            theta = point[2]
-        
         corners = self.get_corners(point)
-        if np.cos(theta) >= 0:
-            return [corners[2], corners[3]]
-        else:    
-            return [corners[0], corners[1]]
-    
+        return [corners[2], corners[3]]
 
-        
 class Room:
 
     def __init__(self, width, length):
@@ -146,6 +136,9 @@ class Room:
                 line, = plt.plot([], [], label=obj.name)  # Create an invisible line
                 rectangle.set_edgecolor(line.get_color())  # Use the line's color for the rectangle
                 axes[0].text(obj.position[0], obj.position[1], obj.name, fontsize=10)
+                corners = obj.get_back_corners()
+                for corner in corners:
+                    ax.plot(corner[0], corner[1], color = line.get_color(), marker = 'o')
 
         if self.fixed_objects:
             for obj in self.fixed_objects:
@@ -163,6 +156,9 @@ class Room:
                 line, = plt.plot([], [], label=obj.name)  # Create an invisible line
                 rectangle.set_edgecolor(line.get_color())  # Use the line's color for the rectangle
                 axes[1].text(obj.position[0], obj.position[1], obj.name, fontsize=10)
+                corners = obj.get_back_corners()
+                for corner in corners:
+                    ax.plot(corner[0], corner[1], color = line.get_color(), marker = 'o')
 
         if self.fixed_objects:
             for obj in self.fixed_objects:
@@ -191,6 +187,9 @@ class Room:
                 line, = plt.plot([], [], label=obj.name)  # Create an invisible line
                 rectangle.set_edgecolor(line.get_color())  # Use the line's color for the rectangle
                 ax.text(obj.position[0], obj.position[1], obj.name, fontsize=10)
+                corners = obj.get_back_corners()
+                for corner in corners:
+                    ax.plot(corner[0], corner[1], color = line.get_color(), marker = 'o')
         
         if self.fixed_objects:
             for obj in self.fixed_objects:
