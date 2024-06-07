@@ -60,6 +60,21 @@ class Room:
 
         return weight * value
     
+    def balance_constraint(self, x, y, object, weight = 1):
+
+        ## Constraint: Room Balance
+        center_of_mass = object.width*object.length*np.array([x, y])
+        total_weight = object.width*object.length
+        
+        for obj in self.moving_objects:
+            if obj != object:
+                center_of_mass += obj.width * obj.length * np.array(obj.position)
+                total_weight += obj.width * obj.length
+       
+        center_of_mass /= total_weight
+        c_balance = np.sum((center_of_mass - np.array([self.center[0], self.center[1]]))**2)
+        return weight * c_balance
+    
     def add(self, list_of_funcs, figsize = (12, 8)):
 
         fig, axes = plt.subplots(1, 2, figsize = figsize)
@@ -108,32 +123,32 @@ class Room:
             
 
 
-def draw_room(room):
-    
-    fig, ax = plt.subplots()
-    ax.set_xlim(-1, room.width + 1)
-    ax.set_ylim(-1, room.length + 1)
-    ax.set_aspect('equal')
-    ax.grid(linestyle = '--')
+    def draw(self):
+        
+        fig, ax = plt.subplots()
+        ax.set_xlim(-1, self.width + 1)
+        ax.set_ylim(-1, self.length + 1)
+        ax.set_aspect('equal')
+        ax.grid(linestyle = '--')
 
-    rect = patches.Rectangle((0, 0), room.width, room.length, linewidth=2, edgecolor='black', facecolor='none')
-    ax.add_patch(rect)
+        rect = patches.Rectangle((0, 0), self.width, self.length, linewidth=2, edgecolor='black', facecolor='none')
+        ax.add_patch(rect)
 
-    if room.moving_objects:
-        for obj in room.moving_objects:
-            rect = patches.Rectangle(obj.position - np.array([obj.width/2, obj.length/2]), obj.width, obj.length, linewidth=2, edgecolor='none', facecolor='none')
-            ax.add_patch(rect)
-            line, = plt.plot([], [], label=obj.name)  # Create an invisible line
-            rect.set_edgecolor(line.get_color())  # Use the line's color for the rectangle
-            ax.text(obj.position[0], obj.position[1], obj.name, fontsize=10)
+        if self.moving_objects:
+            for obj in self.moving_objects:
+                rect = patches.Rectangle(obj.position - np.array([obj.width/2, obj.length/2]), obj.width, obj.length, linewidth=2, edgecolor='none', facecolor='none')
+                ax.add_patch(rect)
+                line, = plt.plot([], [], label=obj.name)  # Create an invisible line
+                rect.set_edgecolor(line.get_color())  # Use the line's color for the rectangle
+                ax.text(obj.position[0], obj.position[1], obj.name, fontsize=10)
 
-    if room.fixed_objects:
-        for obj in room.fixed_objects:
-            rect = patches.Rectangle(obj.position - np.array([obj.width/2, obj.length/2]), obj.width, obj.length, linewidth=5, edgecolor='r', facecolor='none')
-            ax.add_patch(rect)
-            ax.text(obj.position[0] + 0.05, obj.position[1] + 0.05, obj.name, fontsize=10)
+        if self.fixed_objects:
+            for obj in self.fixed_objects:
+                rect = patches.Rectangle(obj.position - np.array([obj.width/2, obj.length/2]), obj.width, obj.length, linewidth=5, edgecolor='r', facecolor='none')
+                ax.add_patch(rect)
+                ax.text(obj.position[0] + 0.05, obj.position[1] + 0.05, obj.name, fontsize=10)
 
-    plt.show()
-    return
+        plt.show()
+        return
 
 
