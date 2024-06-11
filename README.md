@@ -1,2 +1,2 @@
-# Dissertation
-All the code for my dissertation project on "Using LLMs for Scene Synthesis".
+# MSc Project
+All the code for my project on using LLMs for scene synthesis.
