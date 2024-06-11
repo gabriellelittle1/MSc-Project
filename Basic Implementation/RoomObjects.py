@@ -10,6 +10,17 @@ class Object:
         self.position = position
         self.width = width
         self.length = length
+    
+    def get_corners(self, x, y):
+        
+        w, l = self.width, self.length
+        
+        TR = (x + w/2, y + l/2)
+        BR = (x + w/2, y - l/2)
+        TL = (x - w/2, y + l/2)
+        BL = (x - w/2, y - l/2)
+
+        return [TR, BR, BL, TL]
         
 class Room:
 
@@ -19,6 +30,17 @@ class Room:
         self.fixed_objects = []
         self.moving_objects = []
         self.center = (width/2, length/2)
+    
+    def wall_centre(self, cardinal_direction):
+
+        if cardinal_direction == 'north':
+            return (self.width/2, self.length)
+        elif cardinal_direction == 'east': 
+            return (self.width, self.length/2)
+        elif cardinal_direction == 'south':
+            return (self.width/2, 0)
+        elif cardinal_direction == 'west':
+            return (0, self.length/2)
 
     def find(self, name):
 
@@ -135,7 +157,79 @@ class Room:
                 axes[1].text(obj.position[0] + 0.05, obj.position[1] + 0.05, obj.name, fontsize=10)
 
         return 
+    
+    def longest_supporting_wall(self, object):
+
+        """ Find the longest wall in the room (accounting for doors and windows). """
+
+        directions = ['north', 'east', 'south', 'west']
+        nesw_d = np.zeros(4)
+        nesw_w = np.zeros(4)
+
+        ## Check which walls have windows and doors. 
+        doors = self.find_all('door')
+        windows = self.find_all('window')
+
+        for door in doors: 
+            if door.position[0] - door.width/2 <= object.width: 
+                nesw_d[3] += max(door.position[1] - door.length/2, self.length - (door.position[1] + door.length/2))
+                
+            if self.width - (door.position[0] + door.width/2) <= object.width:
+                nesw_d[1] += max(door.position[1] - door.length/2, self.length - (door.position[1] + door.length/2))
+                
+            if door.position[1] - door.length/2 <= object.length:
+                nesw_d[2] += max(door.position[0] - door.width/2, self.width - (door.position[0] + door.width/2))
+                
+            if self.length - (door.position[1] + door.length/2) <= object.length:
+                nesw_d[0] += max(door.position[0] - door.width/2, self.width - (door.position[0] + door.width/2))
+                
+        for window in windows: 
+            if window.position[0] == 0: 
+                nesw_w[3] += max(window.position[1] - window.length/2, self.length - (window.position[1] + window.length/2))
+            if window.position[0] == self.width:
+                nesw_w[1] += max(window.position[1] - window.length/2, self.length - (window.position[1] + window.length/2))
+            if window.position[1] == 0:
+                nesw_w[2] += max(window.position[0] - window.width/2, self.width - (window.position[0] + window.width/2))
+            if window.position[1] == self.length:
+                nesw_w[0] += max(window.position[0] - window.width/2, self.width - (window.position[0] + window.width/2))
+        
+        ## If they all have windows/doors, choose the one with the largest distance from corner to wall or door
+        if np.all(nesw_d + nesw_w) > 0:
             
+            index = np.argmax(nesw_d + nesw_w)
+            return directions[index]
+
+        else: 
+            object_free_walls = np.argwhere(nesw_d + nesw_w == 0)[0]
+            
+            if len(object_free_walls) == 1:
+                return directions[object_free_walls[0]]
+            
+            elif self.width >= self.length and 'east' or 'west' in object_free_walls:
+                return 'east'
+            elif self.width < self.length and 'north' or 'south' in object_free_walls:
+                return 'north'
+            elif 'east' and 'west' in object_free_walls:
+                return 'east'
+            elif 'north' and 'south' in object_free_walls:
+                return 'north'
+        
+    def focal_point(self, object): 
+
+
+        if np.abs(self.width - self.length) < 0.5:
+            windows = self.find_all('window')
+            biggest_window = windows[0]
+            for window in windows: 
+                if window.width + window.length > biggest_window.width + biggest_window.length:
+                    biggest_window = window
+            return biggest_window.position
+        
+        else: 
+            biggest_wall = self.longest_supporting_wall(object)
+            centre = self.wall_centre(biggest_wall)
+            
+            return centre
 
 
     def draw(self):
@@ -167,3 +261,4 @@ class Room:
 
         plt.show()
         return
+
