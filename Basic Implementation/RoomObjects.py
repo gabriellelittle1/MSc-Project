@@ -5,7 +5,7 @@ import matplotlib.patches as patches
 
 class Object:
     
-    def __init__(self, name, position, width, length):
+    def __init__(self, name, position, width = None, length = None):
         self.name = name
         self.position = position
         self.width = width
@@ -255,9 +255,12 @@ class Room:
 
         if self.fixed_objects:
             for obj in self.fixed_objects:
-                rect = patches.Rectangle(obj.position - np.array([obj.width/2, obj.length/2]), obj.width, obj.length, linewidth=5, edgecolor='r', facecolor='none')
-                ax.add_patch(rect)
-                ax.text(obj.position[0] + 0.05, obj.position[1] + 0.05, obj.name, fontsize=10)
+                if obj.name not in ['plug', 'Plug']:
+                    rect = patches.Rectangle(obj.position - np.array([obj.width/2, obj.length/2]), obj.width, obj.length, linewidth=5, edgecolor='r', facecolor='none')
+                    ax.add_patch(rect)
+                    ax.text(obj.position[0] + 0.05, obj.position[1] + 0.05, obj.name, fontsize=10)
+                else: 
+                    ax.scatter(obj.position[0], obj.position[1], color = 'black', marker ='x')
 
         plt.show()
         return
