@@ -2,6 +2,10 @@ import numpy as np
 from scipy.optimize import minimize
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+from scipy.spatial import Voronoi, voronoi_plot_2d
+import scipy as sp
+import sys
+import copy
 
 class Object:
 
@@ -57,7 +61,20 @@ class Object:
     def back_corners(self):
         return [self.TR(), self.TL()]
 
+class Region: 
+    def __init__(self, name, x, y, index):
 
+        """ Initialization of a region in a scene. 
+            Inputs: 
+            name: str, name of the object all lowercase
+            x: float, x-coordinate of the center of the region
+            y: float, y-coordinate of the center of the region
+        """
+
+        self.name = name
+        self.x = x
+        self.y = y
+        self.index = index
 class Room: 
 
     def __init__(self, width, length, fixed_objects = [], moving_objects = []):
@@ -68,6 +85,22 @@ class Room:
         self.moving_objects = moving_objects
         self.center = (width/2, length/2)
         self.regions = []
+
+    def find_region_index(self, region_name):
+
+        """ Finds a region in the room by name.
+            Inputs:
+            region_name: str, name of the region
+            Outputs:
+            region: Region, the region object
+        """
+
+        for region in self.regions:
+            if region.name == region_name:
+                return region.index
+
+        print("No region with this name is in the room.")    
+        return None
     
     def windows_on_wall(self, cardinal_direction):
 
@@ -200,17 +233,90 @@ class Room:
                                           theta1=np.rad2deg(obj.position[2]), theta2=np.rad2deg(obj.position[2]) + 90, linewidth=3, edgecolor='r', facecolor='none')
                     ax.add_patch(wedge)
                     #ax.text(obj.position[0], obj.position[1], obj.name, fontsize=10, color='red')
-                elif obj.name == 'socket':
+                elif obj.name == 'socket' or obj.name == 'plug' or obj.name == 'electrical plug':
                     x, y = obj.position[:2]
                     ax.plot([x - 0.05, x + 0.05], [y - 0.05, y + 0.05], color='red', linewidth=2)
                     ax.plot([x - 0.05, x + 0.05], [y + 0.05, y - 0.05], color='red', linewidth=2)
-
-        if draw_regions: 
-            for region in self.regions:
-                name, x, y = region
-                ax.plot(x, y, 'o', markersize=10) 
-                ax.text(x, y, name, fontsize=10)
         
+        if draw_regions:
+            eps = sys.float_info.epsilon
+
+            def in_box(towers, bounding_box):
+                return np.logical_and(np.logical_and(bounding_box[0] <= towers[:, 0],
+                                         towers[:, 0] <= bounding_box[1]),
+                          np.logical_and(bounding_box[2] <= towers[:, 1],
+                                         towers[:, 1] <= bounding_box[3]))
+            def voronoi(towers, bounding_box):
+                # Select towers inside the bounding box
+                i = in_box(towers, bounding_box)
+                # Mirror points
+                points_center = towers[i, :]
+                points_left = np.copy(points_center)
+                points_left[:, 0] = bounding_box[0] - (points_left[:, 0] - bounding_box[0])
+                points_right = np.copy(points_center)
+                points_right[:, 0] = bounding_box[1] + (bounding_box[1] - points_right[:, 0])
+                points_down = np.copy(points_center)
+                points_down[:, 1] = bounding_box[2] - (points_down[:, 1] - bounding_box[2])
+                points_up = np.copy(points_center)
+                points_up[:, 1] = bounding_box[3] + (bounding_box[3] - points_up[:, 1])
+                points = np.append(points_center,
+                                np.append(np.append(points_left,
+                                                    points_right,
+                                                    axis=0),
+                                            np.append(points_down,
+                                                    points_up,
+                                                    axis=0),
+                                            axis=0),
+                                axis=0)
+                # Compute Voronoi
+                vor = sp.spatial.Voronoi(points)
+                # Filter regions
+                regions = []
+                for region in vor.regions:
+                    flag = True
+                    for index in region:
+                        if index == -1:
+                            flag = False
+                            break
+                        else:
+                            x = vor.vertices[index, 0]
+                            y = vor.vertices[index, 1]
+                            if not(bounding_box[0] - eps <= x and x <= bounding_box[1] + eps and
+                                bounding_box[2] - eps <= y and y <= bounding_box[3] + eps):
+                                flag = False
+                                break
+                    if region != [] and flag:
+                        regions.append(region)
+                vor.filtered_points = points_center
+                vor.filtered_regions = regions
+                return vor
+            
+            # Collect points for Voronoi diagram
+            points = np.array([[region.x, region.y] for region in self.regions])
+            colors = plt.cm.viridis(np.linspace(0, 1, len(points)))
+
+            # Plot Voronoi diagram
+            vor = voronoi(points, np.array([0, self.width, 0, self.length]))
+            for point_index, region_index in enumerate(vor.point_region):
+                if point_index >= len(self.regions):
+                    break
+                region = vor.regions[region_index]
+                if len(region) > 0:
+                    polygon = [vor.vertices[i] for i in region]
+                    for vert in polygon:
+                        if vert[0] < 0:
+                            vert[0] = 0
+                        if vert[0] > self.width:
+                            vert[0] = self.width
+                        if vert[1] < 0:
+                            vert[1] = 0
+                        if vert[1] > self.length:
+                            vert[1] = self.length
+                    ax.fill(*zip(*polygon), color=colors[point_index], alpha=0.2)
+            # Plot the points
+            for i, point in enumerate(points):
+                ax.plot(point[0], point[1], 'o', markersize=10, color=colors[i])
+                ax.text(point[0], point[1], self.regions[i].name, fontsize=10)
         
         plt.show()
 

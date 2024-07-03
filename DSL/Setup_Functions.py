@@ -1,5 +1,5 @@
 import numpy as np
-from Class_Structures import Object, Room
+from Class_Structures import Object, Room, Region
 
 def create_room(width, length):
     """ A function that creates an empty room.
@@ -32,23 +32,23 @@ def create_fixed_object(room, name, width, length, wall, position = None):
         return 
     
     elif wall == 'north':
-        x = position*room.width
+        x = width/2 + position*(room.width - width/2)
         y = room.length
         theta = np.pi
     
     elif wall == 'east':
         x = room.width
-        y = position*room.length
+        y = length/2 + position*(room.length - length/2)
         theta = np.pi/2
     
     elif wall == 'south':
-        x = position*room.width
+        x = width/2 + position*(room.width - width/2)
         y = 0
         theta = 0
 
     else:
         x = 0
-        y = position*room.length
+        y = length/2 + position*(room.length - length/2)
         theta = 3*np.pi/2
     
     room.fixed_objects += [Object(name, width, length, (x, y, theta))]
@@ -67,19 +67,21 @@ def remove_object(room, obj):
         room.moving_objects.remove(obj)
     return
 
-def region_setup(room, name):
+def region_setup(room, name, index):
 
     """ A function that initialises the regions in a room randomly.
         Inputs:
         room: Room, the room from which the object is to be removed
         name: str, the name of the region e.g 'sleeping'
+        index: int, the index of the region (0, 1, 2, ...). First one must be 0, and the rest must be in order.
     """
 
     x = np.random.uniform(0, room.width)
     y = np.random.uniform(0, room.length)
-    
-    room.regions += [(name, x, y)]
 
-    return 
+    region = Region(name, x, y, index)
+    room.regions += [region]
+
+    return region
 
 
