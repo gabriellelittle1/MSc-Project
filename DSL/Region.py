@@ -226,7 +226,7 @@ def region_centrality(positions, room):
     """
     return 0
 
-def distinct_regions(positions):
+def distinct_regions(positions, room, thresh = 2):
     """ The function distinct_regions should be used with every region constraint problem in addition to
         all other constraints. It ensures that all of the regions are separate from each other.
         
@@ -239,14 +239,15 @@ def distinct_regions(positions):
     """
 
     # Decided to penalise any region positions that are within 1 meter of each other.
+    maximum_dist = np.sqrt(room.width**2 + room.length**2)
     pos = positions.reshape(-1, 2)
     n = pos.shape[0]
     val = 0
     for i in range(n):
         for j in range(i + 1, n):
-            dist = np.linalg.norm(pos[i, :] - pos[j, :])**2
-            if dist < 2:
-                val += 1/(dist)
+            dist = np.linalg.norm(pos[i, :] - pos[j, :])
+            if dist < thresh:
+                val += (thresh - dist)**2/(maximum_dist - thresh)**2
 
     return val 
 

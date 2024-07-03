@@ -26,29 +26,36 @@ def create_fixed_object(room, name, width, length, wall, position = None):
         position: float object (between 0 and 1) that determines where on the wall it is placed. E.g if wall is 'north', 
                   position might be 0.5, which means the object is at position (0.5*room.width, room.length).
     """
+
+    if name == 'door':
+        w = width
+        l = length
+    else: 
+        w = width/2
+        l = length/2
     
     if wall not in ['north', 'east', 'south', 'west']:
         print("Invalid wall entered. Please enter one of 'north', 'east', 'south', 'west'.")
         return 
     
     elif wall == 'north':
-        x = width/2 + position*(room.width - width/2)
+        x = w + position*(room.width - w)
         y = room.length
         theta = np.pi
     
     elif wall == 'east':
         x = room.width
-        y = length/2 + position*(room.length - length/2)
+        y = l + position*(room.length - l)
         theta = np.pi/2
     
     elif wall == 'south':
-        x = width/2 + position*(room.width - width/2)
+        x = w + position*(room.width - w)
         y = 0
         theta = 0
 
     else:
         x = 0
-        y = length/2 + position*(room.length - length/2)
+        y = l + position*(room.length - l)
         theta = 3*np.pi/2
     
     room.fixed_objects += [Object(name, width, length, (x, y, theta))]
