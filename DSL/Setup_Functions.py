@@ -27,36 +27,52 @@ def create_fixed_object(room, name, width, length, wall, position = None):
                   position might be 0.5, which means the object is at position (0.5*room.width, room.length).
     """
 
-    if name == 'door':
-        w = width
-        l = length
-    else: 
-        w = width/2
-        l = length/2
-    
     if wall not in ['north', 'east', 'south', 'west']:
         print("Invalid wall entered. Please enter one of 'north', 'east', 'south', 'west'.")
         return 
     
     elif wall == 'north':
-        x = w + position*(room.width - w)
-        y = room.length
-        theta = np.pi
+        if name == 'door':
+            x = width + position*(room.width - width)
+            y = room.length
+            theta = np.pi
+        else: 
+            x = width/2 + position*(room.width - width)
+            y = room.length
+            theta = np.pi
     
     elif wall == 'east':
-        x = room.width
-        y = l + position*(room.length - l)
-        theta = np.pi/2
+        
+        if name == 'door':
+            x = room.width
+            y = position*(room.length - width)
+            theta = np.pi/2
+        else:
+            x = room.width
+            y = width/2 + position*(room.length - width)
+            theta = np.pi/2
     
     elif wall == 'south':
-        x = w + position*(room.width - w)
-        y = 0
-        theta = 0
+
+        if name == 'door':
+            x = position*(room.width - width)
+            y = 0
+            theta = 0
+        else:
+            x = width/2 + position*(room.width - width)
+            y = 0
+            theta = 0
 
     else:
-        x = 0
-        y = l + position*(room.length - l)
-        theta = 3*np.pi/2
+
+        if name == 'door':
+            x = 0
+            y = width + position*(room.length - width)
+            theta = 3*np.pi/2
+        else: 
+            x = 0
+            y = width/2 + position*(room.length - width)
+            theta = 3*np.pi/2
     
     room.fixed_objects += [Object(name, width, length, (x, y, theta))]
     return 

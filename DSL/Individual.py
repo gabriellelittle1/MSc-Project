@@ -1,6 +1,6 @@
 ## All the Individual Object constraint functions are defined here
 
-def next_to_wall(room, object, cardinal_direction = None, side = None):
+def next_to_wall(positions, room, object, cardinal_direction = None, side = None):
     """ The function next_to_wall ensures an object is next to a wall in a room. 
         If cardinal_direction is given, a specific wall will be used. If side is given, 
         the specific side of the object will be used.
@@ -13,7 +13,7 @@ def next_to_wall(room, object, cardinal_direction = None, side = None):
     """
     return 
 
-def next_to_fixed_object(room, object, fixed_object_type, side = None):
+def next_to_fixed_object(positions, room, object, fixed_object_type, side = None):
     """ The function next_to_fixed_object ensures an object is next to a fixed object in a room. 
         If side is given, the specific side of the object will be used.
         
@@ -25,7 +25,7 @@ def next_to_fixed_object(room, object, fixed_object_type, side = None):
     """
     return
 
-def accessible(room, object, sides):
+def accessible(positions, room, object, sides):
     """ The function accessible ensures that an object is accessible from given sides. 
         
         Args:
@@ -35,7 +35,7 @@ def accessible(room, object, sides):
     """
     return
 
-def central(room, object):
+def central(positions, room, object):
     """ The function central ensures that an object is centrally placed in the room. 
 
         Args:
@@ -44,12 +44,17 @@ def central(room, object):
     """
     return
 
-def in_region(room, object, region):
+def in_region(positions, room, object_index, region_name):
     """ The function in_region ensures that an object is in a given region. 
         
         Args:
         room: rectangular Room object
         object: Object object to check
-        region: a Region object
+        region_name: string, name of the region for the object to be in 
     """
+    regions = room.regions
+    region_index = room.find_region_index(region_name)
+
+    value = 0 
+    pos = 
     return

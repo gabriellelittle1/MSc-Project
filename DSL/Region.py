@@ -74,7 +74,7 @@ def include_focal_point(positions, room, region, window = None, longest_wall = F
         window: Window object, window to be made the focal point (optional)
         longest_wall: bool, whether the longest wall should be made the focal point (optional)
     """
-    return
+    return 0
 
 def close_to_wall(positions, room, region, cardinal_direction = None):
     """ The function close_to_wall ensures that a region is close to a wall in a room. 

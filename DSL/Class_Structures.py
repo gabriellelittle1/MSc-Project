@@ -77,12 +77,12 @@ class Region:
         self.index = index
 class Room: 
 
-    def __init__(self, width, length, fixed_objects = [], moving_objects = []):
+    def __init__(self, width, length, fixed_objects = [], moving_objects = None):
 
         self.width = width
         self.length = length
         self.fixed_objects = fixed_objects
-        self.moving_objects = moving_objects
+        self.moving_objects = []
         self.center = (width/2, length/2)
         self.regions = []
 
@@ -232,7 +232,7 @@ class Room:
                     wedge = patches.Wedge(center=obj.position[:2], r=obj.width, 
                                           theta1=np.rad2deg(obj.position[2]), theta2=np.rad2deg(obj.position[2]) + 90, linewidth=3, edgecolor='r', facecolor='none')
                     ax.add_patch(wedge)
-                    #ax.text(obj.position[0], obj.position[1], obj.name, fontsize=10, color='red')
+
                 elif obj.name == 'socket' or obj.name == 'plug' or obj.name == 'electrical plug':
                     x, y = obj.position[:2]
                     ax.plot([x - 0.05, x + 0.05], [y - 0.05, y + 0.05], color='red', linewidth=2)
