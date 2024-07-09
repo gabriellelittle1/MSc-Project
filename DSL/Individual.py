@@ -2,8 +2,8 @@
 from Class_Structures import *
 from shapely.geometry import Polygon
 
-def next_to_wall(positions, room, object_index, cardinal_direction = None, side = None):
-    """ The function next_to_wall ensures an object is next to a wall in a room. 
+def ind_next_to_wall(positions, room, object_index, cardinal_direction = None, side = None):
+    """ This function ensures an object is next to a wall in a room. 
         If cardinal_direction is given, a specific wall will be used. If side is given, 
         the specific side of the object will be used.
         
@@ -59,8 +59,8 @@ def next_to_wall(positions, room, object_index, cardinal_direction = None, side 
 
             return min(distances.flatten())
     
-def object_close_to_fixed_object(positions, room, object_index, fixed_object_type, side = None, max_dist = 0.5):
-    """ The function next_to_fixed_object ensures an object is next to a fixed object in a room. 
+def ind_close_to_fixed_object(positions, room, object_index, fixed_object_type, side = None, max_dist = 0.5):
+    """ This function ensures an object is next to a fixed object in a room. 
         If side is given, the specific side of the object will be used.
         
         Args:
@@ -100,19 +100,18 @@ def object_close_to_fixed_object(positions, room, object_index, fixed_object_typ
                 distances[i, j] = (cs[j][0] - f_objs[i].position[0])**2 + (cs[j][1] - f_objs[i].position[1])**2
         return max(min(distances.flatten()) - max_dist**2, 0.0)
 
-def object_away_from_fixed_object(positions, room, object_index, fixed_object_type, min_dist = 2):
-    """ The function away_from_fixed_object ensures an object is not near to a fixed object in a room. 
-        If side is given, the specific side of the object will be used.
+def ind_away_from_fixed_object(positions, room, object_index, fixed_object_type, min_dist = 2):
+    """ This function ensures an object is not near to a fixed object in a room. 
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
         room: rectangular Room object
         object_index: int, index of the object in the room's object list
         fixed_object_type: string, type of fixed object to check. One of 'window', 'door', 'plug'
-        side: string, one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of the object to check
+        min_dist: float, minimum distance between the object and the fixed object to be considered away from it 
     """
 
-    x, y= positions[3*object_index:3*object_index+2]
+    x, y = positions[3*object_index:3*object_index+2]
     w, l = room.moving_objects[object_index].width, room.moving_objects[object_index].length
     half_diag = (w**2 + l**2)/4
     f_objs = room.find_all(fixed_object_type)
@@ -122,11 +121,13 @@ def object_away_from_fixed_object(positions, room, object_index, fixed_object_ty
     for i in range(len(f_objs)):
         f_obj = f_objs[i]
         distances[i] = max(0.0, (min_dist ** 2)*(half_diag) - ((x - f_obj.position[0])**2 + (y - f_obj.position[1])**2)) 
+     
+    val = sum(distances)/(len(f_objs) * min_dist**2 * half_diag)
     
     return sum(distances)/(len(f_objs) * min_dist**2 * half_diag)
 
-def accessible(positions, room, object_index, sides):
-    """ The function accessible ensures that an object is accessible from given sides. 
+def ind_accessible(positions, room, object_index, sides):
+    """ This function ensures that an object is accessible from given sides. 
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
@@ -136,8 +137,8 @@ def accessible(positions, room, object_index, sides):
     """
     return 0
 
-def central(positions, room, object_index):
-    """ The function central ensures that an object is centrally placed in the room. 
+def ind_central(positions, room, object_index):
+    """ This function ensures that an object is centrally placed in the room. 
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
         room: rectangular Room object
@@ -149,8 +150,8 @@ def central(positions, room, object_index):
     mid_x, mid_y = room.width/2, room.length/2
     return min((mid_x - x)**2, (mid_y - y)**2)
 
-def in_region(positions, room, object_index, region_name):
-    """ The function in_region ensures that an object is in a given region. 
+def ind_in_region(positions, room, object_index, region_name):
+    """ This function ensures that an object is in a given region. 
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
@@ -169,9 +170,9 @@ def in_region(positions, room, object_index, region_name):
             value += ((regions[i].x - x)**2 + (regions[i].y - y)**2) - ((regions[region_index].x - x)**2 + (regions[region_index].y - y)**2)
     return min(0, value)**2
 
-def in_bounds(positions, room): 
+def ind_in_bounds(positions, room, weight = 3): 
 
-    """ The function in_region ensures that all objects are within the room. This must be used in every constraint solving problem for Individual constraint types.
+    """ This function ensures that all objects are within the room. This must be used in every constraint solving problem for Individual constraint types.
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
@@ -186,10 +187,10 @@ def in_bounds(positions, room):
             val += (max(0, corner[0] - room.width)**2 + max(0, corner[1] - room.length)**2)
             val += (max(0, -corner[0])**2 + max(0, -corner[1])**2)
         
-    return val 
+    return weight * val 
 
-def no_overlap(positions, room):
-    """ The function no_overlap ensures that no objects overlap in the room. This should be used in every constraint satisfaction problem.
+def ind_no_overlap(positions, room, weight = 3):
+    """ This function ensures that no objects overlap in the room. This should be used in every constraint satisfaction problem.
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
