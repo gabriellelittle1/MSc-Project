@@ -7,60 +7,70 @@ import scipy as sp
 import sys
 import copy
 
+def TR(x, y, theta, w, l):
+    return (x + w/2 * np.cos(theta) + l/2 * np.sin(theta), y + w/2 * np.sin(theta) - l/2 * np.cos(theta))
+
+def TL(x, y, theta, w, l):
+    return (x - w/2 * np.cos(theta) + l/2 * np.sin(theta), y - w/2 * np.sin(theta) - l/2 * np.cos(theta))
+
+def BR(x, y, theta, w, l):
+    return (x + w/2 * np.cos(theta) - l/2 * np.sin(theta), y + w/2 * np.sin(theta) + l/2 * np.cos(theta))
+
+def BL(x, y, theta, w, l):
+    return (x - w/2 * np.cos(theta) - l/2 * np.sin(theta), y - w/2 * np.sin(theta) + l/2 * np.cos(theta))
+
+def corners(x, y, theta, w, l):
+    return [TL(x, y, theta, w, l), TR(x, y, theta, w, l), BR(x, y, theta, w, l), BL(x, y, theta, w, l)]
+
+def back_corners(x, y, theta, w, l):
+    return [TL(x, y, theta, w, l), TR(x, y, theta, w, l), ]
+
 class Object:
 
-    def __init__(self, name, width, length, position = None):
+    def __init__(self, name, width, length, position = None, index = None):
 
         """ Initialization of an object in a scene. 
             Inputs: 
             name: str, name of the object all lowercase
             width: float, width of the object
             length: float, length of the object
+            index : int, index of the object in the room's object list (optional, only used for moving_objects)
             position: tuple (x, y, theta), where x, y are the coordinates of the center of the 
                       object and theta is the orientation of the object in radians.
         """
 
         if position:
-            self.x, self.y, self.orientation = position 
             self.position = position
         
         if not position: 
-            self.x = 0
-            self.y = 0
-            self.orientation = 0
             self.position = (0, 0, 0)
             position = self.position
 
         self.name = name
         self.width = width 
         self.length = length
-
+    
     def TR(self):
         x, y, theta = self.position
-        w, l = self.width, self.length
-        return (x + w/2 * np.cos(theta) + l/2 * np.sin(theta), y + w/2 * np.sin(theta) - l/2 * np.cos(theta))
-    
-    def TL(self):
+        return TR(x, y, theta, self.width, self.length)
+
+    def TL(self):  
         x, y, theta = self.position
-        w, l = self.width, self.length
-        return (x - w/2 * np.cos(theta) + l/2 * np.sin(theta), y - w/2 * np.sin(theta) - l/2 * np.cos(theta))
+        return TL(x, y, theta, self.width, self.length)
 
     def BR(self):
         x, y, theta = self.position
-        w, l = self.width, self.length
-        return (x + w/2 * np.cos(theta) - l/2 * np.sin(theta), y + w/2 * np.sin(theta) + l/2 * np.cos(theta))
+        return BR(x, y, theta, self.width, self.length)
 
     def BL(self):
         x, y, theta = self.position
-        w, l = self.width, self.length
-        return (x - w/2 * np.cos(theta) - l/2 * np.sin(theta), y - w/2 * np.sin(theta) + l/2 * np.cos(theta))
-    
+        return BL(x, y, theta, self.width, self.length)
+
     def corners(self):
-        return [self.TR(), self.BR(), self.TL(), self.BL()]
+        return [self.TL(), self.TR(), self.BR(), self.BL()]
     
     def back_corners(self):
-        return [self.TR(), self.TL()]
-
+        return [self.TL(), self.TR()]
 class Region: 
     def __init__(self, name, x, y, index):
 
@@ -148,34 +158,34 @@ class Room:
             self.moving_objects.append(obj)
         return 
     
-    def doors_on_wall(self, cardinal_direction):
+    # def doors_on_wall(self, cardinal_direction):
 
-        """ Returns the number of doors on a given wall of the room.
-            Inputs: 
-            cardinal_direction: str, one of N, S, E, W
-            Outputs:
-            num_doors: int, number of doors on the wall
-        """
+    #     """ Returns the number of doors on a given wall of the room.
+    #         Inputs: 
+    #         cardinal_direction: str, one of N, S, E, W
+    #         Outputs:
+    #         num_doors: int, number of doors on the wall
+    #     """
 
-        num_doors = 0
-        if cardinal_direction == 'S': # South wall
-            crit = lambda obj: obj.y == 0
-        elif cardinal_direction == 'N': # North wall
-            crit = lambda obj: obj.y == self.length
-        elif cardinal_direction == 'E': # East wall
-            crit = lambda obj: obj.x == self.width
-        elif cardinal_direction == 'W': # West wall
-            crit = lambda obj: obj.x == 0
-        else:
-            raise ValueError('Invalid Cardinal Direction. Please enter one of N, S, E, W.')
+    #     num_doors = 0
+    #     if cardinal_direction == 'S': # South wall
+    #         crit = lambda obj: obj.y == 0
+    #     elif cardinal_direction == 'N': # North wall
+    #         crit = lambda obj: obj.y == self.length
+    #     elif cardinal_direction == 'E': # East wall
+    #         crit = lambda obj: obj.x == self.width
+    #     elif cardinal_direction == 'W': # West wall
+    #         crit = lambda obj: obj.x == 0
+    #     else:
+    #         raise ValueError('Invalid Cardinal Direction. Please enter one of N, S, E, W.')
 
-        if self.fixed_objects:
-            for obj in self.fixed_objects:
-                if obj.name in ['door', 'Doors']:
-                    if crit(obj):
-                        num_doors += 1
+    #     if self.fixed_objects:
+    #         for obj in self.fixed_objects:
+    #             if obj.name in ['door', 'Doors']:
+    #                 if crit(obj):
+    #                     num_doors += 1
         
-        return num_doors 
+    #     return num_doors 
     
     def find(self, name):
         for obj in self.fixed_objects + self.moving_objects:
@@ -218,8 +228,8 @@ class Room:
                 line, = plt.plot([], [], label=obj.name)  # Create an invisible line
                 rectangle.set_edgecolor(line.get_color())  # Use the line's color for the rectangle
                 ax.text(obj.position[0], obj.position[1], obj.name, fontsize=10)
-                corners = obj.back_corners()
-                for corner in corners:
+                cs = obj.back_corners()
+                for corner in cs:
                     ax.plot(corner[0], corner[1], color = line.get_color(), marker = 'o')
         
         if self.fixed_objects:

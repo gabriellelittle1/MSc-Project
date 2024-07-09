@@ -61,11 +61,10 @@ def away_from(positions, room, region1, region2):
 
     return value/len(room.regions)
 
-def include_focal_point(positions, room, region, window = None, longest_wall = False):
+def include_focal_point(positions, room, region, window = None):
 
     """ The function focal_point finds the focal point of a room and ensures that a region is close to it. 
-        If a window is given, that window will be made the focal point. If longest_wall is True, then the 
-        longest wall will be made the focal point. 
+        If a window is given, that window will be made the focal point, otherwise, the longest wall will be made the focal point
         
         Args:
         positions: numpy array, positions of all the regions in the room
@@ -74,7 +73,69 @@ def include_focal_point(positions, room, region, window = None, longest_wall = F
         window: Window object, window to be made the focal point (optional)
         longest_wall: bool, whether the longest wall should be made the focal point (optional)
     """
-    return 0
+
+    region_index = room.find_region_index(region)
+    x, y = positions[2*region_index:2*region_index + 2]
+    ## Find the focal point of the room
+    if window: 
+        focal_point = window.position[:2]
+    else: 
+        dws_on_walls = [[], [], [], []] # N, E, S, W
+        for obj in room.fixed_objects: 
+            if obj.name == 'window' or obj.name == 'door':
+                if obj.position[2] == np.pi:
+                    dws_on_walls[0] += [obj]
+                if obj.position[2]== np.pi/2:
+                    dws_on_walls[1] += [obj]
+                if obj.position[2] == 0:
+                    dws_on_walls[0] += [obj]
+                if obj.position[2] == 3*np.pi/2:
+                    dws_on_walls[3] += [obj]
+
+        midps = [[room.width/2, room.length], [room.width, room.length/2], [room.width/2, 0], [0, room.length/2]]
+        distances = [room.width, room.length, room.width, room.length]
+        lambdas = [lambda x: x[1] == room.length, lambda x: x[0] == room.width, lambda x: x[1] == 0, lambda x: x[0] == 0]
+        for i in range(4):
+            points = [[0, 0], [0, room.length], [room.width, 0], [room.width, room.length]]
+            for obj in dws_on_walls[i]:
+                if i in [0, 2] and obj.name == 'window':
+                    points += [[obj.position[0] - obj.width/2, obj.position[1]], [obj.position[0] + obj.width/2, obj.position[1]]]
+                if i in [1, 3] and obj.name == 'window':
+                    points += [[obj.position[0], obj.position[1] - obj.width/2], [obj.position[0], obj.position[1] + obj.width/2]]
+                if obj.name == 'door':
+                    if i == 0: 
+                        points += [[obj.position[0] - obj.width, obj.position[1]], [obj.position[0], obj.position[1]]]
+                    if i == 1: 
+                        points += [[obj.position[0], obj.position[1]], [obj.position[0], obj.position[1] + obj.width]]
+                    if i == 2: 
+                        points += [[obj.position[0], obj.position[1]], [obj.position[0] + obj.width, obj.position[1]]]
+                    if i == 3: 
+                        points += [[obj.position[0], obj.position[1] - obj.width], [obj.position[0], obj.position[1]]]
+
+                new_points = sorted([j[i % 2] for j in points if lambdas[i](j)])
+                space = np.array(new_points[1:]) - np.array(new_points[:-1])
+                index = np.argmax(space)
+                midps[i][i % 2] = new_points[index] + space[index]/2
+                distances[i] = space[index]
+
+        if room.width < room.length: 
+            distances[1] += (room.length - room.width)/2
+            distances[3] += (room.length - room.width)/2
+        if room.width > room.length:
+            distances[0] += (room.width - room.length)/2
+            distances[2] += (room.width - room.length)/2
+
+        focal_point = midps[np.argmax(distances)]
+
+    ## Now that we have the focus point, want the given region to be closer to the focus point than any of the other regions. 
+    ## So want d1 < di for all i 
+
+    val = 0
+    for i in range(len(room.regions)):
+        rx, ry = positions[2*i:2*i + 2]
+        val += max(0,  ((focal_point[0] - x)**2 + (focal_point[1] - y)**2) - ((focal_point[0] - rx)**2 + (focal_point[1] - ry)**2))
+
+    return val 
 
 def close_to_wall(positions, room, region, cardinal_direction = None):
     """ The function close_to_wall ensures that a region is close to a wall in a room. 
@@ -215,7 +276,8 @@ def between(positions, room, region, region1, region2):
     return 0 
 
 def region_centrality(positions, room):
-    """ The function region_centrality ensures that all of the regions are not against the walls. 
+    """ The function region_centrality ensures that all of the regions are not against the walls. This function should be used with every region constraint problem in addition to
+        all other constraints. 
         
         Args:
         positions: numpy array, positions of all the regions in the room
@@ -224,9 +286,31 @@ def region_centrality(positions, room):
         region1: a Region region1
         region2: a Region region2
     """
-    return 0
 
-def distinct_regions(positions, room, thresh = 2):
+    ## Keep all regions equal distance from the walls ? 
+    def wall_distances(x, y):
+        distances = [x**2, (room.width - x)**2, y**2, (room.length - y)**2]
+        return min(distances)
+    
+    val = 0
+    # distances = [wall_distances(positions[2*i], positions[2*i + 1]) for i in range(len(room.regions))]
+    center = room.center
+    distances = []
+    for i in range(len(room.regions)): 
+        x, y = positions[2*i:2*i + 2]
+        distances += [(center[0] - x)**2 + (center[1] - y)**2]
+    
+    mean_distance = np.mean(distances)
+    for distance in distances:
+        val += (distance - mean_distance)**2
+    
+    room_center = np.array([room.width/2, room.length/2])
+    region_centroid = np.mean(positions.reshape(-1, 2), axis = 0)
+    val += np.linalg.norm(region_centroid - room_center)**2
+
+    return val 
+
+def distinct_regions(positions, room, thresh = 1):
     """ The function distinct_regions should be used with every region constraint problem in addition to
         all other constraints. It ensures that all of the regions are separate from each other.
         
@@ -238,7 +322,7 @@ def distinct_regions(positions, room, thresh = 2):
         region2: a Region region2
     """
 
-    # Decided to penalise any region positions that are within 1 meter of each other.
+    # Decided to penalise any region positions that are within a certain distance of each other.
     maximum_dist = np.sqrt(room.width**2 + room.length**2)
     pos = positions.reshape(-1, 2)
     n = pos.shape[0]

@@ -107,4 +107,61 @@ def region_setup(room, name, index):
 
     return region
 
+def create_moving_object(room, name, width, length, region_name, index):
+    """ A function that creates an object.
+        Inputs:
+        room: Room for the object to be put in
+        name: str, name of the object all lowercase. E.g. 'window'
+        width: float, width of the object (m)
+        length: float, length of the object (m)
+        region_name: str, name of the region where the object is to be placed
+        index: int, index of the object in the room's object list
+    """
+    
+    region_index = room.find_region_index(region_name)
+
+    ## Give the orientation of the closest wall? 
+    def closest_wall(room, x, y):
+        wall_distances = np.array([x, room.width - x, y, room.length - y])
+        min_arg = np.argmin(wall_distances)
+        if min_arg == 0:
+            theta = 3*np.pi/2
+        elif min_arg == 1:
+            theta = np.pi/2
+        elif min_arg == 2:
+            theta = 0
+        else:
+            theta = np.pi
+        return theta
+    
+    # Ensure the initial position is within the room 
+    obj_theta = closest_wall(room, room.regions[region_index].x, room.regions[region_index].y)
+    new_object = Object(name, width, length, (room.regions[region_index].x, room.regions[region_index].y, obj_theta))
+    corners = np.array(new_object.corners())
+    x_max_index, y_max_index = corners.argmax(axis=0)
+    x_min_index, y_min_index = corners.argmin(axis=0)
+    print(name, corners)
+
+    if corners[x_max_index][0] > room.width:
+        print(name, "hi1")
+        obj_x = new_object.position[0] - (corners[x_max_index][0] - room.width)
+    elif corners[x_min_index][0] < 0:
+        print(name, "hi2")
+        obj_x = new_object.position[0] - corners[x_min_index][0]
+    else: 
+        obj_x = new_object.position[0]
+
+    if corners[y_max_index][1] > room.length:
+        print(name, "hi3")
+        obj_y = new_object.position[1] - (corners[y_max_index][1] - room.length)
+    elif corners[y_min_index][1] < 0:
+        print(name, "hi4")
+        obj_y = new_object.position[1] - corners[y_min_index][1]
+    else: 
+        obj_y = new_object.position[1]
+
+    room.moving_objects += [Object(name, width, length, (obj_x, obj_y, obj_theta), index)]
+
+    return
+
 
