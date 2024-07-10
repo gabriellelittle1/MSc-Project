@@ -140,22 +140,17 @@ def create_moving_object(room, name, width, length, region_name, index):
     corners = np.array(new_object.corners())
     x_max_index, y_max_index = corners.argmax(axis=0)
     x_min_index, y_min_index = corners.argmin(axis=0)
-    print(name, corners)
 
     if corners[x_max_index][0] > room.width:
-        print(name, "hi1")
         obj_x = new_object.position[0] - (corners[x_max_index][0] - room.width)
     elif corners[x_min_index][0] < 0:
-        print(name, "hi2")
         obj_x = new_object.position[0] - corners[x_min_index][0]
     else: 
         obj_x = new_object.position[0]
 
     if corners[y_max_index][1] > room.length:
-        print(name, "hi3")
         obj_y = new_object.position[1] - (corners[y_max_index][1] - room.length)
     elif corners[y_min_index][1] < 0:
-        print(name, "hi4")
         obj_y = new_object.position[1] - corners[y_min_index][1]
     else: 
         obj_y = new_object.position[1]

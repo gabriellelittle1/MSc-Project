@@ -19,7 +19,7 @@ def BR(x, y, theta, w, l):
 def BL(x, y, theta, w, l):
     return (x - w/2 * np.cos(theta) - l/2 * np.sin(theta), y - w/2 * np.sin(theta) + l/2 * np.cos(theta))
 
-def corners(x, y, theta, w, l):
+def corners(x, y, theta, w, l): # TL, TR, BR, BL
     return [TL(x, y, theta, w, l), TR(x, y, theta, w, l), BR(x, y, theta, w, l), BL(x, y, theta, w, l)]
 
 def back_corners(x, y, theta, w, l):

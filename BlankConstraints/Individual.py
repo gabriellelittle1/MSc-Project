@@ -78,7 +78,7 @@ def ind_in_region(positions, room, object_index, region_name):
 
 def ind_in_bounds(positions, room): 
 
-    """ This function ensures that all objects are within the room. This must be used in every constraint solving problem for Individual constraint types.
+    """ This function ensures that all objects are within the room. This should not be used in the objective function.
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
@@ -87,7 +87,7 @@ def ind_in_bounds(positions, room):
     return
 
 def ind_no_overlap(positions, room):
-    """ This function ensures that no objects overlap in the room. This should be used in every constraint satisfaction problem.
+    """ This function ensures that no objects overlap in the room. This should not be used in the objective function.
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room

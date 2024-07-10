@@ -165,13 +165,13 @@ def reg_close_to_wall(positions, room, region, cardinal_direction = None):
     region_position = positions[2*region_index:2*region_index + 2]
 
     if cardinal_direction == 'N':
-        wall_distances = (region_position[1] - room.length)**2
+        wall_distances = [(region_position[1] - room.length)**2]
     elif cardinal_direction == 'S':
-        wall_distances = region_position[1]**2
+        wall_distances = [region_position[1]**2]
     elif cardinal_direction == 'E':
-        wall_distances = (region_position[0] - room.width)**2
+        wall_distances = [(region_position[0] - room.width)**2]
     elif cardinal_direction == 'W':
-        wall_distances = region_position[0]**2
+        wall_distances = [region_position[0]**2]
     else:
         wall_distances = [region_position[1]**2, (region_position[1] - room.length)**2, region_position[0]**2, (region_position[0] - room.width)**2]
 

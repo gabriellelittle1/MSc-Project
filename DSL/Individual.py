@@ -133,9 +133,51 @@ def ind_accessible(positions, room, object_index, sides):
         positions: list of floats, x, y, theta values for all objects in the room
         room: rectangular Room object
         object_index: int, index of the object in the room's object list
-        sides: a list of strings, one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of the object to check
+        sides: a list of strings, each one one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of the object to check
     """
-    return 0
+    
+    obj = room.moving_objects[object_index]
+    x, y, theta = positions[3*object_index:3*object_index+3]
+    TL, TR, BR, BL = corners(x, y, theta, obj.width, obj.length)
+    polys = []
+
+    def project(point1, point2, distance = 1):
+        direction = np.array([point1[0] - point2[0], point1[1] - point2[1]])
+        direction /= np.linalg.norm(direction)
+        return [point1[0], point1[1]] + distance * direction
+    
+    for side in sides: 
+        if side == 'top' or side == 'back':
+            new_pointL = project(TL, BL)
+            new_pointR = project(TR, BR)
+            polys += [Polygon([TL, TR, new_pointR, new_pointL])]
+        elif side == 'bottom' or side == 'front':
+            new_pointL = project(BL, TL) 
+            new_pointR = project(BR, TR)
+            polys += [Polygon([BL, BR, new_pointR, new_pointL])]
+        elif side == 'left':
+            new_pointT = project(TL, TR)
+            new_pointB = project(BL, BR)
+            polys += [Polygon([TL, BL, new_pointB, new_pointT])]
+        elif side == 'right':
+            new_pointT = project(TR, TL)
+            new_pointB = project(BR, BL)
+            polys += [Polygon([TR, BR, new_pointB, new_pointT])]
+        else: 
+            print(side + " is not a valid side of the object.")
+    
+    value = 0.0
+    polys += [Polygon([TL, TR, BR, BL])]
+    for poly in polys:
+        for i in range(len(room.moving_objects)):
+            if i == object_index:
+                continue
+            poly2 = Polygon(room.moving_objects[i].corners())
+            intersection = poly.intersection(poly2)
+            if intersection.area > 0:
+                value += intersection.area
+
+    return value
 
 def ind_central(positions, room, object_index):
     """ This function ensures that an object is centrally placed in the room. 
@@ -146,7 +188,7 @@ def ind_central(positions, room, object_index):
     """
 
     ## Minimise the distance from one of the central points of the room 
-    x, y= positions[3*object_index:3*object_index+2]
+    x, y = positions[3*object_index:3*object_index+2]
     mid_x, mid_y = room.width/2, room.length/2
     return min((mid_x - x)**2, (mid_y - y)**2)
 
@@ -161,7 +203,7 @@ def ind_in_region(positions, room, object_index, region_name):
     """
     regions = room.regions
     region_index = room.find_region_index(region_name)
-    x, y, theta = positions[3*object_index:3*object_index+3]
+    x, y = positions[3*object_index:3*object_index+2]
     value = 0 
     for i in range(len(regions)):
         if i == region_index:
@@ -172,7 +214,7 @@ def ind_in_region(positions, room, object_index, region_name):
 
 def ind_in_bounds(positions, room, weight = 3): 
 
-    """ This function ensures that all objects are within the room. This must be used in every constraint solving problem for Individual constraint types.
+    """ This function ensures that all objects are within the room. This should not be used in the objective function.
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
@@ -190,7 +232,7 @@ def ind_in_bounds(positions, room, weight = 3):
     return weight * val 
 
 def ind_no_overlap(positions, room, weight = 3):
-    """ This function ensures that no objects overlap in the room. This should be used in every constraint satisfaction problem.
+    """ This function ensures that no objects overlap in the room. This should not be used in the objective function.
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
@@ -205,17 +247,14 @@ def ind_no_overlap(positions, room, weight = 3):
             obj_j = objs[j]
             corners_i = corners(positions[3*i], positions[3*i+1], positions[3*i+2], obj_i.width, obj_i.length)
             corners_j = corners(positions[3*j], positions[3*j+1], positions[3*j+2], obj_j.width, obj_j.length)
-
             poly1 = Polygon(corners_i)
             poly2 = Polygon(corners_j)
             intersection = poly1.intersection(poly2)
 
             if intersection.area > 0:
-                # diff_x = (positions[3*i] - positions[3*j])**2
-                # diff_y = (positions[3*i+1] - positions[3*j+1])**2
-                val += intersection.area# - diff_x - diff_y
+                val += intersection.area
 
-    return val 
+    return weight*val 
                 
 
 
