@@ -2,7 +2,7 @@
 from Class_Structures import *
 from shapely.geometry import Polygon
 
-def ind_next_to_wall(positions, room, object_index, cardinal_direction = None, side = None):
+def ind_next_to_wall(positions, room, object_index, side):
     """ This function ensures an object is next to a wall in a room. 
         If cardinal_direction is given, a specific wall will be used. If side is given, 
         the specific side of the object will be used.
@@ -11,7 +11,6 @@ def ind_next_to_wall(positions, room, object_index, cardinal_direction = None, s
         positions: list of floats, x, y, theta values for all objects in the room
         room: rectangular Room object
         object_index: int, index of the object in the room's object list
-        cardinal_direction: string, one of 'N', 'S', 'E', 'W', defines which wall to check
         side: string, one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of the object to check e.g back of bed 
     """
 

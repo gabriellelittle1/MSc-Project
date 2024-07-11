@@ -8,8 +8,8 @@ def reg_close_to_reg(positions, room, region1_name, region2_name):
         Args:
         positions: numpy array, positions of all the regions in the room
         room: rectangular Room object
-        region1: a str, name of region
-        region2: a str, name of region
+        region1_name: a str, name of region
+        region2_name: a str, name of region
     """
 
     ## For this function, since I don't want the regions to be on top of each other, I only 
@@ -42,8 +42,8 @@ def reg_away_from_reg(positions, room, region1_name, region2_name):
         Args:
         positions: numpy array, positions of all the regions in the room
         room: rectangular Room object
-        region1: string, region name for a Region region1
-        region2: string, region name for a Region region2
+        region1_name: string, region name for a Region region1
+        region2_name: string, region name for a Region region2
     """
     ## For this function, since I don't want the regions to be in the corners I only 
     ## want to ensure that these regions are not the closest to each other. 
@@ -69,7 +69,7 @@ def reg_away_from_reg(positions, room, region1_name, region2_name):
 
     return value/len(room.regions)
 
-def reg_include_focal_point(positions, room, region, window_index = None):
+def reg_include_focal_point(positions, room, region_name, window_index = None):
 
     """ This function finds the focal point of a room and ensures that a region is close to it. 
         If a window is given, that window will be made the focal point, otherwise, the longest wall will be made the focal point
@@ -77,19 +77,19 @@ def reg_include_focal_point(positions, room, region, window_index = None):
         Args:
         positions: numpy array, positions of all the regions in the room
         room: rectangular Room object
-        region: region to be close to the focal point
+        region_name: str, name of region to be close to the focal point
         window: int, index of room.fixed_objects that is the window for a focal point (optional)
         longest_wall: bool, whether the longest wall should be made the focal point (optional)
     """
 
-    region_index = room.find_region_index(region)
+    region_index = room.find_region_index(region_name)
     x, y = positions[2*region_index:2*region_index + 2]
     ## Find the focal point of the room
     if window_index: 
         window = room.fixed_objects[window_index]
         if window.name != 'window':
             print("That focal point is not a window, continuing with the longest wall method.")
-            return reg_include_focal_point(positions, room, region)
+            return reg_include_focal_point(positions, room, region_name)
         else: 
             focal_point = window.position[:2]
     else: 
@@ -150,18 +150,18 @@ def reg_include_focal_point(positions, room, region, window_index = None):
 
     return val 
 
-def reg_close_to_wall(positions, room, region, cardinal_direction = None):
+def reg_close_to_wall(positions, room, region_name, cardinal_direction = None):
     """ This function ensures that a region is close to a wall in a room. 
         If cardinal_direction is given, a specific wall will be checked.
         
         Args:
         positions: numpy array, positions of all the regions in the room
         room: rectangular Room object
-        region: string, region name to be close to the wall
+        region_name: string, region name to be close to the wall
         cardinal_direction: string, one of 'N', 'S', 'E', 'W', defines which wall to check
     """
 
-    region_index = room.find_region_index(region)
+    region_index = room.find_region_index(region_name)
     region_position = positions[2*region_index:2*region_index + 2]
 
     if cardinal_direction == 'N':
@@ -183,7 +183,7 @@ def reg_close_to_fixed_object(positions, room, region_name, fixed_object_type, m
         Args:
         positions: numpy array, positions of all the regions in the room
         room: rectangular Room object
-        region: string, region name to be close to the fixed object
+        region_name: string, region name to be close to the fixed object
         fixed_object_type: string, type of fixed object to check. E.g. 'window', 'door', 'socket'
         maximum_distance: float, maximum distance for the object to be defined as close to the object (optional)
     """
@@ -213,7 +213,7 @@ def reg_away_from_fixed_object(positions, room, region_name, fixed_object_type, 
         Args:
         positions: numpy array, positions of all the regions in the room
         room: rectangular Room object
-        region: region to be away from the fixed object
+        region_name: string, name of region to be away from the fixed object
         fixed_object_type: string, type of fixed object to check. One of 'window', 'door', 'plug'
         minimum_distance: float, minimum distance to be away from the object (optional)
     """
@@ -234,17 +234,17 @@ def reg_away_from_fixed_object(positions, room, region_name, fixed_object_type, 
     else: 
         return (minimum_distance - min(distances))**2/(minimum_distance**2)
 
-def reg_in_corner(positions, room, region, maximum_distance = 1.5):
+def reg_in_corner(positions, room, region_name, maximum_distance = 1.5):
     """ This function ensures that a region is in a corner of a room. 
         
         Args:
         positions: numpy array, positions of all the regions in the room
         room: rectangular Room object
-        region: region to be in the corner
+        region_name: region to be in the corner
     """
 
     corners = [[0, 0], [0, room.length], [room.width, 0], [room.width, room.length]]
-    region_index = room.find_region_index(region)
+    region_index = room.find_region_index(region_name)
     region_position = positions[2*region_index:2*region_index + 2]
 
     distances = [np.linalg.norm(region_position - corner) for corner in corners]
@@ -254,38 +254,63 @@ def reg_in_corner(positions, room, region, maximum_distance = 1.5):
         return (min(distances) - maximum_distance)**2/(np.sqrt(room.width**2 + room.length**2) - maximum_distance)**2
 
 
-def reg_opposite(positions, room, region1, region2):
+def reg_opposite(positions, room, region1_name, region2_name):
     """ This function ensures that two regions are opposite to each other in a room. 
         
         Args:
         positions: numpy array, positions of all the regions in the room
         room: rectangular Room object
-        region1: a Region region1
-        region2: a Region region2
+        region1_name: string, name of region1
+        region2_name: string, name of region2
     """
     return 0
 
-def reg_central(positions, room, region):
+def reg_central(positions, room, region_name):
     """ This function ensures that a region is centrally placed in the room. 
         
         Args:
         positions: numpy array, positions of all the regions in the room
         room: rectangular Room object
-        region: region to be centrally placed
+        region_name: string, name of region to be centrally placed
     """
-    return 0 
+    ## For this function, I want to ensure that the region is in the center of the room.
+    ## To do this, I am going to have the point of the region be as close to either the x center or y center
 
-def reg_between(positions, room, region, region1, region2):
+    region_index = room.find_region_index(region_name)
+    x, y = positions[2*region_index:2*region_index + 2]
+    mid_x, mid_y = room.width/2, room.length/2
+    val = min((x - mid_x)**2,  (y - mid_y)**2)
+
+    return val
+
+def reg_between(positions, room, region_name, region1_name, region2_name):
     """ The function reg_between ensures that a region is between two other regions. 
         
         Args:
         room: rectangular Room object
-        region: region to be between the other two regions
-        region1: a Region region1
-        region2: a Region region2
+        region_name: string, name of region to be between region1 and region2
+        region1_name: string, name of region1
+        region2_name: string, name of region2
     """
 
-    ## region should be closer to region1 and region2 than any other regions, and region1 and region2 should be further than region to eithe of them.
+    ## region should be closer to region1 and region2 than any other regions, and region1 and region2 should be further than region to either of them.
+    region_index = room.find_region_index(region_name)
+    region1_index = room.find_region_index(region1_name)
+    region2_index = room.find_region_index(region2_name)
+
+    if region_index == None or region1_index == None or region2_index == None:
+        print("Error in inputs for reg_between")
+        return 0
+
+    region_position = positions[2*region_index:2*region_index + 2]
+    region1_position = positions[2*region1_index:2*region1_index + 2]
+    region2_position = positions[2*region2_index:2*region2_index + 2]
+
+    d1d = np.linalg.norm(region_position - region1_position)
+    d2d = np.linalg.norm(region_position - region2_position)
+    d12 = np.linalg.norm(region1_position - region2_position)
+    
+
     return 0 
 
 def reg_centrality(positions, room):
@@ -299,14 +324,7 @@ def reg_centrality(positions, room):
         region1: a Region region1
         region2: a Region region2
     """
-
-    ## Keep all regions equal distance from the walls ? 
-    def wall_distances(x, y):
-        distances = [x**2, (room.width - x)**2, y**2, (room.length - y)**2]
-        return min(distances)
-    
     val = 0
-    # distances = [wall_distances(positions[2*i], positions[2*i + 1]) for i in range(len(room.regions))]
     center = room.center
     distances = []
     for i in range(len(room.regions)): 
@@ -336,7 +354,6 @@ def reg_distinct_regions(positions, room, thresh = 1):
     """
 
     # Decided to penalise any region positions that are within a certain distance of each other.
-    maximum_dist = np.sqrt(room.width**2 + room.length**2)
     pos = positions.reshape(-1, 2)
     n = pos.shape[0]
     val = 0
@@ -347,8 +364,3 @@ def reg_distinct_regions(positions, room, thresh = 1):
                 val += (thresh - dist)**2
 
     return val 
-
-
-
-
-

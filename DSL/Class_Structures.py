@@ -112,35 +112,6 @@ class Room:
         print("No region with this name is in the room.")    
         return None
     
-    def windows_on_wall(self, cardinal_direction):
-
-        """ Returns the number of windows on a given wall of the room.
-            Inputs: 
-            cardinal_direction: str, one of N, S, E, W
-            Outputs:
-            num_windows: int, number of windows on the wall
-        """
-
-        num_windows = 0
-        if cardinal_direction == 'S':
-            crit = lambda obj: obj.y == 0
-        elif cardinal_direction == 'N':
-            crit = lambda obj: obj.y == self.length
-        elif cardinal_direction == 'E':
-            crit = lambda obj: obj.x == self.width
-        elif cardinal_direction == 'W':
-            crit = lambda obj: obj.x == 0
-        else:
-            raise ValueError('Invalid Cardinal Direction. Please enter one of N, S, E, W.')
-
-        if self.fixed_objects:
-            for obj in self.fixed_objects:
-                if obj.name in ['window', 'Window']:
-                    if crit(obj):
-                        num_windows += 1
-        
-        return num_windows 
-    
     def add_object(self, obj):
 
         """ Adds an object to the room.
@@ -157,35 +128,6 @@ class Room:
                 obj = Object(obj.name, obj.width, obj.length, (self.center[0], self.center[1], 0))
             self.moving_objects.append(obj)
         return 
-    
-    # def doors_on_wall(self, cardinal_direction):
-
-    #     """ Returns the number of doors on a given wall of the room.
-    #         Inputs: 
-    #         cardinal_direction: str, one of N, S, E, W
-    #         Outputs:
-    #         num_doors: int, number of doors on the wall
-    #     """
-
-    #     num_doors = 0
-    #     if cardinal_direction == 'S': # South wall
-    #         crit = lambda obj: obj.y == 0
-    #     elif cardinal_direction == 'N': # North wall
-    #         crit = lambda obj: obj.y == self.length
-    #     elif cardinal_direction == 'E': # East wall
-    #         crit = lambda obj: obj.x == self.width
-    #     elif cardinal_direction == 'W': # West wall
-    #         crit = lambda obj: obj.x == 0
-    #     else:
-    #         raise ValueError('Invalid Cardinal Direction. Please enter one of N, S, E, W.')
-
-    #     if self.fixed_objects:
-    #         for obj in self.fixed_objects:
-    #             if obj.name in ['door', 'Doors']:
-    #                 if crit(obj):
-    #                     num_doors += 1
-        
-    #     return num_doors 
     
     def find(self, name):
         for obj in self.fixed_objects + self.moving_objects:
