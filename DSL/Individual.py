@@ -209,10 +209,15 @@ def ind_central(positions, room, object_index):
         object_index: int, index of the object in the room's object list
     """
 
-    ## Minimise the distance from one of the central points of the room 
-    x, y, theta = positions[3*object_index:3*object_index+3]
+    ## want the position to be in the middle 1/3 of x and middle 1/3 of y
+    lower_x, upper_x = room.width/3, 2*room.width/3
+    lower_y, upper_y = room.length/3, 2*room.length/3
     mid_x, mid_y = room.width/2, room.length/2
-    return min((mid_x - x)**2, (mid_y - y)**2)
+
+    x, y, theta = positions[3*object_index:3*object_index+3]
+    val = max(0, x - lower_x)**2 + max(0, upper_x - x)**2 + max(0, y - lower_y)**2 + max(0, upper_y - y)**2
+    val += 0.1 * (x - mid_x)**2 + 0.1 * (y - mid_y)**2
+    return val
 
 def ind_in_region(positions, room, object_index, region_name):
     """ This function ensures that an object is in a given region. 
@@ -253,13 +258,14 @@ def ind_in_bounds(positions, room, weight = 3):
         
     return weight * val 
 
-def ind_no_overlap(positions, room):
+def ind_no_overlap(positions, room, position_fixing = []):
     """ This function ensures that no objects overlap in the room. This should not be used in the objective function.
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
         room: rectangular Room object
     """
+
     val = 0
     objs = room.moving_objects
     doors = room.find_all('door')
