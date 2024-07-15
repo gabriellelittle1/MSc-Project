@@ -119,6 +119,11 @@ def create_moving_object(room, name, width, length, region_name, index):
     """
     
     region_index = room.find_region_index(region_name)
+    if region_index == None: 
+        print("Region not found.")
+        new_object = Object(name, width, length, (room.center[0], room.center[1], 0.0))
+        room.moving_objects += [new_object]
+        return 
 
     ## Give the orientation of the closest wall? 
     def closest_wall(room, x, y):

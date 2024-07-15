@@ -67,7 +67,32 @@ class Object:
         return BL(x, y, theta, self.width, self.length)
 
     def corners(self):
-        return [self.TL(), self.TR(), self.BR(), self.BL()]
+
+
+        if self.name != 'door':
+            return [self.TL(), self.TR(), self.BR(), self.BL()]
+        else: 
+            if self.position[2] == 0: 
+                BL = [self.position[0] - self.width, self.position[1]]
+                BR = [self.position[0] + self.width, self.position[1]]
+                TR = [self.position[0] + self.width, self.position[1] + self.width]
+                TL = [self.position[0] - self.width, self.position[1] + self.width]    
+            elif self.position[2] == np.pi/2:
+                BL = [self.position[0], self.position[1] - self.width]
+                BR = [self.position[0], self.position[1] + self.width]
+                TR = [self.position[0] - self.width, self.position[1] + self.width]
+                TL = [self.position[0] - self.width, self.position[1] - self.width]
+            elif self.position[2] == np.pi:
+                BL = [self.position[0] + self.width, self.position[1]]
+                BR = [self.position[0] - self.width, self.position[1]]
+                TR = [self.position[0] - self.width, self.position[1] - self.width]
+                TL = [self.position[0] + self.width, self.position[1] - self.width]
+            elif self.position[2] == 3*np.pi/2:
+                BL = [self.position[0], self.position[1] + self.width]
+                BR = [self.position[0], self.position[1] - self.width]
+                TR = [self.position[0] + self.width, self.position[1] - self.width]
+                TL = [self.position[0] + self.width, self.position[1] + self.width]
+            return [TL, TR, BR, BL]
     
     def back_corners(self):
         return [self.TL(), self.TR()]
