@@ -209,14 +209,14 @@ def ind_central(positions, room, object_index):
         object_index: int, index of the object in the room's object list
     """
 
-    ## want the position to be in the middle 1/3 of x and middle 1/3 of y
+    ## want the position to be in the middle 1/3 of x or the middle 1/3 of y
     lower_x, upper_x = room.width/3, 2*room.width/3
     lower_y, upper_y = room.length/3, 2*room.length/3
     mid_x, mid_y = room.width/2, room.length/2
 
     x, y, theta = positions[3*object_index:3*object_index+3]
-    val = max(0, x - lower_x)**2 + max(0, upper_x - x)**2 + max(0, y - lower_y)**2 + max(0, upper_y - y)**2
-    val += 0.1 * (x - mid_x)**2 + 0.1 * (y - mid_y)**2
+    val = (min(0, x - lower_x)**2 + min(0, upper_x - x)**2) * (min(0, y - lower_y)**2 + min(0, upper_y - y)**2)
+    val += 0.01 * ((x - mid_x)**2 + (y - mid_y)**2)
     return val
 
 def ind_in_region(positions, room, object_index, region_name):
