@@ -80,42 +80,32 @@ def p_next_to(positions, room, object1_index, object2_index, side1 = None, side2
             distance = np.linalg.norm(np.cross(direction5, direction3)) / np.linalg.norm(direction5)
             val += distance**2
     
-    if side1 and not side2: 
-
-        mid_point = (point1 + point2)/2 
-        ## Want to minimise the distance of this side from the center of object2
-        side_dist = (np.linalg.norm(point1 - np.array([x2, y2])) + np.linalg.norm(point2 - np.array([x2, y2])) + np.linalg.norm(mid_point - np.array([x2, y2])))/3
-        other_dists = np.sqrt(np.sum((cs1 - np.array([x2, y2]))**2, axis = 0))
-        val = sum(np.clip(side_dist - other_dists, 0.0, np.inf)**2)
+    if side1 and not side2:
+        min_side_dist = np.inf
+        sides = ['front', 'back', 'left', 'right']
+        for i in range(4): 
+            side_value = p_next_to(positions, room, object1_index, object2_index, side1 = side1, side2 = sides[i])
+            min_side_dist = min(min_side_dist, side_value)
+        val += min_side_dist
+                
+        # mid_point = (point1 + point2)/2 
+        # ## Want to minimise the distance of this side from the center??? of object2
+        # side_dist = (np.linalg.norm(point1 - np.array([x2, y2])) + np.linalg.norm(point2 - np.array([x2, y2])) + np.linalg.norm(mid_point - np.array([x2, y2])))/3
+        # other_dists = np.sqrt(np.sum((cs1 - np.array([x2, y2]))**2, axis = 0))
+        # val = sum(np.clip(side_dist - other_dists, 0.0, np.inf)**2)
         return val 
-        ### Assume the opposite side each time. I.e. if object2 is  on the left of object 1, assume its the right side
-        # if side1 == 'left':
-        #     return p_next_to(positions, room, object1_index, object2_index, side1 = 'left', side2 = 'right')
-        # elif side1 == 'right':
-        #     return p_next_to(positions, room, object1_index, object2_index, side1 = 'right', side2 = 'left')
-        # elif side1 == 'top' or side1 == 'back':
-        #     return p_next_to(positions, room, object1_index, object2_index, side1 = 'top', side2 = 'bottom')
-        # elif side1 == 'bottom' or side1 == 'front':
-        #     return p_next_to(positions, room, object1_index, object2_index, side1 = 'bottom', side2 = 'top')
     if side2 and not side1:     
-        mid_point = (point3 + point4)/2 
+        min_side_dist = np.inf
+        sides = ['front', 'back', 'left', 'right']
+        for i in range(4): 
+            side_value = p_next_to(positions, room, object1_index, object2_index, side1 = sides[i], side2 = side2)
+            min_side_dist = min(min_side_dist, side_value)
+        val += min_side_dist
 
-        side_dist = (np.linalg.norm(point3 - np.array([x1, y1])) + np.linalg.norm(point4 - np.array([x1, y1])) + np.linalg.norm(mid_point - np.array([x1, y1])))/3
-        other_dists = np.sqrt(np.sum((cs2 - np.array([x1, y1]))**2, axis = 0))
-        val = sum(np.clip(side_dist - other_dists, 0.0, np.inf)**2)
         return val 
-
-        # if side2 == 'left':
-        #     return p_next_to(positions, room, object1_index, object2_index, side1 = 'right', side2 = 'left')
-        # elif side2 == 'right':
-        #     return p_next_to(positions, room, object1_index, object2_index, side1 = 'left', side2 = 'right')
-        # elif side2 == 'top' or side2 == 'back':
-        #     return p_next_to(positions, room, object1_index, object2_index, side1 = 'bottom', side2 = 'top')
-        # elif side2 == 'bottom' or side2 == 'front':
-        #     return p_next_to(positions, room, object1_index, object2_index, side1 = 'top', side2 = 'bottom')
     if not side2 and not side1: 
         ### If no sides are given, we want the two objects to be close to each other as possible from any direction
-        ### Want the distance between the two objects to be minimized
+        ### Want the distance between the two objects to be minimized but also to not be overlapping 
 
         distance = np.linalg.norm(np.array([x1, y1]) - np.array([x2, y2]))
         val += distance**2
@@ -227,7 +217,6 @@ def p_facing(positions, room, object1_index, object2_index, both = False):
         cs2 = np.array(corners(x2, y2, theta2, object2.width, object2.length))# TL, TR, BR, BL
         dir2 = np.array([cs2[3][0] - cs2[0][0], cs2[3][1] - cs2[0][1]])
         dir2 /= np.linalg.norm(dir2)
-
         val += (np.dot(dir1, dir2) + 1)**2
     return val 
 
@@ -264,7 +253,7 @@ def p_under_central(positions, room, object1_index, object2_index):
         return val
 
 def p_on_top_of(positions, room, object1_index, object2_index):
-    """ The function under ensures that object1 is on top of object2 (a rug but does not ensure that it is centered.
+    """ The function under ensures that object1 is on top of object2 (a rug) but does not ensure that it is centered.
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
@@ -276,6 +265,7 @@ def p_on_top_of(positions, room, object1_index, object2_index):
     obj2 = room.moving_objects[object2_index]   
     if obj2.name != 'rug':
         print("Only rugs can go underneath other moving objects.")
+        return 0.0
 
     else:   
         ## Under basically means that their positions are the same.
@@ -318,6 +308,8 @@ def p_infront(positions, room, object1_index, object2_index, dist = 0.8):
         room: rectangular Room object
         object1_index: int, Object object
         object2_index: int, Object object
+        dist: float, desired distance between two objects. E.g. if its a sofa and a coffee table, the distance should be around 0.8m, 
+                                                            if its a sofa and a fireplace, the distance should be around 2m/2.5m.
     """
 
     ## want object1 position to be in front of object2 position in the frame of object2
@@ -336,8 +328,56 @@ def p_infront(positions, room, object1_index, object2_index, dist = 0.8):
     val = (projection[0] - x1)**2 + (projection[1] - y1)**2
     return val
 
-def p_perpendicular_aligned(positions, room, object1_index, object2_index, center_info):
-    return 0
+def p_perpendicular_aligned(positions, room, object1_index, object2_index, center_object_index = None):
+    """ The function p_perpendicular_aligned ensures that two objects are aligned in a room perpendicularly. 
+        If center is given, the objects will be aligned about that point. For example, 
+        a sofa and chair might be aligned perpendicularly about a coffee table or a side table. Or a chair at the head of the table 
+        might be aligned perpendicularly with the chairs closest to it on the sides of the table. 
+
+        
+        Args:
+
+        positions: list of floats, x, y, theta values for all objects in the room
+        room: rectangular Room object
+        object1_index: int, index of object1 in the room
+        object2_index: int, index of object2 in the room
+        center_object_index: int, index of object in room.moving_objects to be used as the pivot for the alignment (e.g. a coffee table or a table)
+    """
+
+    val = 0.0
+    obj1, obj2 = room.moving_objects[object1_index], room.moving_objects[object2_index]
+    x1, y1, theta1 = positions[3*object1_index:3*object1_index + 3]
+    x2, y2, theta2 = positions[3*object2_index:3*object2_index + 3]
+
+    cs1 = np.array(corners(x1, y1, theta1, obj1.width, obj1.length))# TL, TR, BR, BL
+    cs2 = np.array(corners(x2, y2, theta2, obj2.width, obj2.length))
+
+    mid_front1 = (cs1[2, :] + cs1[3, :])/2
+    mid_front2 = (cs2[2, :] + cs2[3, :])/2
+
+    dir1 = (cs1[3, :] - cs1[0, :])/np.linalg.norm(cs1[3, :] - cs1[0, :])
+    dir2 = (cs2[3, :] - cs2[0, :])/np.linalg.norm(cs2[3, :] - cs2[0, :])
+
+    ### Find t1, and t2 (intersection line lengths - want there to be a right angled triangle between each object)
+    BA = mid_front2 - mid_front1
+    t1 = np.dot(np.array([dir2[1], -dir2[0]]), BA) / np.dot(np.array([dir2[1], -dir2[0]]), dir1)
+    t2 = np.dot(np.array([dir1[1], -dir1[0]]), BA) / np.dot(np.array([dir2[1], -dir2[0]]), dir1)
+    
+    if not center_object_index:
+        val += (np.linalg.norm(BA) - np.sqrt((t1**2 + t2**2)))**2 
+        val += min(0.0, t1)**2 + min(0.0, t2)**2 # t1 and t2 should be bigger than 0 
+        val += min(0.0, np.sqrt((0.8*obj1.width)**2 + (0.8*obj2.width)**2) - np.sqrt(t1**2+ t2**2))**2 # t1 and t2 should not be too big
+        val += ((max(theta1, theta2) - min(theta1, theta2)) - np.pi/2)**2 ## thetas should be pi/2 apart
+    else: 
+        center_obj = room.moving_objects[center_object_index]
+        x3, y3, theta3 = positions[3*center_object_index:3*center_object_index + 3]
+        val += (np.linalg.norm(BA) - np.sqrt((t1**2 + t2**2)))**2 ## mid_front1, mid_front2, and intersection point should make a right angled triangle 
+        val += min(0.0, t1 * t2)**2 # t1 and t2 should either both be positive or both be negative 
+        C = np.array([x1, y1]) + t1 * dir1 
+        val += (C[0] - x3)**2 + (C[1] - y3)**2 # C should be the center of the center object
+        val += min(0.0, np.sqrt((center_obj.width)**2 + (center_obj.width)**2) - np.sqrt(t1**2+ t2**2))**2 # t1 and t2 should not be too big
+        val += ((max(theta1, theta2) - min(theta1, theta2)) - np.pi/2)**2 ## thetas should be pi/2 apart
+    return val
 
 def p_parallel_aligned(positions, room, object1_index, object2_index, center_info):
     return 0

@@ -17,37 +17,38 @@ def ind_next_to_wall(positions, room, object_index, side):
 
     x, y, theta = positions[3*object_index:3*object_index+3]
     cs = np.array(corners(x, y, theta, room.moving_objects[object_index].width, room.moving_objects[object_index].length)) # TL, TR, BR, BL
-    distances = distances = np.zeros((4, 4)) # each row a different corner, each column a different wall 
+    distances =  np.zeros((4, 4)) # each row a different corner, each column a different wall 
     sides = [[0, 1], [2, 3], [0, 3], [1, 2]]
-    mid_distances = np.zeros((4, 4))
     for i in range(4):
         distances[i, :] = np.array([(cs[i][1] - room.length)**2, (cs[i][0] - room.width)**2, cs[i][1]**2, cs[i][0]**2])
-        c1, c2 = cs[sides[i][0]], cs[sides[i][1]]
-        mid_point = [(c1[0] + c2[0])/2, (c1[1] + c2[1])/2]
-        mid_distances[i, :] = np.array([(mid_point[1] - room.length)**2, (mid_point[0] - room.width)**2, mid_point[1] **2, mid_point[0]**2])
-    
+
+    distances = np.sqrt(distances)
+    side_distances = np.zeros_like(distances) # columns: N, E, S, W, rows: top, bottom, left, right
+    for i in range(4):
+        side_distances[i, :] = distances[sides[i][0], :] + distances[sides[i][1], :]
+
     val = 0 
 
     if side == "top" or side == "back":
-        wall = np.argmin(distances[0, :] + distances[1, :])
-        ds = np.sqrt(distances[:, wall])
-        val += max(ds[0] - ds[2], 0.0)**2 + max(ds[0] - ds[3], 0.0)**2 + max(ds[1] - ds[2], 0.0)**2 + max(ds[1] - ds[3], 0.0)**2
-        val += distances[0, wall] + distances[1, wall] + mid_distances[0, wall]
+        wall = np.argmin(side_distances[0, :])
+        ds = side_distances[:, wall]
+        val += (min(side_distances[0, 0], side_distances[0, 2]) * min(side_distances[0, 1], side_distances[0, 3]))
+        val += max(ds[0] - ds[1], 0.0)**2 + max(ds[0] - ds[2], 0.0)**2 + max(ds[0] - ds[3], 0.0)**2
     elif side == "bottom" or side == "front":
-        wall = np.argmin(distances[2, :] + distances[3, :])
-        ds = np.sqrt(distances[:, wall])
-        val += (max(ds[2] - ds[0], 0.0)**2 + max(ds[2] - ds[1], 0.0)**2 + max(ds[3] - ds[0], 0.0)**2 + max(ds[3] - ds[1], 0.0)**2)
-        val += distances[2, wall] + distances[3, wall] + mid_distances[1, wall]
+        wall = np.argmin(side_distances[1, :])
+        ds = side_distances[:, wall]
+        val += (min(side_distances[1, 0], side_distances[1, 2]) * min(side_distances[1, 1], side_distances[1, 3]))
+        val += max(ds[1] - ds[0], 0.0)**2 + max(ds[1] - ds[2], 0.0)**2 + max(ds[1] - ds[3], 0.0)**2
     elif side == "left":
-        wall = np.argmin(distances[0, :] + distances[3, :])
-        ds = np.sqrt(distances[:, wall])
-        val += (max(ds[0] - ds[1], 0.0)**2 + max(ds[0] - ds[2], 0.0)**2 + max(ds[3] - ds[1], 0.0)**2 + max(ds[3] - ds[2], 0.0)**2)
-        val += distances[0, wall] + distances[3, wall] + mid_distances[2, wall]
+        wall = np.argmin(side_distances[2, :])
+        ds = side_distances[:, wall]
+        val += (min(side_distances[2, 0], side_distances[2, 2]) * min(side_distances[2, 1], side_distances[2, 3]))
+        val += max(ds[2] - ds[0], 0.0)**2 + max(ds[2] - ds[1], 0.0)**2 + max(ds[2] - ds[3], 0.0)**2
     elif side == "right":
-        wall = np.argmin(distances[1, :] + distances[2, :])
-        ds = np.sqrt(distances[:, wall])
-        val += (max(ds[1] - ds[0], 0.0)**2 + max(ds[1] - ds[3], 0.0)**2 + max(ds[2] - ds[0], 0.0)**2 + max(ds[2] - ds[3], 0.0)**2)
-        val += distances[1, wall] + distances[2, wall] + mid_distances[3, wall]
+        wall = np.argmin(side_distances[3, :])
+        ds = side_distances[:, wall]
+        val += (min(side_distances[3, 0], side_distances[3, 2]) * min(side_distances[3, 1], side_distances[3, 3]))
+        val += max(ds[3] - ds[0], 0.0)**2 + max(ds[3] - ds[1], 0.0)**2 + max(ds[3] - ds[2], 0.0)**2
     else: 
         print(side + " is not a valid side of an object.")
         return 0
@@ -62,7 +63,7 @@ def ind_close_to_fixed_object(positions, room, object_index, fixed_object_type, 
         positions: list of floats, x, y, theta values for all objects in the room
         room: rectangular Room object
         object_index: int, index of the object in the room's object list
-        fixed_object_type: string, type of fixed object to check. One of 'window', 'door', 'plug'
+        fixed_object_type: string, type of fixed object to check. One of 'window', 'door', 'socket'
         side: string, one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of the object to check
     """
 
@@ -78,6 +79,8 @@ def ind_close_to_fixed_object(positions, room, object_index, fixed_object_type, 
         cs = [cs[1], cs[2]]
     
     f_objs = room.find_all(fixed_object_type)
+    if len(f_objs) == 0: 
+        print("There are no " + "fixed_object_type" + "s in the room.")
     if side: 
         dist = np.inf
         point = [(cs[0][0] + cs[1][0])/2, (cs[0][1] + cs[1][1])/2]
@@ -141,7 +144,7 @@ def ind_accessible(positions, room, object_index, sides):
     TL, TR, BR, BL = corners(x, y, theta, obj.width, obj.length)
     polys = []
 
-    def project(point1, point2, distance = min(1, max(obj.width, obj.length))):
+    def project(point1, point2, distance = min(1, np.max([obj.width, obj.length, 0.5]))):
         direction = np.array([point1[0] - point2[0], point1[1] - point2[1]])
         direction /= np.linalg.norm(direction)
         return [point1[0], point1[1]] + distance * direction
@@ -155,32 +158,41 @@ def ind_accessible(positions, room, object_index, sides):
         if side == 'top' or side == 'back':
             new_pointL = project(TL, BL)
             new_pointR = project(TR, BR)
+            if np.isnan(new_pointL.any()) or np.isnan(new_pointR.any()):
+                continue
             polys += [Polygon([TL, TR, new_pointR, new_pointL])]
             val += wall_bounds(new_pointL) + wall_bounds(new_pointR)
         elif side == 'bottom' or side == 'front':
             new_pointL = project(BL, TL) 
             new_pointR = project(BR, TR)
+            if np.isnan(new_pointL.any()) or np.isnan(new_pointR.any()):
+                continue
             polys += [Polygon([new_pointL, new_pointR, BR, BL])]
             val += wall_bounds(new_pointL) + wall_bounds(new_pointR)
         elif side == 'left':
             new_pointT = project(TL, TR)
             new_pointB = project(BL, BR)
-            polys += [Polygon([TL, BL, new_pointB, new_pointT])]
+            if np.isnan(new_pointT.any()) or np.isnan(new_pointB.any()):
+                continue
+            polys += [Polygon([TL, new_pointT, new_pointB, BL])]
             val += wall_bounds(new_pointT) + wall_bounds(new_pointB)
         elif side == 'right':
             new_pointT = project(TR, TL)
             new_pointB = project(BR, BL)
+            if np.isnan(new_pointT.any()) or np.isnan(new_pointB.any()):
+                continue
             polys += [Polygon([new_pointT, TR, BR, new_pointB])]
             val += wall_bounds(new_pointT) + wall_bounds(new_pointB)
         else: 
             print(side + " is not a valid side of the object.")
     
-    #polys += [Polygon([TL, TR, BR, BL])]
     for poly in polys:
         for i in range(len(room.moving_objects)):
             if i == object_index:
                 continue
-            poly2 = Polygon(room.moving_objects[i].corners())
+            
+            x, y, theta = positions[3*i:3*i+3]
+            poly2 = Polygon(corners(x, y, theta, room.moving_objects[i].width, room.moving_objects[i].length))
             intersection = poly.intersection(poly2)
             if intersection.area > 1e-3:
                 x = np.array([[i, j] for i, j in zip(intersection.exterior.xy[0], intersection.exterior.xy[1])])
@@ -201,12 +213,14 @@ def ind_accessible(positions, room, object_index, sides):
 
     return val
 
-def ind_central(positions, room, object_index):
+def ind_central(positions, room, object_index, both = False):
     """ This function ensures that an object is centrally placed in the room. 
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
         room: rectangular Room object
         object_index: int, index of the object in the room's object list
+        both: bool (optional), if True, then the object should be placed centrally in both x and y. For example for a bed, this would be False, 
+              but for a dining table, it should be True..
     """
 
     ## want the position to be in the middle 1/3 of x or the middle 1/3 of y
@@ -215,11 +229,27 @@ def ind_central(positions, room, object_index):
     mid_x, mid_y = room.width/2, room.length/2
 
     x, y, theta = positions[3*object_index:3*object_index+3]
-    val = (min(0, x - lower_x)**2 + min(0, upper_x - x)**2) * (min(0, y - lower_y)**2 + min(0, upper_y - y)**2)
-    val += 0.01 * ((x - mid_x)**2 + (y - mid_y)**2)
+    if both: 
+        val = 0
+        if x < lower_x: 
+            val += (lower_x - x)**2
+        elif x > upper_x: 
+            val += (x - upper_x)**2
+        else: 
+            val += 0.01*(x - mid_x)**2
+        if y < lower_y:
+            val += (lower_y - y)**2
+        elif y > upper_y:
+            val += (y - upper_y)**2
+        else:
+            val += 0.01*(y - mid_y)**2
+    else: 
+
+        val = (min(x - lower_x, 0.0) + min(upper_x - x, 0.0))*(min(y - lower_y, 0.0) + min(upper_y - y, 0.0))
+
     return val
 
-def ind_in_region(positions, room, object_index, region_name):
+def ind_in_region(positions, room, object_index, region_name, weight = 5):
     """ This function ensures that an object is in a given region. 
         
         Args:
@@ -237,9 +267,9 @@ def ind_in_region(positions, room, object_index, region_name):
             continue
         else:
             value += ((regions[i].x - x)**2 + (regions[i].y - y)**2) - ((regions[region_index].x - x)**2 + (regions[region_index].y - y)**2)
-    return min(0, value)**2
+    return 5*min(0, value)**2
 
-def ind_in_bounds(positions, room, weight = 3): 
+def ind_in_bounds(positions, room, weight = 10): 
 
     """ This function ensures that all objects are within the room. This should not be used in the objective function.
         
@@ -258,7 +288,7 @@ def ind_in_bounds(positions, room, weight = 3):
         
     return weight * val 
 
-def ind_no_overlap(positions, room, position_fixing = []):
+def ind_no_overlap(positions, room, position_fixing = [], weight = 10):
     """ This function ensures that no objects overlap in the room. This should not be used in the objective function.
         
         Args:
@@ -335,27 +365,73 @@ def ind_no_overlap(positions, room, position_fixing = []):
                 lengths = np.linalg.norm(lengths, axis = 1)
                 val += sum(lengths**2)   
 
-    return val 
+    return weight * val 
 
-# def ind_not_block_fixed_object(positions, room, object_index, fixed_object_type):
+def ind_not_block_fixed_object(positions, room, object_index, fixed_object_type):
 
-#     """ This function ensures that an object does not block a fixed object in the room. 
-#         E.g. a wardrobe shouldn't block a window.
+    """ This function ensures that an object does not block a fixed object in the room. 
+        E.g. a wardrobe shouldn't block a window.
         
-#         Args:
-#         positions: list of floats, x, y, theta values for all objects in the room
-#         room: rectangular Room object
-#         object_index: int, index of the object in the room's object list
-#         cardinal_direction: string, one of 'N', 'S', 'E', 'W', defines which wall to check
-#         side: string, one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of the object to check e.g back of bed 
-#     """
+        Args:
+        positions: list of floats, x, y, theta values for all objects in the room
+        room: rectangular Room object
+        object_index: int, index of the object in the room's object list
+        fixed_object_type: string, type of fixed object to check. E.g one of 'window', 'door', 'plug'
+    """
 
-#     obj = room.moving_objects[object_index]
-#     x, y, theta = positions[3*object_index:3*object_index+2]
-#     cs = corners(x, y, theta, obj.width, obj.length)
-#     fixed_objs = room.find_all(fixed_object_type)
+    val = 0
+    fixed_objects = room.find_all(fixed_object_type)
+    x, y, theta = positions[3*object_index:3*object_index+3]
+    obj = room.moving_objects[object_index]
+    cs = corners(x, y, theta, obj.width, obj.length)
+    poly = Polygon(cs)
 
-#     polygons = []
+    for obj in fixed_objects: 
+        if obj.name == 'window':
+            x, y, theta = obj.position
+            cs = corners(x, y, theta, obj.width, min(obj.length, 1))
+            poly_fixed = Polygon(cs)
+            intersection = poly.intersection(poly_fixed)
+            if intersection.area > 1e-3:
+                x = np.array([[i, j] for i, j in zip(intersection.exterior.xy[0], intersection.exterior.xy[1])])
+                lengths = np.roll(x, -1, axis = 0) - x
+                lengths = np.linalg.norm(lengths, axis = 1)
+                val += sum(lengths**2)  
+        elif obj.name == 'door':
+            door_corners = []
+            if obj.position[2] == 0:
+                door_corners += [[obj.position[0] - obj.width, obj.position[1]]]
+                door_corners += [[obj.position[0] + obj.width, obj.position[1]]]
+                door_corners += [[obj.position[0] + obj.width, obj.position[1] + obj.width]]
+                door_corners += [[obj.position[0] - obj.width, obj.position[1] + obj.width]]
+            elif obj.position[2] == np.pi/2:
+                door_corners += [[obj.position[0], obj.position[1] - obj.width]]
+                door_corners += [[obj.position[0] - obj.width, obj.position[1] - obj.width]]
+                door_corners += [[obj.position[0] - obj.width, obj.position[1] + obj.width]]
+                door_corners += [[obj.position[0], obj.position[1] + obj.width]]
+            elif obj.position[2] == np.pi:
+                door_corners += [[obj.position[0] + obj.width, obj.position[1]]]
+                door_corners += [[obj.position[0] + obj.width, obj.position[1] - obj.width]]
+                door_corners += [[obj.position[0] - obj.width, obj.position[1] - obj.width]]
+                door_corners += [[obj.position[0] - obj.width, obj.position[1]]]
+            elif obj.position[2] == 3*np.pi/2:
+                door_corners += [[obj.position[0], obj.position[1] + obj.width]]
+                door_corners += [[obj.position[0] + obj.width, obj.position[1] + obj.width]]
+                door_corners += [[obj.position[0] + obj.width, obj.position[1] - obj.width]]
+                door_corners += [[obj.position[0], obj.position[1] - obj.width]]
+
+            poly_fixed = Polygon(door_corners)
+            intersection = poly.intersection(poly_fixed)
+            if intersection.area > 1e-3:
+                x = np.array([[i, j] for i, j in zip(intersection.exterior.xy[0], intersection.exterior.xy[1])])
+                lengths = np.roll(x, -1, axis = 0) - x
+                lengths = np.linalg.norm(lengths, axis = 1)
+                val += sum(lengths**2)  
+
+        else: 
+            return 0.0
+                
+    return val
 
 def ind_under_window(positions, room, object_index):
 
@@ -368,7 +444,7 @@ def ind_under_window(positions, room, object_index):
         room: rectangular Room object
     """ 
 
-    x, y = positions[3*object_index, 3*object_index + 2]
+    x, y = positions[3*object_index], positions[3*object_index + 2]
     windows = room.find_all('window')
     min_dist = np.inf
     for window in windows: 
@@ -378,7 +454,35 @@ def ind_under_window(positions, room, object_index):
 
     return min_dist
 
+def ind_aligned(positions, room):
+    """ ind_aligned is a function that penalises orientations that are not one of the cardinal directions.
+        Since most furniture in a room is in one of the cardinal directions, we want to encourage this. 
+        This constraint is quite week in order to not prevent rotations. This should be used in all rooms.
 
+        Args: 
+        positions: list of floats, x, y, theta values for all objects in the room
+        room: rectangular Room object
+    """
+
+    val = 0
+    for i in range(len(room.moving_objects)):
+        theta = positions[3*i + 2]
+        val += (np.sin(2*theta)**2)/5
+    return val
+
+def FIX(positions, room, object_indices, weight = 10):
+    """ FIX is a function that fixes the positions of moving_objects in the room. This should be applied to every primary object in the 
+        room when optimising the position of the secondary objects...
+
+        Args: 
+        positions: list of floats, x, y, theta values for all objects in the room
+        room: rectangular Room object
+    """
+    val = 0
+    for i in object_indices: 
+        val += np.linalg.norm(positions[3*i: 3*i + 3] - room.moving_objects[i].position)**2
+    
+    return weight*val 
 
 
 

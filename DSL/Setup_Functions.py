@@ -165,3 +165,13 @@ def create_moving_object(room, name, width, length, region_name, index):
     return
 
 
+def distance_point_from_line(p1, p2, p):
+    """ Perpendicular distance of p from the line going from p1 to p2. 
+        Args: 
+        p1: tuple, point 1
+        p2: tuple, point 2
+        p: tuple, point to find distance from
+        
+    """
+    dist = abs((p2[1] - p1[1])*p[0] - (p2[0] - p1[0])*p[1] + p2[0]*p1[1] - p2[1]*p1[0])/np.sqrt((p2[0] - p1[0])**2 + (p2[1] - p1[1])**2)
+    return dist 
