@@ -4,14 +4,12 @@ from shapely.geometry import Polygon
 
 def ind_next_to_wall(positions, room, object_index, side):
     """ This function ensures an object is next to a wall in a room. 
-        If cardinal_direction is given, a specific wall will be used. If side is given, 
-        the specific side of the object will be used.
+        The specific side of the object will be used.
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
         room: rectangular Room object
         object_index: int, index of the object in the room's object list
-        cardinal_direction: string, one of 'N', 'S', 'E', 'W', defines which wall to check
         side: string, one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of the object to check e.g back of bed 
     """
 
@@ -112,6 +110,8 @@ def ind_away_from_fixed_object(positions, room, object_index, fixed_object_type,
     w, l = room.moving_objects[object_index].width, room.moving_objects[object_index].length
     half_diag = (w**2 + l**2)/4
     f_objs = room.find_all(fixed_object_type)
+    if len(f_objs) == 0:
+        return 0.0
 
     ## If any of the corners are within the minimum distance, return the sum of the distances
     distances = np.zeros(len(f_objs))
@@ -260,6 +260,8 @@ def ind_in_region(positions, room, object_index, region_name, weight = 5):
     """
     regions = room.regions
     region_index = room.find_region_index(region_name)
+    if region_index == None: 
+        return 0.0
     x, y = positions[3*object_index:3*object_index+2]
     value = 0 
     for i in range(len(regions)):
@@ -458,7 +460,6 @@ def ind_aligned(positions, room):
     """ ind_aligned is a function that penalises orientations that are not one of the cardinal directions.
         Since most furniture in a room is in one of the cardinal directions, we want to encourage this. 
         This constraint is quite week in order to not prevent rotations. This should be used in all rooms.
-
         Args: 
         positions: list of floats, x, y, theta values for all objects in the room
         room: rectangular Room object
@@ -468,6 +469,73 @@ def ind_aligned(positions, room):
     for i in range(len(room.moving_objects)):
         theta = positions[3*i + 2]
         val += (np.sin(2*theta)**2)/5
+    return val
+
+def ind_facing_into_room(positions, room, object_index):
+    """ ind_facing_into_room is a function that ensures and object faces into the center of the room. 
+        E.g. an armchair might face into the room.
+
+        Args: 
+        positions: list of floats, x, y, theta values for all objects in the room
+        room: rectangular Room object
+        object_index: int, index of the object in the room's object list
+        
+    """
+    val = 0
+    x, y, theta = positions[3*object_index:3*object_index+3]
+    bl = BL(x, y, theta, room.moving_objects[object_index].width, room.moving_objects[object_index].length)
+    tl = TL(x, y, theta, room.moving_objects[object_index].width, room.moving_objects[object_index].length)
+
+    direction1 = np.array([room.width/2 - x, room.length/2 - y])
+    direction1 /= np.linalg.norm(direction1)
+
+    direction2 = np.array([tl[0] - bl[0], tl[1] - bl[1]])
+    direction2 /= np.linalg.norm(direction2)
+
+    angle = np.arccos(np.dot(direction1, direction2))
+    val += max(0.0, angle - np.pi/4)**2
+
+    return val 
+
+def ind_not_against_wall(positions, room, object_index, side = None, min_dist = 0.5):
+
+    """ ind_not_against_wall is a function that ensures and object is not against a wall. 
+        If a side is given, it will ensure that the specific side is not against a wall.
+
+        Args:
+        positions: list of floats, x, y, theta values for all objects in the room
+        room: rectangular Room object
+        object_index: int, index of the object in the room's object list
+        side: string, one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of the object to check e.g back of bed   
+        min_dist: float, minimum distance the object should be from the wall 
+    """
+    val = 0.0
+    x, y, theta = positions[3*object_index:3*object_index+3]
+    cs = np.array(corners(x, y, theta, room.moving_objects[object_index].width, room.moving_objects[object_index].length)) # TL, TR, BR, BL
+
+    distances =  np.zeros((4, 4)) # each row a different corner, each column a different wall 
+    sides = [[0, 1], [2, 3], [0, 3], [1, 2]]
+    for i in range(4):
+        distances[i, :] = np.array([(cs[i][1] - room.length)**2, (cs[i][0] - room.width)**2, cs[i][1]**2, cs[i][0]**2])
+
+    distances = np.sqrt(distances)
+    side_distances = np.zeros_like(distances) # columns: N, E, S, W, rows: top, bottom, left, right
+    for i in range(4):
+        side_distances[i, :] = distances[sides[i][0], :] + distances[sides[i][1], :]
+
+    val = 0 
+
+    if side == "top" or side == "back":
+        val += max(0.0, np.min(side_distances[0, :]) - min_dist)**2
+    elif side == "bottom" or side == "front":
+        val += max(0.0, np.min(side_distances[1, :]) - min_dist)**2
+    elif side == "left":
+        val += max(0.0, np.min(side_distances[2, :]) - min_dist)**2
+    elif side == "right":
+        val += max(0.0, np.min(side_distances[3, :]) - min_dist)**2
+    else: 
+        val += max(0.0, min(distances) - min_dist)**2
+    
     return val
 
 def FIX(positions, room, object_indices, weight = 10):

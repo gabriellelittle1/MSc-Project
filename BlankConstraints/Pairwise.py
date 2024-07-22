@@ -57,6 +57,7 @@ def p_facing(positions, room, object1_index, object2_index, both = False):
 
 def p_under_central(positions, room, object1_index, object2_index):
     """ The function under ensures that object1 (a rug) is underneath object2 (any moving_object) and centered.
+        object1 MUST be a rug.
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
@@ -68,8 +69,9 @@ def p_under_central(positions, room, object1_index, object2_index):
     return
 
 def p_on_top_of(positions, room, object1_index, object2_index):
-    """ The function under ensures that object1 is on top of object2 (a rug but does not ensure that it is centered.
-        
+    """ The function under ensures that object1 is on top of object2 (a rug)but does not ensure that it is centered.
+        object2 MUST be a rug. 
+
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
         room: rectangular Room object
@@ -111,9 +113,6 @@ def p_perpendicular_aligned(positions, room, object1_index, object2_index, cente
 
     return
 
-def p_parallel_aligned(positions, room, object1_index, object2_index, center_info):
-    return 0
-
 def p_surround(positions, room, central_object_index, object_indices):
     """ The function p_surroudn ensures that central_object is surrounded by all the objects in object_indices.
         This would be used for chairs around a dining table.
@@ -126,3 +125,14 @@ def p_surround(positions, room, central_object_index, object_indices):
     """
 
     return
+
+def p_not_facing(positions, room, object1_index, object2_index):
+    """ The function facing ensures that object1 is NOT facing object2 in a room.
+        
+        Args:
+        positions: list of floats, x, y, theta values for all objects in the room
+        room: rectangular Room object
+        object1_index: int, index of object1 in the room
+        object2_index: int, index of object2 in the room
+    """
+    return 

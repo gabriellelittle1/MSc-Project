@@ -4,21 +4,19 @@ from shapely.geometry import Polygon
 
 def ind_next_to_wall(positions, room, object_index, side):
     """ This function ensures an object is next to a wall in a room. 
-        If cardinal_direction is given, a specific wall will be used. If side is given, 
-        the specific side of the object will be used.
+        The specific side of the object will be used.
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
         room: rectangular Room object
-        object_index: int, index of the object in the room's object list
-        cardinal_direction: string, one of 'N', 'S', 'E', 'W', defines which wall to check
-        side: string, one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of the object to check e.g back of bed 
+        object_index: int, index of the object in the room's object list)
+        side: string, one of 'top' or 'back' (for things like headboard of bed, or back of bookshelf), 'bottom' or 'front' (for things like foot of bed or front of bookshelf), 'left', 'right', defines which side of the object to check e.g back of bed 
     """
 
     return
     
 def ind_close_to_fixed_object(positions, room, object_index, fixed_object_type, side = None, max_dist = 0.5):
-    """ This function ensures an object is next to a fixed object in a room. 
+    """ The function ind_close_to_fixed_object ensures an object is next to a fixed object in a room. 
         If side is given, the specific side of the object will be used.
         
         Args:
@@ -26,7 +24,7 @@ def ind_close_to_fixed_object(positions, room, object_index, fixed_object_type, 
         room: rectangular Room object
         object_index: int, index of the object in the room's object list
         fixed_object_type: string, type of fixed object to check. One of 'window', 'door', 'socket'
-        side: string, one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of the object to check
+        side: string, one of 'top' or 'back' (for things like headboard of bed, or back of bookshelf), 'bottom' or 'front' (for things like foot of bed or front of bookshelf), 'left', 'right', defines which side of the object to check e.g back of bed 
     """
 
     return
@@ -51,7 +49,8 @@ def ind_accessible(positions, room, object_index, sides):
         positions: list of floats, x, y, theta values for all objects in the room
         room: rectangular Room object
         object_index: int, index of the object in the room's object list
-        sides: a list of strings, each one one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of the object to check
+        sides: list of strings, each string one of 'top' or 'back' (for things like headboard of bed, or back of bookshelf), 'bottom' or 'front' (for things like foot of bed or front of bookshelf), 
+              'left', 'right', defines which side of the object to check
     """
     
     return
@@ -126,6 +125,49 @@ def ind_aligned(positions, room):
     """
 
     return
+
+def ind_facing_into_room(positions, room, object_index):
+    """ ind_facing_into_room is a function that ensures and object faces into the center of the room. 
+        E.g. an armchair might face into the room.
+
+        Args: 
+        positions: list of floats, x, y, theta values for all objects in the room
+        room: rectangular Room object
+        object_index: int, index of the object in the room's object list
+        
+    """
+    return
+
+def ind_in_region(positions, room, object_index, region_name, weight = 5):
+    """ This function ensures that an object is in a given region. This should NOT be used with the optimize_primary_objects function.
+        
+        Args:
+        positions: list of floats, x, y, theta values for all objects in the room
+        room: rectangular Room object
+        object_index: int, index of the object in the room's object list
+        region_name: string, name of the region for the object to be in 
+    """
+
+    return 
+
+
+
+def ind_not_against_wall(positions, room, object_index, side = None, min_dist = 0.5):
+
+    """ ind_not_against_wall is a function that ensures and object is not against a wall. 
+        If a side is given, it will ensure that the specific side is not against a wall.
+
+        Args:
+        positions: list of floats, x, y, theta values for all objects in the room
+        room: rectangular Room object
+        object_index: int, index of the object in the room's object list
+        side: string, one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of the object to check e.g back of bed   
+        min_dist: float, minimum distance the object should be from the wall 
+    """
+
+    return 
+
+
 
 
 

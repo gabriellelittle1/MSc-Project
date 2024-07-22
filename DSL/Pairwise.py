@@ -231,7 +231,7 @@ def p_under_central(positions, room, object1_index, object2_index):
     """
 
     obj1 = room.moving_objects[object1_index]   
-    if obj1.name != 'rug':
+    if 'rug' not in obj1.name:
         print("Only rugs can go underneath other moving objects.")
         return 0.0
     else:   
@@ -263,7 +263,7 @@ def p_on_top_of(positions, room, object1_index, object2_index):
     """
 
     obj2 = room.moving_objects[object2_index]   
-    if obj2.name != 'rug':
+    if 'rug' not in obj2.name:
         print("Only rugs can go underneath other moving objects.")
         return 0.0
 
@@ -379,8 +379,6 @@ def p_perpendicular_aligned(positions, room, object1_index, object2_index, cente
         val += ((max(theta1, theta2) - min(theta1, theta2)) - np.pi/2)**2 ## thetas should be pi/2 apart
     return val
 
-def p_parallel_aligned(positions, room, object1_index, object2_index, center_info):
-    return 0
 
 def p_surround(positions, room, central_object_index, object_indices):
     """ The function p_surroudn ensures that central_object is surrounded by all the objects in object_indices.
@@ -406,3 +404,32 @@ def p_surround(positions, room, central_object_index, object_indices):
         val += p_facing(positions, room, object_indices[i], central_object_index)
 
     return val
+
+def p_not_facing(positions, room, object1_index, object2_index):
+    """ The function facing ensures that object1 is NOT facing object2 in a room.
+        
+        Args:
+        positions: list of floats, x, y, theta values for all objects in the room
+        room: rectangular Room object
+        object1_index: int, index of object1 in the room
+        object2_index: int, index of object2 in the room
+    """
+    val = 0.0
+
+    object1 = room.moving_objects[object1_index]
+    x1, y1, theta1 = positions[3*object1_index:3*object1_index + 3]
+    x2, y2 = positions[3*object2_index:3*object2_index + 2]
+
+    cs1 = np.array(corners(x1, y1, theta1, object1.width, object1.length))# TL, TR, BR, BL
+    tl1, tr1, br1, bl1 = cs1
+    dir1 = np.array([bl1[0] - tl1[0], bl1[1] - tl1[1]])
+    dir1 /= np.linalg.norm(dir1)
+
+    ## Line 1 goes from front left corner onward, line 2 goes from front right corner 
+    ## distance of object2 from line1
+    dist1 = abs((bl1[1] - tl1[1])*x2 - (bl1[0] - tl1[0])*y2 + bl1[0]*tl1[1] - bl1[1]*tl1[0])/np.sqrt((bl1[0] - tl1[0])**2 + (bl1[1] - tl1[1])**2)
+    ## distance of object2 from line2
+    dist2 = abs((br1[1] - tr1[1])*x2 - (br1[0] - tr1[0])*y2 + br1[0]*tr1[1] - br1[1]*tr1[0])/np.sqrt((br1[0] - tr1[0])**2 + (br1[1] - tr1[1])**2)
+    ## distance between the two lines is width, therefore want dist1 + dist2 > width 
+    val += min((dist1 + dist2) - object1.width, 0.0)**2
+    return val 
