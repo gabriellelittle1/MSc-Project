@@ -86,7 +86,7 @@ def remove_object(room, obj):
     """
     if obj in room.fixed_objects:
         room.fixed_objects.remove(obj)
-    elif obj in room.movable_objects:
+    elif obj in room.moving_objects:
         room.moving_objects.remove(obj)
     return
 
@@ -160,7 +160,7 @@ def create_moving_object(room, name, width, length, region_name, index):
     else: 
         obj_y = new_object.position[1]
 
-    room.moving_objects += [Object(name, width, length, (obj_x, obj_y, obj_theta), index)]
+    room.moving_objects += [Object(name, width, length, (obj_x, obj_y, obj_theta), index, region = region_name)]
 
     return
 

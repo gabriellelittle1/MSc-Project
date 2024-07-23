@@ -6,7 +6,8 @@ def p_next_to(positions, room, object1_index, object2_index, side1 = None, side2
     """ The function next_to ensures that two objects are next to each other in a room. 
         If side1 is given, the specific side of object1 will be used. If side2 is given, 
         the specific side of object2 will be used. E.g. the 'front' of the chair should be next to the 'back' of the desk. 
-        
+        If no side is given, then any of the sides will be used.
+
         Args:
         room: rectangular Room object
         object1: Object object
@@ -134,5 +135,20 @@ def p_not_facing(positions, room, object1_index, object2_index):
         room: rectangular Room object
         object1_index: int, index of object1 in the room
         object2_index: int, index of object2 in the room
+    """
+    return 
+
+def p_between(positions, room, object1_index, object2_index, object3_index): 
+    
+    """ The function p_between ensures that object1 is in between the two objects object2 and object3. 
+        This would be used for something like a side table being between two chairs, or maybe a bed being between two nightstands. 
+        Or even a nightstand going between two beds.
+        
+        Args: 
+        positions: list of floats, x, y, theta values for all objects in the room
+        room: rectangular Room object
+        object1_index: int, index of object1 in the room (** this is the object that will go in between the other two objects)
+        object2_index: int, index of object2 in the room
+        object3_index: int, index of object3 in the room
     """
     return 

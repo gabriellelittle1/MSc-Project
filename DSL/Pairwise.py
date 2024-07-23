@@ -33,7 +33,7 @@ def p_next_to(positions, room, object1_index, object2_index, side1 = None, side2
         elif side1 == 'right':
             point1, point2 = cs1[1], cs1[2]
         else:
-            print("Invalid side for object1, continuing with no side.")
+            #print("Invalid side for object1, continuing with no side.")
             return p_next_to(positions, room, object1_index, object2_index, side2 = side2)
     if side2: 
         if side2 == 'top' or side2 == 'back':
@@ -45,7 +45,7 @@ def p_next_to(positions, room, object1_index, object2_index, side1 = None, side2
         elif side2 == 'right':
             point3, point4 = cs2[1], cs2[2]
         else:
-            print("Invalid side for object2, continuing with no side.")
+            #print("Invalid side for object2, continuing with no side.")
             return p_next_to(positions, room, object1_index, object2_index, side1 = side1)
     if side1 and side2:
 
@@ -88,12 +88,8 @@ def p_next_to(positions, room, object1_index, object2_index, side1 = None, side2
             min_side_dist = min(min_side_dist, side_value)
         val += min_side_dist
                 
-        # mid_point = (point1 + point2)/2 
-        # ## Want to minimise the distance of this side from the center??? of object2
-        # side_dist = (np.linalg.norm(point1 - np.array([x2, y2])) + np.linalg.norm(point2 - np.array([x2, y2])) + np.linalg.norm(mid_point - np.array([x2, y2])))/3
-        # other_dists = np.sqrt(np.sum((cs1 - np.array([x2, y2]))**2, axis = 0))
-        # val = sum(np.clip(side_dist - other_dists, 0.0, np.inf)**2)
         return val 
+    
     if side2 and not side1:     
         min_side_dist = np.inf
         sides = ['front', 'back', 'left', 'right']
@@ -133,7 +129,7 @@ def p_aligned(positions, room, object1_index, object2_index, center_object_info 
     """ The function aligned ensures that two objects are aligned in a room. 
         If center is given, the objects will be aligned about that point. For example, 
         2 nightstands should be aligned about the bed. If center is not given, the objects will 
-        be made close together with their orientations the same. 
+        be made close together with their orientations the same (i.e. parallel aligned). 
         
         Args:
 
@@ -433,3 +429,28 @@ def p_not_facing(positions, room, object1_index, object2_index):
     ## distance between the two lines is width, therefore want dist1 + dist2 > width 
     val += min((dist1 + dist2) - object1.width, 0.0)**2
     return val 
+
+def p_between(positions, room, object1_index, object2_index, object3_index): 
+    
+    """ The function p_between ensures that object1 is in between the two objects object2 and object3. 
+        This would be used for something like a side table being between two chairs, or maybe a bed being between two nightstands. 
+        Or even a nightstand going between two beds.
+        
+        Args: 
+        positions: list of floats, x, y, theta values for all objects in the room
+        room: rectangular Room object
+        object1_index: int, index of object1 in the room (** this is the object that will go in between the other two objects)
+        object2_index: int, index of object2 in the room
+        object3_index: int, index of object3 in the room
+    """
+
+    vali1 = p_next_to(positions, room, object1_index, object2_index, side1 = 'left', side2 = 'right')
+    valj1 = p_next_to(positions, room, object1_index, object3_index, side1 = 'right', side2 = 'left')
+    val1 = vali1 + valj1
+
+    vali2 = p_next_to(positions, room, object1_index, object2_index, side1 = 'right', side2 = 'left')
+    valj2 = p_next_to(positions, room, object1_index, object3_index, side1 = 'left', side2 = 'right')
+    val2 = vali2 + valj2
+
+    return min(val1, val2)
+

@@ -2,9 +2,9 @@
 from Class_Structures import *
 from shapely.geometry import Polygon
 
-def ind_next_to_wall(positions, room, object_index, side):
+def ind_next_to_wall(positions, room, object_index, side = 'back'):
     """ This function ensures an object is next to a wall in a room. 
-        The specific side of the object will be used.
+        The specific side of the object will be used. If no side is given, the back of the object will be used.
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
@@ -48,8 +48,8 @@ def ind_next_to_wall(positions, room, object_index, side):
         val += (min(side_distances[3, 0], side_distances[3, 2]) * min(side_distances[3, 1], side_distances[3, 3]))
         val += max(ds[3] - ds[0], 0.0)**2 + max(ds[3] - ds[1], 0.0)**2 + max(ds[3] - ds[2], 0.0)**2
     else: 
-        print(side + " is not a valid side of an object.")
-        return 0
+        ## Assume side is meant to be back, 
+        return ind_next_to_wall(positions, room, object_index, 'back') 
     
     return val
     
@@ -123,9 +123,10 @@ def ind_away_from_fixed_object(positions, room, object_index, fixed_object_type,
     
     return val
 
-def ind_accessible(positions, room, object_index, sides):
+def ind_accessible(positions, room, object_index, sides = []):
     """ This function ensures that an object is accessible from given sides. 
-        
+        If no sides are given, all the sides will be used.
+    
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
         room: rectangular Room object
@@ -365,7 +366,7 @@ def ind_no_overlap(positions, room, position_fixing = [], weight = 10):
                 x = np.array([[i, j] for i, j in zip(intersection.exterior.xy[0], intersection.exterior.xy[1])])
                 lengths = np.roll(x, -1, axis = 0) - x
                 lengths = np.linalg.norm(lengths, axis = 1)
-                val += sum(lengths**2)   
+                val += 3*sum(lengths**2)   
 
     return weight * val 
 
@@ -534,7 +535,7 @@ def ind_not_against_wall(positions, room, object_index, side = None, min_dist = 
     elif side == "right":
         val += max(0.0, np.min(side_distances[3, :]) - min_dist)**2
     else: 
-        val += max(0.0, min(distances) - min_dist)**2
+        val += max(0.0, np.min(distances) - min_dist)**2
     
     return val
 

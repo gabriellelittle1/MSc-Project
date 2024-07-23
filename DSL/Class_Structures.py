@@ -27,7 +27,7 @@ def back_corners(x, y, theta, w, l):
 
 class Object:
 
-    def __init__(self, name, width, length, position = None, index = None):
+    def __init__(self, name, width, length, position = None, index = None, region = None):
 
         """ Initialization of an object in a scene. 
             Inputs: 
@@ -49,6 +49,12 @@ class Object:
         self.name = name
         self.width = width 
         self.length = length
+        self.index = index
+        if region: 
+            self.region = region
+        else: 
+            self.region = None
+
     
     def TR(self):
         x, y, theta = self.position
