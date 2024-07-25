@@ -1,7 +1,6 @@
 import numpy as np 
 from Class_Structures import * 
 from shapely.geometry import Polygon
-from Individual import positions_index, get_position
 
 def p_next_to(positions, room, object1_index, object2_index, side1 = None, side2 = None):
     """ The function next_to ensures that two objects are next to each other in a room. 
@@ -19,9 +18,8 @@ def p_next_to(positions, room, object1_index, object2_index, side1 = None, side2
     obj1 = room.moving_objects[object1_index]
     obj2 = room.moving_objects[object2_index]
 
-    x1, y1, theta1 = get_position(positions, room, object1_index)
-    x2, y2, theta2 = get_position(positions, room, object2_index)
-
+    x1, y1, theta1 = positions[3*object1_index:3*object1_index+3]
+    x2, y2, theta2 = positions[3*object2_index:3*object2_index+3]
     cs1 = np.array(corners(x1, y1, theta1, obj1.width, obj1.length)) # TL, TR, BR, BL
     cs2 = np.array(corners(x2, y2, theta2, obj2.width, obj2.length)) # TL, TR, BR, BL
 
@@ -118,8 +116,8 @@ def p_away_from(positions, room, object1_index, object2_index, min_dist = 2):
         object2_index: int, index of object2 in the room
 
     """
-    x1, y1, _ = get_position(positions, room, object1_index)
-    x2, y2, _ = get_position(positions, room, object2_index)
+    x1, y1 = positions[3*object1_index:3*object1_index + 2]
+    x2, y2 = positions[3*object2_index:3*object2_index + 2]
 
     distance = np.sqrt((x1 - x2)**2 + (y1 - y2)**2)
 
@@ -139,8 +137,8 @@ def p_aligned(positions, room, object1_index, object2_index, center_object_info 
         object2_index: int, index of object2 in the room
         center_object_info: optional list where first element is the name of the object e.g. 'window' or 'bed' and the second element is the object index.
     """
-    x1, y1, theta1 = get_position(positions, room, object1_index)
-    x2, y2, theta2 = get_position(positions, room, object2_index)
+    x1, y1, theta1 = positions[3*object1_index:3*object1_index + 3]
+    x2, y2, theta2 = positions[3*object2_index:3*object2_index + 3]
 
     val = 0 
 
@@ -149,7 +147,7 @@ def p_aligned(positions, room, object1_index, object2_index, center_object_info 
         if name == 'window' or name == 'door' or name == 'socket':
             x, y = room.fixed_objects[index].position[:2]
         else: 
-            x, y, theta = get_position(positions, room, index)
+            x, y = positions[3*index:3*index + 2]
 
         dist1 = np.sqrt((x - x1)**2 + (y - y1)**2)
         dist2 = np.sqrt((x - x2)**2 + (y - y2)**2)
@@ -190,8 +188,8 @@ def p_facing(positions, room, object1_index, object2_index, both = False):
     val = 0.0
 
     object1, object2 = room.moving_objects[object1_index], room.moving_objects[object2_index]
-    x1, y1, theta1 = get_position(positions, room, object1_index)
-    x2, y2, theta2 = get_position(positions, room, object2_index)
+    x1, y1, theta1 = positions[3*object1_index:3*object1_index + 3]
+    x2, y2, theta2 = positions[3*object2_index:3*object2_index + 3]
 
     cs1 = np.array(corners(x1, y1, theta1, object1.width, object1.length))# TL, TR, BR, BL
     tl1, tr1, br1, bl1 = cs1
@@ -232,8 +230,8 @@ def p_under_central(positions, room, object1_index, object2_index):
 
         ## Under basically means that their positions are the same.
         # obj2 = room.moving_objects[object2_index] 
-        x1, y1, theta1 = get_position(positions, room, object1_index)
-        x2, y2, theta2 = get_position(positions, room, object2_index)
+        x1, y1, theta1 = positions[3*object1_index:3*object1_index + 3]
+        x2, y2, theta2 = positions[3*object2_index:3*object2_index + 3]
         # cs1 = np.array(corners(x1, y1, theta1, obj1.width, obj1.width)).reshape(-1, 2) # TL, TR, BR, BL
         # cs2 = np.array(corners(x2, y2, theta2, obj2.width, obj2.width)).reshape(-1, 2) 
         # dists = np.zeros((4, 4))
@@ -266,8 +264,8 @@ def p_on_top_of(positions, room, object1_index, object2_index):
     else:   
         ## Under basically means that their positions are the same.
         obj1 = room.moving_objects[object1_index] 
-        x1, y1, theta1 = get_position(positions, room, object1_index)
-        x2, y2, theta2 = get_position(positions, room, object2_index)
+        x1, y1, theta1 = positions[3*object1_index:3*object1_index + 3]
+        x2, y2, theta2 = positions[3*object2_index:3*object2_index + 3]
         cs1 = corners(x1, y1, theta1, obj1.width, obj1.length)
         cs2 = corners(x2, y2, theta2, obj2.width, obj2.length)
         poly1 = Polygon(cs1)
@@ -309,8 +307,8 @@ def p_infront(positions, room, object1_index, object2_index, dist = 0.8):
     """
 
     ## want object1 position to be in front of object2 position in the frame of object2
-    x1, y1, theta1 = get_position(positions, room, object1_index)
-    x2, y2, theta2 = get_position(positions, room, object2_index)
+    x1, y1, theta1 = positions[3*object1_index:3*object1_index + 3]
+    x2, y2, theta2 = positions[3*object2_index:3*object2_index + 3]
 
     obj1 = room.moving_objects[object1_index]
     obj2 = room.moving_objects[object2_index]
@@ -342,8 +340,8 @@ def p_perpendicular_aligned(positions, room, object1_index, object2_index, cente
 
     val = 0.0
     obj1, obj2 = room.moving_objects[object1_index], room.moving_objects[object2_index]
-    x1, y1, theta1 = get_position(positions, room, object1_index)
-    x2, y2, theta2 = get_position(positions, room, object2_index)
+    x1, y1, theta1 = positions[3*object1_index:3*object1_index + 3]
+    x2, y2, theta2 = positions[3*object2_index:3*object2_index + 3]
 
     cs1 = np.array(corners(x1, y1, theta1, obj1.width, obj1.length))# TL, TR, BR, BL
     cs2 = np.array(corners(x2, y2, theta2, obj2.width, obj2.length))
@@ -373,7 +371,7 @@ def p_perpendicular_aligned(positions, room, object1_index, object2_index, cente
         val += (C[0] - x3)**2 + (C[1] - y3)**2 # C should be the center of the center object
         val += min(0.0, np.sqrt((center_obj.width)**2 + (center_obj.width)**2) - np.sqrt(t1**2+ t2**2))**2 # t1 and t2 should not be too big
         val += ((max(theta1, theta2) - min(theta1, theta2)) - np.pi/2)**2 ## thetas should be pi/2 apart
-    return val
+    return va
 
 def p_surround(positions, room, central_object_index, object_indices):
     """ The function p_surroudn ensures that central_object is surrounded by all the objects in object_indices.
@@ -388,11 +386,10 @@ def p_surround(positions, room, central_object_index, object_indices):
 
     val = 0
 
-    center_x, center_y, center_theta = get_position(positions, room, central_object_index)
+    center_x, center_y = positions[3*central_object_index:3*central_object_index + 2]
 
     pos = np.array(positions).reshape(-1, 3)
-    indices = [positions_index(room, i) for i in object_indices]
-    pos = pos[indices, :]
+    pos = pos[object_indices, :]
 
     center_of_mass = np.mean(pos[:, :2], axis = 0)
     val += (center_of_mass[0] - center_x)**2 + (center_of_mass[1] - center_y)**2 # center of mass of all the objects
@@ -413,8 +410,8 @@ def p_not_facing(positions, room, object1_index, object2_index):
     val = 0.0
 
     object1 = room.moving_objects[object1_index]
-    x1, y1, theta1 = get_position(positions, room, object1_index)
-    x2, y2, theta2 = get_position(positions, room, object2_index)
+    x1, y1, theta1 = positions[3*object1_index:3*object1_index + 3]
+    x2, y2 = positions[3*object2_index:3*object2_index + 2]
 
     cs1 = np.array(corners(x1, y1, theta1, object1.width, object1.length))# TL, TR, BR, BL
     tl1, tr1, br1, bl1 = cs1

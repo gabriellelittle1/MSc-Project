@@ -7,27 +7,8 @@ def nan_check(points):
         if np.isnan(point[0]) or np.isnan(point[1]):
             return True
     return False
-
-def positions_index(room, object_index): 
-
-    if len(room.fm_indices) == 0: 
-        return 3*object_index
-    else: 
-        new_index = 1 * object_index
-        for i in range(len(room.fm_indices)):
-            ind = room.fm_indices[i]
-            if ind < object_index: 
-                new_index -= 1
-        return 3*new_index
     
-def get_position(positions, room, object_index):
-    if object_index in room.fm_indices: 
-        x, y, theta = room.moving_objects[object_index].position
-    else: 
-        index = positions_index(room, object_index)
-        x, y, theta = positions[index:index+3]
-    return x, y, theta
-    
+
 def ind_next_to_wall(positions, room, object_index, side = 'back'):
     """ This function ensures an object is next to a wall in a room. 
         The specific side of the object will be used. If no side is given, the back of the object will be used.
@@ -39,7 +20,7 @@ def ind_next_to_wall(positions, room, object_index, side = 'back'):
         side: string, one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of the object to check e.g back of bed 
     """
 
-    x, y, theta = get_position(positions, room, object_index)
+    x, y, theta = positions[3*object_index:3*object_index+3]
     cs = np.array(corners(x, y, theta, room.moving_objects[object_index].width, room.moving_objects[object_index].length)) # TL, TR, BR, BL
     distances =  np.zeros((4, 4)) # each row a different corner, each column a different wall 
     sides = [[0, 1], [2, 3], [0, 3], [1, 2]]
@@ -91,7 +72,7 @@ def ind_close_to_fixed_object(positions, room, object_index, fixed_object_type, 
         side: string, one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of the object to check
     """
 
-    x, y, theta = get_position(positions, room, object_index)
+    x, y, theta = positions[3*object_index:3*object_index+3]
     cs = np.array(corners(x, y, theta, room.moving_objects[object_index].width, room.moving_objects[object_index].length)) # TR, BR, TL, BL
     if side == "top" or side == "back":
         cs = [cs[0], cs[1]]
@@ -131,7 +112,8 @@ def ind_away_from_fixed_object(positions, room, object_index, fixed_object_type,
         fixed_object_type: string, type of fixed object to check. One of 'window', 'door', 'plug'
         min_dist: float, minimum distance between the object and the fixed object to be considered away from it 
     """
-    x, y, _ = get_position(positions, room, object_index)
+
+    x, y = positions[3*object_index:3*object_index+2]
     w, l = room.moving_objects[object_index].width, room.moving_objects[object_index].length
     half_diag = (w**2 + l**2)/4
     f_objs = room.find_all(fixed_object_type)
@@ -167,7 +149,7 @@ def ind_accessible(positions, room, object_index, sides = [], min_dist = None):
     if 'rug' in obj.name or 'mat' in obj.name:
         return 0.0
     
-    x, y, theta = get_position(positions, room, object_index)
+    x, y, theta = positions[3*object_index:3*object_index+3]
     TL, TR, BR, BL = corners(x, y, theta, obj.width, obj.length)
     polys = []
     if min_dist: 
@@ -175,6 +157,7 @@ def ind_accessible(positions, room, object_index, sides = [], min_dist = None):
     else: 
         distance = min(1, np.max([obj.width, obj.length, 0.5]))
 
+        
     def project(point1, point2, distance = distance):
         direction = np.array([point1[0] - point2[0], point1[1] - point2[1]])
         direction /= np.linalg.norm(direction)
@@ -224,8 +207,7 @@ def ind_accessible(positions, room, object_index, sides = [], min_dist = None):
                 continue
             if 'rug' in room.moving_objects[i].name or 'mat' in room.moving_objects[i].name: 
                 continue
-
-            x, y, theta = get_position(positions, room, i)
+            x, y, theta = positions[3*i:3*i+3]
             poly2 = Polygon(corners(x, y, theta, room.moving_objects[i].width, room.moving_objects[i].length))
             intersection = poly.intersection(poly2)
             if intersection.area > 1e-3:
@@ -263,7 +245,7 @@ def ind_central(positions, room, object_index, both = False):
     lower_y, upper_y = room.length/3, 2*room.length/3
     mid_x, mid_y = room.width/2, room.length/2
 
-    x, y, _ = get_position(positions, room, object_index)
+    x, y, theta = positions[3*object_index:3*object_index+3]
     if both: 
         val = 0
         if x < lower_x: 
@@ -297,20 +279,18 @@ def ind_in_region(positions, room, object_index, region_name, weight = 5):
     region_index = room.find_region_index(region_name)
     if region_index == None: 
         return 0.0
-    
-    x, y, _ = get_position(positions, room, object_index)
-
+    x, y = positions[3*object_index:3*object_index+2]
     value = 0 
     for i in range(len(regions)):
         if i == region_index:
             continue
         else:
             value += ((regions[i].x - x)**2 + (regions[i].y - y)**2) - ((regions[region_index].x - x)**2 + (regions[region_index].y - y)**2)
-    return weight*min(0, value)**2
+    return 5*min(0, value)**2
 
 def ind_in_bounds(positions, room, weight = 10): 
 
-    """ This function ensures that all objects are within the room. This should be used in every objective function.
+    """ This function ensures that all objects are within the room. This should not be used in the objective function.
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
@@ -319,7 +299,7 @@ def ind_in_bounds(positions, room, weight = 10):
     val = 0
     objs = room.moving_objects
     for i in range(len(room.moving_objects)):
-        x, y, theta = get_position(positions, room, i)
+        x, y, theta = positions[3*i:3*i+3]
         cs = corners(x, y, theta, objs[i].width, objs[i].length)
         for corner in cs: 
             val += (max(0, corner[0] - room.width)**2 + max(0, corner[1] - room.length)**2)
@@ -327,7 +307,7 @@ def ind_in_bounds(positions, room, weight = 10):
         
     return weight * val 
 
-def ind_no_overlap(positions, room, weight = 10):
+def ind_no_overlap(positions, room, position_fixing = [], weight = 10):
     """ This function ensures that no objects overlap in the room. This should not be used in the objective function.
         
         Args:
@@ -370,9 +350,7 @@ def ind_no_overlap(positions, room, weight = 10):
         
         obj_i = objs[i]
 
-        x_i, y_i, theta_i = get_position(positions, room, i)
-
-        corners_i = corners(x_i, y_i, theta_i, obj_i.width, obj_i.length)
+        corners_i = corners(positions[3*i], positions[3*i+1], positions[3*i+2], obj_i.width, obj_i.length)
         if nan_check(corners_i):
             continue
 
@@ -381,10 +359,8 @@ def ind_no_overlap(positions, room, weight = 10):
         for j in indices:
             if j <= i: 
                 continue
-
-            x_j, y_j, theta_j = get_position(positions, room, j)
             obj_j = objs[j]
-            corners_j = corners(x_j, y_j, theta_j, obj_j.width, obj_j.length)
+            corners_j = corners(positions[3*j], positions[3*j+1], positions[3*j+2], obj_j.width, obj_j.length)
             if nan_check(corners_j):
                 continue
             
@@ -395,7 +371,7 @@ def ind_no_overlap(positions, room, weight = 10):
                 x = np.array([[i, j] for i, j in zip(intersection.exterior.xy[0], intersection.exterior.xy[1])])
                 lengths = np.roll(x, -1, axis = 0) - x
                 lengths = np.linalg.norm(lengths, axis = 1)
-                val += sum(lengths**2)/4
+                val += sum(lengths**2)
         
         for door in door_polygons:
             intersection = poly1.intersection(door)
@@ -403,7 +379,7 @@ def ind_no_overlap(positions, room, weight = 10):
                 x = np.array([[i, j] for i, j in zip(intersection.exterior.xy[0], intersection.exterior.xy[1])])
                 lengths = np.roll(x, -1, axis = 0) - x
                 lengths = np.linalg.norm(lengths, axis = 1)
-                val += 3*sum(lengths**2)/4
+                val += 3*sum(lengths**2)   
 
     return weight * val 
 
@@ -421,7 +397,7 @@ def ind_not_block_fixed_object(positions, room, object_index, fixed_object_type)
 
     val = 0
     fixed_objects = room.find_all(fixed_object_type)
-    x, y, theta = get_position(positions, room, object_index)
+    x, y, theta = positions[3*object_index:3*object_index+3]
     obj = room.moving_objects[object_index]
     cs = corners(x, y, theta, obj.width, obj.length)
     poly = Polygon(cs)
@@ -484,8 +460,7 @@ def ind_under_window(positions, room, object_index):
         room: rectangular Room object
     """ 
 
-    index = positions_index(room, object_index)
-    x, y, _ = get_position(positions, room, object_index)
+    x, y = positions[3*object_index], positions[3*object_index + 2]
     windows = room.find_all('window')
     min_dist = np.inf
     for window in windows: 
@@ -505,7 +480,7 @@ def ind_aligned(positions, room):
     """
 
     val = 0
-    for i in range(len(positions)//3):
+    for i in range(len(room.moving_objects)):
         theta = positions[3*i + 2]
         val += (np.sin(2*theta)**2)/5
     return val
@@ -521,7 +496,7 @@ def ind_facing_into_room(positions, room, object_index):
         
     """
     val = 0
-    x, y, theta = get_position(positions, room, object_index)
+    x, y, theta = positions[3*object_index:3*object_index+3]
     bl = BL(x, y, theta, room.moving_objects[object_index].width, room.moving_objects[object_index].length)
     tl = TL(x, y, theta, room.moving_objects[object_index].width, room.moving_objects[object_index].length)
 
@@ -540,7 +515,6 @@ def ind_not_against_wall(positions, room, object_index, side = None, min_dist = 
 
     """ ind_not_against_wall is a function that ensures and object is not against a wall. 
         If a side is given, it will ensure that the specific side is not against a wall.
-        For example, you might not want a rug against a wall, or a dining table. 
 
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
@@ -550,8 +524,7 @@ def ind_not_against_wall(positions, room, object_index, side = None, min_dist = 
         min_dist: float, minimum distance the object should be from the wall 
     """
     val = 0.0
-    x, y, theta = get_position(positions, room, object_index)
-
+    x, y, theta = positions[3*object_index:3*object_index+3]
     cs = np.array(corners(x, y, theta, room.moving_objects[object_index].width, room.moving_objects[object_index].length)) # TL, TR, BR, BL
 
     distances =  np.zeros((4, 4)) # each row a different corner, each column a different wall 
@@ -575,25 +548,23 @@ def ind_not_against_wall(positions, room, object_index, side = None, min_dist = 
     elif side == "right":
         val += max(0.0, np.min(side_distances[3, :]) - min_dist)**2
     else: 
-        for i in range(4):
-            for j in range(4):
-                val += max(0.0, distances[i, j] - min_dist)**2
+        val += max(0.0, np.min(distances) - min_dist)**2
     
-    return val/16
+    return val
 
-# def FIX(positions, room, object_indices, weight = 10):
-#     """ FIX is a function that fixes the positions of moving_objects in the room. This should be applied to every primary object in the 
-#         room when optimising the position of the secondary objects...
+def FIX(positions, room, object_indices, weight = 10):
+    """ FIX is a function that fixes the positions of moving_objects in the room. This should be applied to every primary object in the 
+        room when optimising the position of the secondary objects...
 
-#         Args: 
-#         positions: list of floats, x, y, theta values for all objects in the room
-#         room: rectangular Room object
-#     """
-#     val = 0
-#     for i in object_indices: 
-#         val += np.linalg.norm(positions[3*i: 3*i + 3] - room.moving_objects[i].position)**2
+        Args: 
+        positions: list of floats, x, y, theta values for all objects in the room
+        room: rectangular Room object
+    """
+    val = 0
+    for i in object_indices: 
+        val += np.linalg.norm(positions[3*i: 3*i + 3] - room.moving_objects[i].position)**2
     
-#     return weight*val 
+    return weight*val 
 
 
 

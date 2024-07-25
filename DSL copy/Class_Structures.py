@@ -54,6 +54,7 @@ class Object:
         else: 
             self.region = None
 
+    
     def TR(self):
         x, y, theta = self.position
         return TR(x, y, theta, self.width, self.length)
@@ -69,7 +70,7 @@ class Object:
     def BL(self):
         x, y, theta = self.position
         return BL(x, y, theta, self.width, self.length)
-    
+
     def corners(self):
 
 
@@ -116,13 +117,12 @@ class Region:
         self.index = index
 class Room: 
 
-    def __init__(self, width, length, fixed_objects = []):
+    def __init__(self, width, length, fixed_objects = [], moving_objects = None):
 
         self.width = width
         self.length = length
         self.fixed_objects = fixed_objects
         self.moving_objects = []
-        self.fm_indices = []
         self.center = (width/2, length/2)
         self.regions = []
 
@@ -141,6 +141,23 @@ class Room:
 
         print("No region with this name is in the room.")    
         return None
+    
+    def add_object(self, obj):
+
+        """ Adds an object to the room.
+            Inputs:
+            obj: Object, object to be added to the room
+        """
+
+        if obj.name in ['door', 'Doors', 'plug', 'Plug', 'window', 'Window']:
+            if not obj.position:
+                raise ValueError('Position of fixed objects must be specified.')
+            self.fixed_objects.append(obj)
+        else:
+            if obj.position == (0, 0, 0):
+                obj = Object(obj.name, obj.width, obj.length, (self.center[0], self.center[1], 0))
+            self.moving_objects.append(obj)
+        return 
     
     def find(self, name):
         for obj in self.fixed_objects + self.moving_objects:

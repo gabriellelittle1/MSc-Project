@@ -44,13 +44,14 @@ def ind_away_from_fixed_object(positions, room, object_index, fixed_object_type,
 
 def ind_accessible(positions, room, object_index, sides):
     """ This function ensures that an object is accessible from given sides. 
-        
+        If no sides are given, all the sides will be used. If min_dist is given, then this function 
+        will act as a clearance constraint. If you want all the sides to be accesible, sides = ['top', 'bottom', 'left', 'right'].
+    
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
         room: rectangular Room object
         object_index: int, index of the object in the room's object list
-        sides: list of strings, each string one of 'top' or 'back' (for things like headboard of bed, or back of bookshelf), 'bottom' or 'front' (for things like foot of bed or front of bookshelf), 
-              'left', 'right', defines which side of the object to check
+        sides: a list of strings, each one one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of the object to check
     """
     
     return

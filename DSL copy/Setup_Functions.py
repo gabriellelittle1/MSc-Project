@@ -84,7 +84,6 @@ def remove_object(room, obj_index):
         room: Room, the room from which the object is to be removed
         obj_index: index of object to be removed 
     """
-
     obj = room.moving_objects[obj_index]
     room.moving_objects.remove(obj)
     return
@@ -120,7 +119,7 @@ def create_moving_object(room, name, width, length, region_name, index):
     region_index = room.find_region_index(region_name)
     if region_index == None: 
         print("Region not found.")
-        new_object = Object(name, width, length, position = (room.center[0], room.center[1], 0.0), index = index)
+        new_object = Object(name, width, length, position = (room.center[0], room.center[1], 0.0))
         room.moving_objects += [new_object]
         return 
 
@@ -140,7 +139,7 @@ def create_moving_object(room, name, width, length, region_name, index):
     
     # Ensure the initial position is within the room 
     obj_theta = closest_wall(room, room.regions[region_index].x, room.regions[region_index].y)
-    new_object = Object(name, width, length, position =(room.regions[region_index].x, room.regions[region_index].y, obj_theta), index = index)
+    new_object = Object(name, width, length, position =(room.regions[region_index].x, room.regions[region_index].y, obj_theta))
     corners = np.array(new_object.corners())
     x_max_index, y_max_index = corners.argmax(axis=0)
     x_min_index, y_min_index = corners.argmin(axis=0)
@@ -159,7 +158,7 @@ def create_moving_object(room, name, width, length, region_name, index):
     else: 
         obj_y = new_object.position[1]
 
-    room.moving_objects += [Object(name, width, length, region = region_name, index = index, position = (obj_x, obj_y, obj_theta))]
+    room.moving_objects += [Object(name, width, length, region_name, index, (obj_x, obj_y, obj_theta))]
 
     return
 
@@ -188,8 +187,10 @@ def LINK(positions, room, object_indices):
     val = 0
 
     for i in range(len(object_indices)):
+        obj_i = room.moving_objects[object_indices[i]]
         xi, yi, theta_i = positions[i]
         for j in range(i, len(object_indices)):
+            obj_j = room.moving_objects[object_indices[j]]
             xj, yj, theta_j = positions[j]
             
             distance = (xi - xj)**2 + (yi - yj)**2 + (theta_i - theta_j)**2
