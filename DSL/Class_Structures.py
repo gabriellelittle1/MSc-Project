@@ -136,7 +136,7 @@ class Room:
         """
 
         for region in self.regions:
-            if region.name == region_name:
+            if region_name in region.name or region.name in region_name:
                 return region.index
 
         print("No region with this name is in the room.")    

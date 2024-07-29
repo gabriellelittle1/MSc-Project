@@ -1,8 +1,9 @@
 import numpy as np 
 from Class_Structures import * 
 from shapely.geometry import Polygon
-from Individual import positions_index, get_position
+from Individual import positions_index, get_position, safe_execution
 
+@safe_execution
 def p_next_to(positions, room, object1_index, object2_index, side1 = None, side2 = None):
     """ The function next_to ensures that two objects are next to each other in a room. 
         If side1 is given, the specific side of object1 will be used. If side2 is given, 
@@ -108,6 +109,7 @@ def p_next_to(positions, room, object1_index, object2_index, side1 = None, side2
 
     return val 
 
+@safe_execution
 def p_away_from(positions, room, object1_index, object2_index, min_dist = 2):
     """ The function p_away_from ensures that two objects are away from each other in a room.
         
@@ -125,6 +127,7 @@ def p_away_from(positions, room, object1_index, object2_index, min_dist = 2):
 
     return np.exp(min_dist - distance)
 
+@safe_execution
 def p_aligned(positions, room, object1_index, object2_index, center_object_info = None, max_dist = 2):
     """ The function aligned ensures that two objects are aligned in a room. 
         If center is given, the objects will be aligned about that point. For example, 
@@ -177,6 +180,7 @@ def p_aligned(positions, room, object1_index, object2_index, center_object_info 
         
     return val
 
+@safe_execution
 def p_facing(positions, room, object1_index, object2_index, both = False):
     """ The function facing ensures that object1 is facing object2 in a room.
         If both is True, then object2 will also be facing object1.
@@ -216,6 +220,7 @@ def p_facing(positions, room, object1_index, object2_index, both = False):
         val += (np.dot(dir1, dir2) + 1)**2
     return val 
 
+@safe_execution
 def p_under_central(positions, room, object1_index, object2_index):
     """ The function under ensures that object1 (a rug) is underneath object2 (any moving_object) and centered.
         
@@ -249,6 +254,7 @@ def p_under_central(positions, room, object1_index, object2_index):
         print("hi this should be a rug", obj1.name)
         return 0.0
 
+@safe_execution
 def p_on_top_of(positions, room, object1_index, object2_index):
     """ The function under ensures that object1 is on top of object2 (a rug) but does not ensure that it is centered.
         
@@ -296,6 +302,7 @@ def p_on_top_of(positions, room, object1_index, object2_index):
         
             return total_lengths - lengths_on_rug
 
+@safe_execution
 def p_infront(positions, room, object1_index, object2_index, dist = 0.8):
     """ The function p_infront ensures that object1 is in front of object2 (both moving_objects i.e. not windows or doors). E.g a coffee table should be in front of a sofa....
 
@@ -324,6 +331,7 @@ def p_infront(positions, room, object1_index, object2_index, dist = 0.8):
     val = (projection[0] - x1)**2 + (projection[1] - y1)**2
     return val
 
+@safe_execution
 def p_perpendicular_aligned(positions, room, object1_index, object2_index, center_object_index = None):
     """ The function p_perpendicular_aligned ensures that two objects are aligned in a room perpendicularly. 
         If center is given, the objects will be aligned about that point. For example, 
@@ -375,6 +383,7 @@ def p_perpendicular_aligned(positions, room, object1_index, object2_index, cente
         val += ((max(theta1, theta2) - min(theta1, theta2)) - np.pi/2)**2 ## thetas should be pi/2 apart
     return val
 
+@safe_execution
 def p_surround(positions, room, central_object_index, object_indices):
     """ The function p_surroudn ensures that central_object is surrounded by all the objects in object_indices.
         This would be used for chairs around a dining table.
@@ -401,6 +410,7 @@ def p_surround(positions, room, central_object_index, object_indices):
 
     return val
 
+@safe_execution
 def p_not_facing(positions, room, object1_index, object2_index):
     """ The function facing ensures that object1 is NOT facing object2 in a room.
         
@@ -430,6 +440,7 @@ def p_not_facing(positions, room, object1_index, object2_index):
     val += min((dist1 + dist2) - object1.width, 0.0)**2
     return val 
 
+@safe_execution
 def p_between(positions, room, object1_index, object2_index, object3_index): 
     
     """ The function p_between ensures that object1 is in between the two objects object2 and object3. 

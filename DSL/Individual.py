@@ -2,6 +2,15 @@
 from Class_Structures import *
 from shapely.geometry import Polygon
 
+def safe_execution(func):
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return 0.0
+    return wrapper
+
 def nan_check(points):
     for point in points:  
         if np.isnan(point[0]) or np.isnan(point[1]):
@@ -27,7 +36,8 @@ def get_position(positions, room, object_index):
         index = positions_index(room, object_index)
         x, y, theta = positions[index:index+3]
     return x, y, theta
-    
+
+@safe_execution 
 def ind_next_to_wall(positions, room, object_index, side = 'back'):
     """ This function ensures an object is next to a wall in a room. 
         The specific side of the object will be used. If no side is given, the back of the object will be used.
@@ -78,7 +88,8 @@ def ind_next_to_wall(positions, room, object_index, side = 'back'):
         return ind_next_to_wall(positions, room, object_index, 'back') 
     
     return val
-    
+
+@safe_execution   
 def ind_close_to_fixed_object(positions, room, object_index, fixed_object_type, side = None, max_dist = 0.5):
     """ This function ensures an object is next to a fixed object in a room. 
         If side is given, the specific side of the object will be used.
@@ -121,6 +132,7 @@ def ind_close_to_fixed_object(positions, room, object_index, fixed_object_type, 
                 distances[i, j] = (cs[j][0] - f_objs[i].position[0])**2 + (cs[j][1] - f_objs[i].position[1])**2
         return max(min(distances.flatten()) - max_dist**2, 0.0)
 
+@safe_execution
 def ind_away_from_fixed_object(positions, room, object_index, fixed_object_type, min_dist = 2):
     """ This function ensures an object is not near to a fixed object in a room. 
         
@@ -148,6 +160,7 @@ def ind_away_from_fixed_object(positions, room, object_index, fixed_object_type,
     
     return val
 
+@safe_execution
 def ind_accessible(positions, room, object_index, sides = [], min_dist = None):
     """ This function ensures that an object is accessible from given sides. 
         If no sides are given, all the sides will be used. If min_dist is given, then this function 
@@ -248,6 +261,7 @@ def ind_accessible(positions, room, object_index, sides = [], min_dist = None):
 
     return val
 
+@safe_execution
 def ind_central(positions, room, object_index, both = False):
     """ This function ensures that an object is centrally placed in the room. 
         Args:
@@ -284,6 +298,7 @@ def ind_central(positions, room, object_index, both = False):
 
     return val
 
+@safe_execution
 def ind_in_region(positions, room, object_index, region_name, weight = 5):
     """ This function ensures that an object is in a given region. 
         
@@ -308,6 +323,7 @@ def ind_in_region(positions, room, object_index, region_name, weight = 5):
             value += ((regions[i].x - x)**2 + (regions[i].y - y)**2) - ((regions[region_index].x - x)**2 + (regions[region_index].y - y)**2)
     return weight*min(0, value)**2
 
+@safe_execution
 def ind_in_bounds(positions, room, weight = 10): 
 
     """ This function ensures that all objects are within the room. This should be used in every objective function.
@@ -327,6 +343,7 @@ def ind_in_bounds(positions, room, weight = 10):
         
     return weight * val 
 
+@safe_execution
 def ind_no_overlap(positions, room, weight = 10):
     """ This function ensures that no objects overlap in the room. This should not be used in the objective function.
         
@@ -407,6 +424,7 @@ def ind_no_overlap(positions, room, weight = 10):
 
     return weight * val 
 
+@safe_execution
 def ind_not_block_fixed_object(positions, room, object_index, fixed_object_type):
 
     """ This function ensures that an object does not block a fixed object in the room. 
@@ -473,6 +491,7 @@ def ind_not_block_fixed_object(positions, room, object_index, fixed_object_type)
                 
     return val
 
+@safe_execution
 def ind_under_window(positions, room, object_index):
 
     """ This function ensures that the object (object_index) will be placed underneath a window.
@@ -495,6 +514,7 @@ def ind_under_window(positions, room, object_index):
 
     return min_dist
 
+@safe_execution
 def ind_aligned(positions, room):
     """ ind_aligned is a function that penalises orientations that are not one of the cardinal directions.
         Since most furniture in a room is in one of the cardinal directions, we want to encourage this. 
@@ -510,6 +530,7 @@ def ind_aligned(positions, room):
         val += (np.sin(2*theta)**2)/5
     return val
 
+@safe_execution
 def ind_facing_into_room(positions, room, object_index):
     """ ind_facing_into_room is a function that ensures and object faces into the center of the room. 
         E.g. an armchair might face into the room.
@@ -536,6 +557,7 @@ def ind_facing_into_room(positions, room, object_index):
 
     return val 
 
+@safe_execution
 def ind_not_against_wall(positions, room, object_index, side = None, min_dist = 0.5):
 
     """ ind_not_against_wall is a function that ensures and object is not against a wall. 
@@ -580,20 +602,6 @@ def ind_not_against_wall(positions, room, object_index, side = None, min_dist = 
                 val += max(0.0, distances[i, j] - min_dist)**2
     
     return val/16
-
-# def FIX(positions, room, object_indices, weight = 10):
-#     """ FIX is a function that fixes the positions of moving_objects in the room. This should be applied to every primary object in the 
-#         room when optimising the position of the secondary objects...
-
-#         Args: 
-#         positions: list of floats, x, y, theta values for all objects in the room
-#         room: rectangular Room object
-#     """
-#     val = 0
-#     for i in object_indices: 
-#         val += np.linalg.norm(positions[3*i: 3*i + 3] - room.moving_objects[i].position)**2
-    
-#     return weight*val 
 
 
 

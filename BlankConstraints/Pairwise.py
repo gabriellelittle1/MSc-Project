@@ -2,6 +2,7 @@ import numpy as np
 from Class_Structures import * 
 from shapely.geometry import Polygon
 
+
 def p_next_to(positions, room, object1_index, object2_index, side1 = None, side2 = None):
     """ The function next_to ensures that two objects are next to each other in a room. 
         If side1 is given, the specific side of object1 will be used. If side2 is given, 
