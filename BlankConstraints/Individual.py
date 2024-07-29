@@ -25,11 +25,12 @@ def ind_close_to_fixed_object(positions, room, object_index, fixed_object_type, 
         object_index: int, index of the object in the room's object list
         fixed_object_type: string, type of fixed object to check. One of 'window', 'door', 'socket'
         side: string, one of 'top' or 'back' (for things like headboard of bed, or back of bookshelf), 'bottom' or 'front' (for things like foot of bed or front of bookshelf), 'left', 'right', defines which side of the object to check e.g back of bed 
+        max_dist: float, maximum distance between the object and the fixed object to be considered close to it. Please write this as a float e.g. 2.0. 
     """
 
     return
 
-def ind_away_from_fixed_object(positions, room, object_index, fixed_object_type, min_dist = 2):
+def ind_away_from_fixed_object(positions, room, object_index, fixed_object_type, min_dist = 2.0):
     """ This function ensures an object is not near to a fixed object in a room. 
         
         Args:
@@ -37,7 +38,7 @@ def ind_away_from_fixed_object(positions, room, object_index, fixed_object_type,
         room: rectangular Room object
         object_index: int, index of the object in the room's object list
         fixed_object_type: string, type of fixed object to check. One of 'window', 'door', 'socket'
-        min_dist: float, minimum distance between the object and the fixed object to be considered away from it 
+        min_dist: float, minimum distance between the object and the fixed object to be considered away from it. Please write this as a float, e.g. 2.0. 
     """
 
     return
@@ -68,17 +69,18 @@ def ind_central(positions, room, object_index, both = False):
 
     return
 
-def ind_in_bounds(positions, room, weight = 15): 
+def ind_in_bounds(positions, room, weight = 15.0): 
 
     """ This function ensures that all objects are within the room. THIS SHOULD BE USED IN EVERY OPTIMISATION FUNCTION.
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
         room: rectangular Room object
+        weight: float, weight of the constraint
     """
     return
 
-def ind_no_overlap(positions, room, position_fixing = []):
+def ind_no_overlap(positions, room):
     """ This function ensures that no objects overlap in the room. THIS SHOULD BE USED IN EVERY OPTIMISATION FUNCTION.
         
         Args:
@@ -139,7 +141,7 @@ def ind_facing_into_room(positions, room, object_index):
     """
     return
 
-def ind_in_region(positions, room, object_index, region_name, weight = 5):
+def ind_in_region(positions, room, object_index, region_name, weight = 5.0):
     """ This function ensures that an object is in a given region. This should NOT be used with the optimize_primary_objects function.
         
         Args:
@@ -147,6 +149,7 @@ def ind_in_region(positions, room, object_index, region_name, weight = 5):
         room: rectangular Room object
         object_index: int, index of the object in the room's object list
         region_name: string, name of the region for the object to be in 
+        weight: float, weight of the constraint
     """
 
     return 
@@ -163,7 +166,7 @@ def ind_not_against_wall(positions, room, object_index, side = None, min_dist = 
         room: rectangular Room object
         object_index: int, index of the object in the room's object list
         side: string, one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of the object to check e.g back of bed   
-        min_dist: float, minimum distance the object should be from the wall 
+        min_dist: float, minimum distance the object should be from the wall. Please write this as a float, e.g. 2.0. 
     """
 
     return 

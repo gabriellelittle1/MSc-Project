@@ -16,7 +16,7 @@ def p_next_to(positions, room, object1_index, object2_index, side1 = None, side2
     """
     return
 
-def p_away_from(positions, room, object1_index, object2_index, min_dist = 2):
+def p_away_from(positions, room, object1_index, object2_index, min_dist = 2.0):
     """ The function p_away_from ensures that two objects are away from each other in a room.
         
         Args:
@@ -24,11 +24,12 @@ def p_away_from(positions, room, object1_index, object2_index, min_dist = 2):
         room: rectangular Room object
         object1_index: int, index of object1 in the room
         object2_index: int, index of object2 in the room
+        min_dist: float, minimum distance between the two objects. Please write this as a float, e.g. 2.0.
 
     """
     return
 
-def p_aligned(positions, room, object1_index, object2_index, center_object_info = None, max_dist = 2):
+def p_aligned(positions, room, object1_index, object2_index, center_object_info = None, max_dist = 2.0):
     """ The function aligned ensures that two objects are aligned in a room. 
         If center is given, the objects will be aligned about that point. For example, 
         2 nightstands should be aligned about the bed. If center is not given, the objects will 
@@ -41,6 +42,7 @@ def p_aligned(positions, room, object1_index, object2_index, center_object_info 
         object1_index: int, index of object1 in the room
         object2_index: int, index of object2 in the room
         center_object_info: optional list where first element is the name of the object e.g. 'window' or 'bed' and the second element is the object index.
+        max_dist: float, maximum distance between the two objects. Please write this as a float, e.g. 2.0.
     """
     return
 
