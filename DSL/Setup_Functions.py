@@ -104,7 +104,7 @@ def region_setup(room, name, index):
     region = Region(name, x, y, index)
     room.regions += [region]
 
-    return region
+    return
 
 def create_moving_object(room, name, width, length, region_name, index):
     """ A function that creates an object.
@@ -140,24 +140,26 @@ def create_moving_object(room, name, width, length, region_name, index):
     
     # Ensure the initial position is within the room 
     obj_theta = closest_wall(room, room.regions[region_index].x, room.regions[region_index].y)
-    new_object = Object(name, width, length, position =(room.regions[region_index].x, room.regions[region_index].y, obj_theta), index = index)
-    corners = np.array(new_object.corners())
-    x_max_index, y_max_index = corners.argmax(axis=0)
-    x_min_index, y_min_index = corners.argmin(axis=0)
+    # new_object = Object(name, width, length, position =(room.regions[region_index].x, room.regions[region_index].y, obj_theta), index = index)
+    # corners = np.array(new_object.corners())
+    # x_max_index, y_max_index = corners.argmax(axis=0)
+    # x_min_index, y_min_index = corners.argmin(axis=0)
 
-    if corners[x_max_index][0] > room.width:
-        obj_x = new_object.position[0] - (corners[x_max_index][0] - room.width)
-    elif corners[x_min_index][0] < 0:
-        obj_x = new_object.position[0] - corners[x_min_index][0]
-    else: 
-        obj_x = new_object.position[0]
+    # if corners[x_max_index][0] > room.width:
+    #     obj_x = new_object.position[0] - (corners[x_max_index][0] - room.width)
+    # elif corners[x_min_index][0] < 0:
+    #     obj_x = new_object.position[0] - corners[x_min_index][0]
+    # else: 
+    #     obj_x = new_object.position[0]
 
-    if corners[y_max_index][1] > room.length:
-        obj_y = new_object.position[1] - (corners[y_max_index][1] - room.length)
-    elif corners[y_min_index][1] < 0:
-        obj_y = new_object.position[1] - corners[y_min_index][1]
-    else: 
-        obj_y = new_object.position[1]
+    # if corners[y_max_index][1] > room.length:
+    #     obj_y = new_object.position[1] - (corners[y_max_index][1] - room.length)
+    # elif corners[y_min_index][1] < 0:
+    #     obj_y = new_object.position[1] - corners[y_min_index][1]
+    # else: 
+    #     obj_y = new_object.position[1]
+    obj_x = np.random.uniform(0, room.width)
+    obj_y = np.random.uniform(0, room.length)
 
     room.moving_objects += [Object(name, width, length, region = region_name, index = index, position = (obj_x, obj_y, obj_theta))]
 

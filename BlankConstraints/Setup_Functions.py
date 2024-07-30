@@ -37,7 +37,7 @@ def remove_object(room, obj_index):
 
 def region_setup(room, name, index):
 
-    """ A function that initialises the regions in a room randomly.
+    """ A function that initialises the regions in a room.
         Inputs:
         room: Room, the room from which the object is to be removed
         name: str, the name of the region e.g 'sleeping'

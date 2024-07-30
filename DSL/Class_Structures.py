@@ -27,7 +27,7 @@ def back_corners(x, y, theta, w, l):
 
 class Object:
 
-    def __init__(self, name, width, length, region = None, index = None, position = None):
+    def __init__(self, name, width, length, region = None, index = None, position = (0, 0, 0)):
         """ Initialization of an object in a scene. 
             Inputs: 
             name: str, name of the object all lowercase
@@ -38,13 +38,7 @@ class Object:
                       object and theta is the orientation of the object in radians.
         """
 
-        if position:
-            self.position = position
-        
-        if not position: 
-            self.position = (0, 0, 0)
-            position = self.position
-
+        self.position = position
         self.name = name
         self.width = width 
         self.length = length
@@ -77,25 +71,26 @@ class Object:
             return [self.TL(), self.TR(), self.BR(), self.BL()]
         else: 
             if self.position[2] == 0: 
-                BL = [self.position[0] - self.width, self.position[1]]
-                BR = [self.position[0] + self.width, self.position[1]]
-                TR = [self.position[0] + self.width, self.position[1] + self.width]
-                TL = [self.position[0] - self.width, self.position[1] + self.width]    
+                BL = [self.position[0] - self.width, self.position[1] - 0.2]
+                BR = [self.position[0] + self.width, self.position[1] - 0.2]
+                TR = [self.position[0] + self.width, self.position[1] + self.width + 0.2]
+                TL = [self.position[0] - self.width, self.position[1] + self.width + 0.2]    
             elif self.position[2] == np.pi/2:
-                BL = [self.position[0], self.position[1] - self.width]
-                BR = [self.position[0], self.position[1] + self.width]
-                TR = [self.position[0] - self.width, self.position[1] + self.width]
-                TL = [self.position[0] - self.width, self.position[1] - self.width]
+                BL = [self.position[0] + 0.2, self.position[1] - self.width]
+                BR = [self.position[0] + 0.2, self.position[1] + self.width]
+                TR = [self.position[0] - self.width - 0.2, self.position[1] + self.width]
+                TL = [self.position[0] - self.width - 0.2, self.position[1] - self.width]
             elif self.position[2] == np.pi:
-                BL = [self.position[0] + self.width, self.position[1]]
-                BR = [self.position[0] - self.width, self.position[1]]
-                TR = [self.position[0] - self.width, self.position[1] - self.width]
-                TL = [self.position[0] + self.width, self.position[1] - self.width]
+                BL = [self.position[0] + self.width, self.position[1] + 0.2]
+                BR = [self.position[0] - self.width, self.position[1] + 0.2]
+                TR = [self.position[0] - self.width, self.position[1] - self.width - 0.2]
+                TL = [self.position[0] + self.width, self.position[1] - self.width - 0.2]
             elif self.position[2] == 3*np.pi/2:
-                BL = [self.position[0], self.position[1] + self.width]
-                BR = [self.position[0], self.position[1] - self.width]
-                TR = [self.position[0] + self.width, self.position[1] - self.width]
-                TL = [self.position[0] + self.width, self.position[1] + self.width]
+                BL = [self.position[0] - 0.2, self.position[1] + self.width]
+                BR = [self.position[0] - 0.2, self.position[1] - self.width]
+                TR = [self.position[0] + self.width + 0.2, self.position[1] - self.width]
+                TL = [self.position[0] + self.width + 0.2, self.position[1] + self.width]
+
             return [TL, TR, BR, BL]
     
     def back_corners(self):

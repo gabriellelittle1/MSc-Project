@@ -2,18 +2,26 @@ import numpy as np
 from Class_Structures import * 
 from shapely.geometry import Polygon
 
+### Throughout, the sides of the objects are defined as follows:
+# 'top' or 'back' of the object would be the headboard of a bed, or the back of a chair
+# 'front' or 'bottom' of the object would be the foot of a bed, or the front of a wardrobe (the side with the doors)
+# 'left' would be the left side of the object, when standing behind it
+# 'right' would be the right side of the object, when standing behind it
+
 
 def p_next_to(positions, room, object1_index, object2_index, side1 = None, side2 = None):
     """ The function next_to ensures that two objects are next to each other in a room. 
+        This should only be used when necessary e.g. for nightstands and a bed, or a desk and desk chair. 
         If side1 is given, the specific side of object1 will be used. If side2 is given, 
         the specific side of object2 will be used. E.g. the 'front' of the chair should be next to the 'back' of the desk. 
         If no side is given, then any of the sides will be used.
-
+        
         Args:
         room: rectangular Room object
         object1: Object object
         object2: Object object
-        side: string, one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of the object to check
+        side1: string, one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of object1 to use
+        side2: string, one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of object2 to use
     """
     return
 
@@ -30,8 +38,21 @@ def p_away_from(positions, room, object1_index, object2_index, min_dist = 2.0):
     """
     return
 
+def p_near(positions, room, object1_index, object2_index, max_dist = 3.0):
+    """ The function next_to ensures that two objects are within a certain distance to each other. 
+        They are not necessarily next to each other, but they are close.
+        
+        Args:
+        room: rectangular Room object
+        object1_index: Object object
+        object2_index: Object object
+        max_dist: furthest distance between the two objects. Please write this as a float, e.g. 3.0.
+
+    """
+    return 
+
 def p_aligned(positions, room, object1_index, object2_index, center_object_info = None, max_dist = 2.0):
-    """ The function aligned ensures that two objects are aligned in a room. 
+    """ The function aligned ensures that two objects are parallel (if no center object given) or aligned about a center object.
         If center is given, the objects will be aligned about that point. For example, 
         2 nightstands should be aligned about the bed. If center is not given, the objects will 
         be made close together with their orientations the same. 

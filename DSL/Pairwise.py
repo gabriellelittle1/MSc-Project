@@ -6,14 +6,15 @@ from Individual import positions_index, get_position, safe_execution
 @safe_execution
 def p_next_to(positions, room, object1_index, object2_index, side1 = None, side2 = None):
     """ The function next_to ensures that two objects are next to each other in a room. 
-        If side1 is given, the specific side of object1 will be used. If side2 is given, 
-        the specific side of object2 will be used. E.g. the 'front' of the chair should be next to the 'front' of the desk. 
-        
+        This function should only be used when two objects need to be next to each other, 
+        e.g. a chair next to a desk, a bed next to a nightstand, a sofa next to side table. 
+
         Args:
         room: rectangular Room object
         object1: Object object
         object2: Object object
-        side: string, one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of the object to check
+        side1: optional string, one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of object1 to use
+        side2: optional string, one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of object2 to use
     """
     val = 0
 
@@ -128,6 +129,25 @@ def p_away_from(positions, room, object1_index, object2_index, min_dist = 2):
     return np.exp(min_dist - distance)
 
 @safe_execution
+def p_near(positions, room, object1_index, object2_index, max_dist = 3.0):
+    """ The function next_to ensures that two objects are within a certain distance to each other. 
+        They are not necessarily next to each other, but they are close.
+        
+        Args:
+        room: rectangular Room object
+        object1_index: Object object
+        object2_index: Object object
+        max_dist: furthest distance between the two objects. Please write this as a float, e.g. 3.0.
+
+    """
+
+    x1, y1, _ = get_position(positions, room, object1_index)
+    x2, y2, _ = get_position(positions, room, object2_index)
+
+    distance = np.sqrt((x1 - x2)**2 + (y1 - y2)**2)
+    return np.exp(distance - max_dist)
+
+@safe_execution
 def p_aligned(positions, room, object1_index, object2_index, center_object_info = None, max_dist = 2):
     """ The function aligned ensures that two objects are aligned in a room. 
         If center is given, the objects will be aligned about that point. For example, 
@@ -149,6 +169,8 @@ def p_aligned(positions, room, object1_index, object2_index, center_object_info 
 
     if center_object_info: 
         name, index = center_object_info
+        if index == object1_index or index == object2_index:
+            return 0.0
         if name == 'window' or name == 'door' or name == 'socket':
             x, y = room.fixed_objects[index].position[:2]
         else: 
@@ -167,8 +189,8 @@ def p_aligned(positions, room, object1_index, object2_index, center_object_info 
         dir1 /= np.linalg.norm(dir1)
         dir2 /= np.linalg.norm(dir2)
 
-        dir3 = np.array([x - x1, y - y1])/dist1
-        dir4 = np.array([x - x2, y - y2])/dist2
+        dir3 = np.array([x - x1, y - y1])/max(dist1, 1e-6)
+        dir4 = np.array([x - x2, y - y2])/max(dist2, 1e-6)
 
         angle1 = np.arccos(np.dot(dir1, dir3))
         angle2 = np.arccos(np.dot(dir2, dir4))
@@ -233,26 +255,22 @@ def p_under_central(positions, room, object1_index, object2_index):
 
     obj1 = room.moving_objects[object1_index]   
     obj2 = room.moving_objects[object2_index]
-    if 'rug' in obj1.name or 'mat' in obj1.name or 'rug' in obj2.name or 'mat' in obj2.name:
 
-        ## Under basically means that their positions are the same.
-        # obj2 = room.moving_objects[object2_index] 
-        x1, y1, theta1 = get_position(positions, room, object1_index)
-        x2, y2, theta2 = get_position(positions, room, object2_index)
-        # cs1 = np.array(corners(x1, y1, theta1, obj1.width, obj1.width)).reshape(-1, 2) # TL, TR, BR, BL
-        # cs2 = np.array(corners(x2, y2, theta2, obj2.width, obj2.width)).reshape(-1, 2) 
-        # dists = np.zeros((4, 4))
-        # for i in range(4):
-        #     for j in range(4):
-        #         dists[i, j] = np.linalg.norm(cs1[i] - cs2[j])
-        # dists = np.min(dists, axis = 1)
-        # dists /= np.linalg.norm(dists)
+    ## Under basically means that their positions are the same.
+    # obj2 = room.moving_objects[object2_index] 
+    x1, y1, theta1 = get_position(positions, room, object1_index)
+    x2, y2, theta2 = get_position(positions, room, object2_index)
+    # cs1 = np.array(corners(x1, y1, theta1, obj1.width, obj1.width)).reshape(-1, 2) # TL, TR, BR, BL
+    # cs2 = np.array(corners(x2, y2, theta2, obj2.width, obj2.width)).reshape(-1, 2) 
+    # dists = np.zeros((4, 4))
+    # for i in range(4):
+    #     for j in range(4):
+    #         dists[i, j] = np.linalg.norm(cs1[i] - cs2[j])
+    # dists = np.min(dists, axis = 1)
+    # dists /= np.linalg.norm(dists)
 
-        val = (x1 - x2)**2 + (y1 - y2)**2  + (theta1 - theta2)**2 #+ np.arccos(np.dot(dists, np.ones(4)/2))**2 
-        return val 
-    else:   
-        print("hi this should be a rug", obj1.name)
-        return 0.0
+    val = (x1 - x2)**2 + (y1 - y2)**2  + (theta1 - theta2)**2 #+ np.arccos(np.dot(dists, np.ones(4)/2))**2 
+    return val 
 
 @safe_execution
 def p_on_top_of(positions, room, object1_index, object2_index):
@@ -266,41 +284,38 @@ def p_on_top_of(positions, room, object1_index, object2_index):
     """
 
     obj2 = room.moving_objects[object2_index]   
-    if 'rug' or 'mat' not in obj2.name:
+ 
+    ## Under basically means that their positions are the same.
+    obj1 = room.moving_objects[object1_index] 
+    x1, y1, theta1 = get_position(positions, room, object1_index)
+    x2, y2, theta2 = get_position(positions, room, object2_index)
+    cs1 = corners(x1, y1, theta1, obj1.width, obj1.length)
+    cs2 = corners(x2, y2, theta2, obj2.width, obj2.length)
+    poly1 = Polygon(cs1)
+    poly2 = Polygon(cs2)
+
+    intersection = poly1.intersection(poly2)
+    if intersection.area == poly1.area: 
         return 0.0
 
-    else:   
-        ## Under basically means that their positions are the same.
-        obj1 = room.moving_objects[object1_index] 
-        x1, y1, theta1 = get_position(positions, room, object1_index)
-        x2, y2, theta2 = get_position(positions, room, object2_index)
-        cs1 = corners(x1, y1, theta1, obj1.width, obj1.length)
-        cs2 = corners(x2, y2, theta2, obj2.width, obj2.length)
-        poly1 = Polygon(cs1)
-        poly2 = Polygon(cs2)
-
-        intersection = poly1.intersection(poly2)
-        if intersection.area == poly1.area: 
-            return 0.0
-
-        lengths2 = np.roll(np.array(cs1), -1, axis = 0) - np.array(cs1)
-        total_lengths = sum(np.linalg.norm(lengths2, axis = 1)**2)
-        cs1 = np.array(cs1).reshape(-1, 2)
-        cs2 = np.array(cs2).reshape(-1, 2)
-        if intersection.area == 0: 
-            dists = np.zeros((4, 4))
-            for i in range(4):
-                for j in range(4):
-                    dists[i, j] = np.linalg.norm(cs1[i] - cs2[j])
-            return np.min(dists) * total_lengths
-        
-        else: 
-            x = np.array([[i, j] for i, j in zip(intersection.exterior.xy[0], intersection.exterior.xy[1])])
-            lengths1 = np.roll(x, -1, axis = 0) - x
-            lengths1 = np.linalg.norm(lengths1, axis = 1)
-            lengths_on_rug = sum(lengths1**2)
-        
-            return total_lengths - lengths_on_rug
+    lengths2 = np.roll(np.array(cs1), -1, axis = 0) - np.array(cs1)
+    total_lengths = sum(np.linalg.norm(lengths2, axis = 1)**2)
+    cs1 = np.array(cs1).reshape(-1, 2)
+    cs2 = np.array(cs2).reshape(-1, 2)
+    if intersection.area == 0: 
+        dists = np.zeros((4, 4))
+        for i in range(4):
+            for j in range(4):
+                dists[i, j] = np.linalg.norm(cs1[i] - cs2[j])
+        return np.min(dists) * total_lengths
+    
+    else: 
+        x = np.array([[i, j] for i, j in zip(intersection.exterior.xy[0], intersection.exterior.xy[1])])
+        lengths1 = np.roll(x, -1, axis = 0) - x
+        lengths1 = np.linalg.norm(lengths1, axis = 1)
+        lengths_on_rug = sum(lengths1**2)
+    
+        return total_lengths - lengths_on_rug
 
 @safe_execution
 def p_infront(positions, room, object1_index, object2_index, dist = 0.8):
@@ -444,7 +459,7 @@ def p_not_facing(positions, room, object1_index, object2_index):
 def p_between(positions, room, object1_index, object2_index, object3_index): 
     
     """ The function p_between ensures that object1 is in between the two objects object2 and object3. 
-        This would be used for something like a side table being between two chairs, or maybe a bed being between two nightstands. 
+        This would be used for something like a side table being between two chairs, or a bed being between two nightstands. 
         Or even a nightstand going between two beds. This can be used instead of two p_next_to functions, or in conjunction with them.
         
         Args: 

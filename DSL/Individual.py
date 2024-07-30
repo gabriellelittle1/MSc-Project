@@ -7,7 +7,7 @@ def safe_execution(func):
         try:
             return func(*args, **kwargs)
         except Exception as e:
-            print(f"An error occurred: {e}")
+            print(f"An error occurred: {e}, function: {func.__name__}")
             return 0.0
     return wrapper
 
@@ -66,6 +66,7 @@ def ind_next_to_wall(positions, room, object_index, side = 'back'):
     if side == "top" or side == "back":
         wall = np.argmin(side_distances[0, :])
         ds = side_distances[:, wall]
+        # distance of side to north or south, x side of corner 1 to east or west 
         val += (min(side_distances[0, 0], side_distances[0, 2]) * min(side_distances[0, 1], side_distances[0, 3]))
         val += max(ds[0] - ds[1], 0.0)**2 + max(ds[0] - ds[2], 0.0)**2 + max(ds[0] - ds[3], 0.0)**2
     elif side == "bottom" or side == "front":
@@ -115,7 +116,7 @@ def ind_close_to_fixed_object(positions, room, object_index, fixed_object_type, 
     
     f_objs = room.find_all(fixed_object_type)
     if len(f_objs) == 0: 
-        print("There are no " + "fixed_object_type" + "s in the room.")
+        return 0.0
     if side: 
         dist = np.inf
         point = [(cs[0][0] + cs[1][0])/2, (cs[0][1] + cs[1][1])/2]
@@ -126,7 +127,7 @@ def ind_close_to_fixed_object(positions, room, object_index, fixed_object_type, 
                 dist = new_dist
         return max(dist - max_dist**2, 0.0)
     else:
-        distances = np.zeros((len(f_objs), 4))
+        distances = np.zeros((len(f_objs), 4)) # corners to the objects
         for i in range(len(f_objs)):
             for j in range(4): 
                 distances[i, j] = (cs[j][0] - f_objs[i].position[0])**2 + (cs[j][1] - f_objs[i].position[1])**2
@@ -176,9 +177,10 @@ def ind_accessible(positions, room, object_index, sides = [], min_dist = None):
     val = 0.0 # initialise output value 
 
     obj = room.moving_objects[object_index]
-
-    if 'rug' in obj.name or 'mat' in obj.name:
-        return 0.0
+    rug_names = ['rug', 'mat', 'Rug', 'Mat', 'RUG', 'MAT', 'carpet', 'Carpet']
+    for i in range(len(rug_names)): 
+        if rug_names[i] in obj.name:
+            return 0.0
     
     x, y, theta = get_position(positions, room, object_index)
     TL, TR, BR, BL = corners(x, y, theta, obj.width, obj.length)
@@ -235,8 +237,9 @@ def ind_accessible(positions, room, object_index, sides = [], min_dist = None):
         for i in range(len(room.moving_objects)):
             if i == object_index:
                 continue
-            if 'rug' in room.moving_objects[i].name or 'mat' in room.moving_objects[i].name: 
-                continue
+            for name in rug_names: 
+                if name in room.moving_objects[i].name:
+                    continue
 
             x, y, theta = get_position(positions, room, i)
             poly2 = Polygon(corners(x, y, theta, room.moving_objects[i].width, room.moving_objects[i].length))
@@ -354,7 +357,13 @@ def ind_no_overlap(positions, room, weight = 10):
 
     val = 0
     objs = room.moving_objects
-    indices = [i for i in range(len(objs)) if 'rug' not in objs[i].name and 'mat' not in objs[i].name]
+    rug_names = ['rug', 'mat', 'Rug', 'Mat', 'RUG', 'MAT', 'carpet', 'Carpet']
+    indices = []
+    for i in range(len(objs)):
+        inds = [j for j in rug_names if j in objs[i].name]
+        if len(inds) == 0: 
+            indices += [i]
+        
     doors = room.find_all('door')
     door_polygons = [] 
     for door in doors: 
@@ -503,7 +512,6 @@ def ind_under_window(positions, room, object_index):
         room: rectangular Room object
     """ 
 
-    index = positions_index(room, object_index)
     x, y, _ = get_position(positions, room, object_index)
     windows = room.find_all('window')
     min_dist = np.inf
@@ -558,10 +566,9 @@ def ind_facing_into_room(positions, room, object_index):
     return val 
 
 @safe_execution
-def ind_not_against_wall(positions, room, object_index, side = None, min_dist = 0.5):
+def ind_not_against_wall(positions, room, object_index, min_dist = 0.5):
 
     """ ind_not_against_wall is a function that ensures and object is not against a wall. 
-        If a side is given, it will ensure that the specific side is not against a wall.
         For example, you might not want a rug against a wall, or a dining table. 
 
         Args:
@@ -573,35 +580,19 @@ def ind_not_against_wall(positions, room, object_index, side = None, min_dist = 
     """
     val = 0.0
     x, y, theta = get_position(positions, room, object_index)
-
     cs = np.array(corners(x, y, theta, room.moving_objects[object_index].width, room.moving_objects[object_index].length)) # TL, TR, BR, BL
-
     distances =  np.zeros((4, 4)) # each row a different corner, each column a different wall 
-    sides = [[0, 1], [2, 3], [0, 3], [1, 2]]
+
     for i in range(4):
         distances[i, :] = np.array([(cs[i][1] - room.length)**2, (cs[i][0] - room.width)**2, cs[i][1]**2, cs[i][0]**2])
 
     distances = np.sqrt(distances)
-    side_distances = np.zeros_like(distances) # columns: N, E, S, W, rows: top, bottom, left, right
-    for i in range(4):
-        side_distances[i, :] = distances[sides[i][0], :] + distances[sides[i][1], :]
-
     val = 0 
-
-    if side == "top" or side == "back":
-        val += max(0.0, np.min(side_distances[0, :]) - min_dist)**2
-    elif side == "bottom" or side == "front":
-        val += max(0.0, np.min(side_distances[1, :]) - min_dist)**2
-    elif side == "left":
-        val += max(0.0, np.min(side_distances[2, :]) - min_dist)**2
-    elif side == "right":
-        val += max(0.0, np.min(side_distances[3, :]) - min_dist)**2
-    else: 
-        for i in range(4):
-            for j in range(4):
-                val += max(0.0, distances[i, j] - min_dist)**2
+    for i in range(4):
+        for j in range(4):
+            val += max(0.0, distances[i, j] - min_dist)**2
     
-    return val/16
+    return val
 
 
 
