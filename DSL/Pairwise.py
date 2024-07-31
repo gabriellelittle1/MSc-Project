@@ -57,10 +57,7 @@ def p_next_to(positions, room, object1_index, object2_index, side1 = None, side2
         direction2 = np.array([point4[0] - point3[0], point4[1] - point3[1]]) # side2
 
         angle_diff = np.dot(direction1, direction2) / (np.linalg.norm(direction1) * np.linalg.norm(direction2))
-        if angle_diff >= 0:
-            val += max(0.0, 0.95 - angle_diff)**2
-        else:
-            val += max(0.0, -0.95 - angle_diff)**2
+        val += min(0.0, np.pi/4 - abs(angle_diff))**2
 
         if np.linalg.norm(direction1) > np.linalg.norm(direction2):
             point5 = np.array([(point3[0] + point4[0]) / 2, (point3[1] + point4[1]) / 2]) # point on the shorter side
@@ -145,7 +142,7 @@ def p_near(positions, room, object1_index, object2_index, max_dist = 3.0):
     x2, y2, _ = get_position(positions, room, object2_index)
 
     distance = np.sqrt((x1 - x2)**2 + (y1 - y2)**2)
-    return np.exp(distance - max_dist)
+    return min(max_dist - distance, 0.0)**2
 
 @safe_execution
 def p_aligned(positions, room, object1_index, object2_index, center_object_info = None, max_dist = 2):
@@ -253,23 +250,11 @@ def p_under_central(positions, room, object1_index, object2_index):
         object2_index: int, index of object2 in the room
     """
 
-    obj1 = room.moving_objects[object1_index]   
-    obj2 = room.moving_objects[object2_index]
-
     ## Under basically means that their positions are the same.
-    # obj2 = room.moving_objects[object2_index] 
     x1, y1, theta1 = get_position(positions, room, object1_index)
     x2, y2, theta2 = get_position(positions, room, object2_index)
-    # cs1 = np.array(corners(x1, y1, theta1, obj1.width, obj1.width)).reshape(-1, 2) # TL, TR, BR, BL
-    # cs2 = np.array(corners(x2, y2, theta2, obj2.width, obj2.width)).reshape(-1, 2) 
-    # dists = np.zeros((4, 4))
-    # for i in range(4):
-    #     for j in range(4):
-    #         dists[i, j] = np.linalg.norm(cs1[i] - cs2[j])
-    # dists = np.min(dists, axis = 1)
-    # dists /= np.linalg.norm(dists)
 
-    val = (x1 - x2)**2 + (y1 - y2)**2  + (theta1 - theta2)**2 #+ np.arccos(np.dot(dists, np.ones(4)/2))**2 
+    val = ((x1 - x2)**2 + (y1 - y2)**2  + (theta1 - theta2)**2)
     return val 
 
 @safe_execution

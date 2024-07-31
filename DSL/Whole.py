@@ -152,6 +152,22 @@ def balanced(positions, room):
         
     return 0.3*val
 
+## Do I want to try the weighted version of this? 
+    # objs = room.moving_objects
+    # room_x, room_y = room.width/2, room.length/2
+    # av_x, av_y = 0.0, 0.0
+    # total_weight = 0.0
+    # for i in range(len(objs)):
+    #     x, y, theta = get_position(positions, room, i)
+    #     weight = objs[i].width * objs[i].length
+    #     total_weight += weight
+    #     av_x += weight * x
+    #     av_y += weight * y
+    
+    # av_x /= total_weight
+    # av_y /= total_weight
+
+    # val = (av_x - room_x)**2 + (av_y - room_y)**2
 
 
 

@@ -146,18 +146,17 @@ def ind_away_from_fixed_object(positions, room, object_index, fixed_object_type,
     """
     x, y, _ = get_position(positions, room, object_index)
     w, l = room.moving_objects[object_index].width, room.moving_objects[object_index].length
-    half_diag = (w**2 + l**2)/4
+    half_diag = np.sqrt((w/2)**2 + (l/2)**2)
     f_objs = room.find_all(fixed_object_type)
     if len(f_objs) == 0:
         return 0.0
-
-    ## If any of the corners are within the minimum distance, return the sum of the distances
+    
     distances = np.zeros(len(f_objs))
     for i in range(len(f_objs)):
         f_obj = f_objs[i]
-        distances[i] = max(0.0, (min_dist ** 2)*(half_diag) - ((x - f_obj.position[0])**2 + (y - f_obj.position[1])**2)) 
+        distances[i] = max(0.0, (min_dist + half_diag) - np.sqrt(((x - f_obj.position[0])**2 + (y - f_obj.position[1])**2)))**2
      
-    val = sum(distances)/(len(f_objs) * min_dist**2 * half_diag)
+    val = sum(distances)
     
     return val
 
@@ -237,9 +236,14 @@ def ind_accessible(positions, room, object_index, sides = [], min_dist = None):
         for i in range(len(room.moving_objects)):
             if i == object_index:
                 continue
+
+            rug = 0
             for name in rug_names: 
                 if name in room.moving_objects[i].name:
+                    rug = 1
                     continue
+            if rug == 1:
+                continue
 
             x, y, theta = get_position(positions, room, i)
             poly2 = Polygon(corners(x, y, theta, room.moving_objects[i].width, room.moving_objects[i].length))
@@ -282,19 +286,21 @@ def ind_central(positions, room, object_index, both = False):
 
     x, y, _ = get_position(positions, room, object_index)
     if both: 
-        val = 0
-        if x < lower_x: 
-            val += (lower_x - x)**2
-        elif x > upper_x: 
-            val += (x - upper_x)**2
-        else: 
-            val += 0.01*(x - mid_x)**2
-        if y < lower_y:
-            val += (lower_y - y)**2
-        elif y > upper_y:
-            val += (y - upper_y)**2
-        else:
-            val += 0.01*(y - mid_y)**2
+        val = min(x - lower_x, 0.0) + min(upper_x - x, 0.0) + min(y - lower_y, 0.0) + min(upper_y - y, 0.0) + 0.01*((x - mid_x)**2 + (y - mid_y)**2)
+    # if both: 
+    #     val = 0
+    #     if x < lower_x: 
+    #         val += (lower_x - x)**2
+    #     elif x > upper_x: 
+    #         val += (x - upper_x)**2
+    #     else: 
+    #         val += 0.01*(x - mid_x)**2
+    #     if y < lower_y:
+    #         val += (lower_y - y)**2
+    #     elif y > upper_y:
+    #         val += (y - upper_y)**2
+    #     else:
+    #         val += 0.01*(y - mid_y)**2
     else: 
 
         val = (min(x - lower_x, 0.0) + min(upper_x - x, 0.0))*(min(y - lower_y, 0.0) + min(upper_y - y, 0.0))
@@ -317,14 +323,14 @@ def ind_in_region(positions, room, object_index, region_name, weight = 5):
         return 0.0
     
     x, y, _ = get_position(positions, room, object_index)
-
+    r_dist = np.sqrt((regions[region_index].x - x)**2 + (regions[region_index].y - y)**2)
     value = 0 
     for i in range(len(regions)):
         if i == region_index:
             continue
         else:
-            value += ((regions[i].x - x)**2 + (regions[i].y - y)**2) - ((regions[region_index].x - x)**2 + (regions[region_index].y - y)**2)
-    return weight*min(0, value)**2
+            value += min(np.sqrt((regions[i].x - x)**2 + (regions[i].y - y)**2) - r_dist, 0.0)**2
+    return weight*value
 
 @safe_execution
 def ind_in_bounds(positions, room, weight = 10): 
@@ -566,7 +572,7 @@ def ind_facing_into_room(positions, room, object_index):
     return val 
 
 @safe_execution
-def ind_not_against_wall(positions, room, object_index, min_dist = 0.5):
+def ind_not_against_wall(positions, room, object_index, min_dist = 0.2):
 
     """ ind_not_against_wall is a function that ensures and object is not against a wall. 
         For example, you might not want a rug against a wall, or a dining table. 
@@ -586,12 +592,17 @@ def ind_not_against_wall(positions, room, object_index, min_dist = 0.5):
     for i in range(4):
         distances[i, :] = np.array([(cs[i][1] - room.length)**2, (cs[i][0] - room.width)**2, cs[i][1]**2, cs[i][0]**2])
 
-    distances = np.sqrt(distances)
-    val = 0 
-    for i in range(4):
-        for j in range(4):
-            val += max(0.0, distances[i, j] - min_dist)**2
+    distances = np.sqrt(distances.flatten())
+    distances = np.where(distances > min_dist, 0.0, (distances - min_dist)**2)
+    val = 10*sum(distances)
+    # val = 0 
+    # num_corners = 0
+    # for i in range(16):
+    #     if min(0.0, distances[i] - min_dist)**2 > 0:
+    #         num_corners += 1
+    #     val += min(0.0, distances[i] - min_dist)**2
     
+    # print(num_corners)
     return val
 
 
