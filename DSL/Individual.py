@@ -7,7 +7,7 @@ def safe_execution(func):
         try:
             return func(*args, **kwargs)
         except Exception as e:
-            print(f"An error occurred: {e}, function: {func.__name__}")
+            #print(f"An error occurred: {e}, function: {func.__name__}")
             return 0.0
     return wrapper
 
@@ -89,6 +89,75 @@ def ind_next_to_wall(positions, room, object_index, side = 'back'):
         return ind_next_to_wall(positions, room, object_index, 'back') 
     
     return val
+
+@ safe_execution
+def ind_near_wall(positions, room, object_index, max_dist = 0.5):
+    """ This function ensures an object is near to a wall in a room. 
+        The specific side of the object will be used. If no side is given, the back of the object will be used.
+                
+        Args:
+        positions: list of floats, x, y, theta values for all objects in the room
+        room: rectangular Room object
+        object_index: int, index of the object in the room's object list
+        side: string, one of 'back', 'front', 'left', 'right', defines which side of the object to check e.g back of bed 
+        max_dist: float, maximum distance the object should be from the wall
+    """
+        
+    x, y, theta = get_position(positions, room, object_index)
+    cs = np.array(corners(x, y, theta, room.moving_objects[object_index].width, room.moving_objects[object_index].length)) # TL, TR, BR, BL
+    distances =  np.zeros((4, 4))
+    sides = [[0, 1], [2, 3], [0, 3], [1, 2]]
+    for i in range(4):
+        distances[i, :] = np.array([(cs[i][1] - room.length)**2, (cs[i][0] - room.width)**2, cs[i][1]**2, cs[i][0]**2])
+
+    distances = np.sqrt(distances)
+    side_distances = np.zeros_like(distances) # columns: N, E, S, W, rows: top, bottom, left, right
+    for i in range(4):
+        side_distances[i, :] = (distances[sides[i][0], :] + distances[sides[i][1], :])/2
+
+    val = 0 
+    wall = np.argmin(side_distances[0, :])
+    ds = side_distances[:, wall]
+    val += min(max_dist - np.min(ds), 0.0)**2
+    val += max(ds[0] - ds[1], 0.0)**2 + max(ds[0] - ds[2], 0.0)**2 + max(ds[0] - ds[3], 0.0)**2
+    
+    return val
+
+@ safe_execution
+def ind_in_corner(positions, room, object_index, side = 'back', max_dist = 0.5):
+    """ This function can be used to ensure that an object is placed into a corner. 
+        The back of the object will always be placed closest to the corner. 
+
+        Args:
+        positions: list of floats, x, y, theta values for all objects in the room
+        room: rectangular Room object
+        object_index: int, index of the object in the room's object list
+        max_dist: float, maximum distance the object should be from the wall
+    """
+
+    x, y, theta = get_position(positions, room, object_index)
+    cs = np.array(corners(x, y, theta, room.moving_objects[object_index].width, room.moving_objects[object_index].length)) # TL, TR, BR, BL
+    distances =  np.zeros((4, 4)) # each row a different corner, each column a different room corner 
+    room_corners = [[0, 0], [0, room.length], [room.width, 0], [room.width, room.length]]
+    sides = [[0, 1], [2, 3], [0, 3], [1, 2]]
+    for i in range(4):
+        for j in range(4): 
+            distances[i, j] = (cs[i][0] - room_corners[j][0])**2 + (cs[i][1] - room_corners[j][1])**2
+
+    distances = np.sqrt(distances)
+    side_distances = np.zeros_like(distances) # columns: N, E, S, W, rows: back, front, left, right
+    for i in range(4):
+        side_distances[i, :] = (distances[sides[i][0], :] + distances[sides[i][1], :])/2
+    
+    ## want to minimise the distance of the back corners to the corner of the room.
+    room_corner = np.argmin(side_distances[0, :]) 
+    val = 0
+    val += min(max_dist - side_distances[0, room_corner], 0.0)**2  # two back corners should be equally close
+    val += (distances[0, room_corner] - distances[1, room_corner])**2# back side should be closer than any other side
+    val += min(side_distances[1, room_corner] + side_distances[2, room_corner] + side_distances[3, room_corner] - 3*side_distances[0, room_corner], 0.0)**2 # back side should be less than max_dist away from the corner
+
+    return val 
+
 
 @safe_execution   
 def ind_close_to_fixed_object(positions, room, object_index, fixed_object_type, side = None, max_dist = 0.5):
@@ -199,6 +268,26 @@ def ind_accessible(positions, room, object_index, sides = [], min_dist = None):
             return min(0.0, point[0])**2 + min(0.0, point[1])**2 + max(0.0, point[0] - room.width)**2 + max(0.0, point[1] - room.length)**2
         return 0.0
     
+    if sides == []: 
+        sides = ['front']
+    
+    for i in range(len(sides)): 
+
+        if sides[i] == 'long':
+            if obj.width > obj.length:
+                val = np.random.randn()
+                if val > 0: 
+                    sides[i] = 'left'
+                else: 
+                    sides[i] = 'right'
+            else: 
+                sides[i] = 'front'
+        elif sides[i] == 'short':
+            if obj.width > obj.length:
+                sides[i] = 'front'
+            else: 
+                sides[i] = 'left'
+        
     for side in sides: 
         if side == 'top' or side == 'back':
             new_pointL = project(TL, BL)
@@ -264,7 +353,7 @@ def ind_accessible(positions, room, object_index, sides = [], min_dist = None):
                     x = np.array([[i, j] for i, j in zip(intersection.exterior.xy[0], intersection.exterior.xy[1])])
                     lengths = np.roll(x, -1, axis = 0) - x
                     lengths = np.linalg.norm(lengths, axis = 1)
-                    val += sum(lengths**2)
+                    val += 5*sum(lengths**2)
 
     return val
 
@@ -286,7 +375,7 @@ def ind_central(positions, room, object_index, both = False):
 
     x, y, _ = get_position(positions, room, object_index)
     if both: 
-        val = min(x - lower_x, 0.0) + min(upper_x - x, 0.0) + min(y - lower_y, 0.0) + min(upper_y - y, 0.0) + 0.01*((x - mid_x)**2 + (y - mid_y)**2)
+        val = min(x - lower_x, 0.0)**2 + min(upper_x - x, 0.0)**2 + min(y - lower_y, 0.0)**2 + min(upper_y - y, 0.0)**2 + 0.01*((x - mid_x)**2 + (y - mid_y)**2)
     # if both: 
     #     val = 0
     #     if x < lower_x: 
@@ -320,7 +409,19 @@ def ind_in_region(positions, room, object_index, region_name, weight = 5):
     regions = room.regions
     region_index = room.find_region_index(region_name)
     if region_index == None: 
-        return 0.0
+        ## check both uppercase
+        if " " in region_name: 
+            region_name2 = region_name.split(" ")[0].capitalize() + " " + region_name.split(" ")[1].capitalize()
+        ## check both uppercase
+            region_name3 = region_name.split(" ")[0].lower() + " " + region_name.split(" ")[1].lower()
+        ## check uppercase first, lower case second
+            region_name4 = region_name.split(" ")[0].capitalize() + " " + region_name.split(" ")[1].lower()
+        for r in regions: 
+            if r.name == region_name2 or r.name == region_name3 or r.name == region_name4:
+                region_index = regions.index(r)
+                break
+        if region_index == None:
+            return 0.0
     
     x, y, _ = get_position(positions, room, object_index)
     r_dist = np.sqrt((regions[region_index].x - x)**2 + (regions[region_index].y - y)**2)
@@ -331,113 +432,6 @@ def ind_in_region(positions, room, object_index, region_name, weight = 5):
         else:
             value += min(np.sqrt((regions[i].x - x)**2 + (regions[i].y - y)**2) - r_dist, 0.0)**2
     return weight*value
-
-@safe_execution
-def ind_in_bounds(positions, room, weight = 10): 
-
-    """ This function ensures that all objects are within the room. This should be used in every objective function.
-        
-        Args:
-        positions: list of floats, x, y, theta values for all objects in the room
-        room: rectangular Room object
-    """
-    val = 0
-    objs = room.moving_objects
-    for i in range(len(room.moving_objects)):
-        x, y, theta = get_position(positions, room, i)
-        cs = corners(x, y, theta, objs[i].width, objs[i].length)
-        for corner in cs: 
-            val += (max(0, corner[0] - room.width)**2 + max(0, corner[1] - room.length)**2)
-            val += (max(0, -corner[0])**2 + max(0, -corner[1])**2)
-        
-    return weight * val 
-
-@safe_execution
-def ind_no_overlap(positions, room, weight = 10):
-    """ This function ensures that no objects overlap in the room. This should not be used in the objective function.
-        
-        Args:
-        positions: list of floats, x, y, theta values for all objects in the room
-        room: rectangular Room object
-    """
-
-    val = 0
-    objs = room.moving_objects
-    rug_names = ['rug', 'mat', 'Rug', 'Mat', 'RUG', 'MAT', 'carpet', 'Carpet']
-    indices = []
-    for i in range(len(objs)):
-        inds = [j for j in rug_names if j in objs[i].name]
-        if len(inds) == 0: 
-            indices += [i]
-        
-    doors = room.find_all('door')
-    door_polygons = [] 
-    for door in doors: 
-        door_corners = []
-        if door.position[2] == 0:
-            door_corners += [[door.position[0] - door.width, door.position[1]]]
-            door_corners += [[door.position[0] + door.width, door.position[1]]]
-            door_corners += [[door.position[0] + door.width, door.position[1] + door.width]]
-            door_corners += [[door.position[0] - door.width, door.position[1] + door.width]]
-        elif door.position[2] == np.pi/2:
-            door_corners += [[door.position[0], door.position[1] - door.width]]
-            door_corners += [[door.position[0] - door.width, door.position[1] - door.width]]
-            door_corners += [[door.position[0] - door.width, door.position[1] + door.width]]
-            door_corners += [[door.position[0], door.position[1] + door.width]]
-        elif door.position[2] == np.pi:
-            door_corners += [[door.position[0] + door.width, door.position[1]]]
-            door_corners += [[door.position[0] + door.width, door.position[1] - door.width]]
-            door_corners += [[door.position[0] - door.width, door.position[1] - door.width]]
-            door_corners += [[door.position[0] - door.width, door.position[1]]]
-        elif door.position[2] == 3*np.pi/2:
-            door_corners += [[door.position[0], door.position[1] + door.width]]
-            door_corners += [[door.position[0] + door.width, door.position[1] + door.width]]
-            door_corners += [[door.position[0] + door.width, door.position[1] - door.width]]
-            door_corners += [[door.position[0], door.position[1] - door.width]]
-
-        door_poly = Polygon(door_corners)
-        door_polygons += [door_poly]
-        
-    for i in indices:
-        
-        obj_i = objs[i]
-
-        x_i, y_i, theta_i = get_position(positions, room, i)
-
-        corners_i = corners(x_i, y_i, theta_i, obj_i.width, obj_i.length)
-        if nan_check(corners_i):
-            continue
-
-        poly1 = Polygon(corners_i)
-
-        for j in indices:
-            if j <= i: 
-                continue
-
-            x_j, y_j, theta_j = get_position(positions, room, j)
-            obj_j = objs[j]
-            corners_j = corners(x_j, y_j, theta_j, obj_j.width, obj_j.length)
-            if nan_check(corners_j):
-                continue
-            
-            poly2 = Polygon(corners_j)
-            intersection = poly1.intersection(poly2)
-            
-            if intersection.area > 0:
-                x = np.array([[i, j] for i, j in zip(intersection.exterior.xy[0], intersection.exterior.xy[1])])
-                lengths = np.roll(x, -1, axis = 0) - x
-                lengths = np.linalg.norm(lengths, axis = 1)
-                val += sum(lengths**2)/4
-        
-        for door in door_polygons:
-            intersection = poly1.intersection(door)
-            if intersection.area > 0:
-                x = np.array([[i, j] for i, j in zip(intersection.exterior.xy[0], intersection.exterior.xy[1])])
-                lengths = np.roll(x, -1, axis = 0) - x
-                lengths = np.linalg.norm(lengths, axis = 1)
-                val += 3*sum(lengths**2)/4
-
-    return weight * val 
 
 @safe_execution
 def ind_not_block_fixed_object(positions, room, object_index, fixed_object_type):
@@ -462,7 +456,7 @@ def ind_not_block_fixed_object(positions, room, object_index, fixed_object_type)
     for obj in fixed_objects: 
         if obj.name == 'window':
             x, y, theta = obj.position
-            cs = corners(x, y, theta, obj.width, min(obj.length, 1))
+            cs = obj.corners()
             poly_fixed = Polygon(cs)
             intersection = poly.intersection(poly_fixed)
             if intersection.area > 1e-3:
@@ -471,28 +465,7 @@ def ind_not_block_fixed_object(positions, room, object_index, fixed_object_type)
                 lengths = np.linalg.norm(lengths, axis = 1)
                 val += sum(lengths**2)  
         elif obj.name == 'door':
-            door_corners = []
-            if obj.position[2] == 0:
-                door_corners += [[obj.position[0] - obj.width, obj.position[1]]]
-                door_corners += [[obj.position[0] + obj.width, obj.position[1]]]
-                door_corners += [[obj.position[0] + obj.width, obj.position[1] + obj.width]]
-                door_corners += [[obj.position[0] - obj.width, obj.position[1] + obj.width]]
-            elif obj.position[2] == np.pi/2:
-                door_corners += [[obj.position[0], obj.position[1] - obj.width]]
-                door_corners += [[obj.position[0] - obj.width, obj.position[1] - obj.width]]
-                door_corners += [[obj.position[0] - obj.width, obj.position[1] + obj.width]]
-                door_corners += [[obj.position[0], obj.position[1] + obj.width]]
-            elif obj.position[2] == np.pi:
-                door_corners += [[obj.position[0] + obj.width, obj.position[1]]]
-                door_corners += [[obj.position[0] + obj.width, obj.position[1] - obj.width]]
-                door_corners += [[obj.position[0] - obj.width, obj.position[1] - obj.width]]
-                door_corners += [[obj.position[0] - obj.width, obj.position[1]]]
-            elif obj.position[2] == 3*np.pi/2:
-                door_corners += [[obj.position[0], obj.position[1] + obj.width]]
-                door_corners += [[obj.position[0] + obj.width, obj.position[1] + obj.width]]
-                door_corners += [[obj.position[0] + obj.width, obj.position[1] - obj.width]]
-                door_corners += [[obj.position[0], obj.position[1] - obj.width]]
-
+            door_corners = obj.corners()
             poly_fixed = Polygon(door_corners)
             intersection = poly.intersection(poly_fixed)
             if intersection.area > 1e-3:
@@ -527,22 +500,6 @@ def ind_under_window(positions, room, object_index):
             min_dist = distance
 
     return min_dist
-
-@safe_execution
-def ind_aligned(positions, room):
-    """ ind_aligned is a function that penalises orientations that are not one of the cardinal directions.
-        Since most furniture in a room is in one of the cardinal directions, we want to encourage this. 
-        This constraint is quite week in order to not prevent rotations. This should be used in all rooms.
-        Args: 
-        positions: list of floats, x, y, theta values for all objects in the room
-        room: rectangular Room object
-    """
-
-    val = 0
-    for i in range(len(positions)//3):
-        theta = positions[3*i + 2]
-        val += (np.sin(2*theta)**2)/5
-    return val
 
 @safe_execution
 def ind_facing_into_room(positions, room, object_index):
@@ -595,14 +552,6 @@ def ind_not_against_wall(positions, room, object_index, min_dist = 0.2):
     distances = np.sqrt(distances.flatten())
     distances = np.where(distances > min_dist, 0.0, (distances - min_dist)**2)
     val = 10*sum(distances)
-    # val = 0 
-    # num_corners = 0
-    # for i in range(16):
-    #     if min(0.0, distances[i] - min_dist)**2 > 0:
-    #         num_corners += 1
-    #     val += min(0.0, distances[i] - min_dist)**2
-    
-    # print(num_corners)
     return val
 
 

@@ -1,7 +1,7 @@
 ## All the Individual Object constraint functions are defined here
 from Class_Structures import *
 from shapely.geometry import Polygon
-from Individual import safe_execution, get_position, positions_index, nan_check
+from Individual import safe_execution, get_position, positions_index, nan_check, ind_near_wall
 
 @safe_execution
 def in_bounds(positions, room, weight = 10): 
@@ -24,7 +24,7 @@ def in_bounds(positions, room, weight = 10):
     return weight * val 
 
 @safe_execution
-def no_overlap(positions, room, weight = 10):
+def no_overlap(positions, room, weight = 5):
     """ This function ensures that no objects overlap in the room. This should be used in every objective function. 
         
         Args:
@@ -98,7 +98,7 @@ def no_overlap(positions, room, weight = 10):
                 x = np.array([[i, j] for i, j in zip(intersection.exterior.xy[0], intersection.exterior.xy[1])])
                 lengths = np.roll(x, -1, axis = 0) - x
                 lengths = np.linalg.norm(lengths, axis = 1)
-                val += sum(lengths**2)/4
+                val += sum(lengths**2)
         
         for door in door_polygons:
             intersection = poly1.intersection(door)
@@ -106,7 +106,7 @@ def no_overlap(positions, room, weight = 10):
                 x = np.array([[i, j] for i, j in zip(intersection.exterior.xy[0], intersection.exterior.xy[1])])
                 lengths = np.roll(x, -1, axis = 0) - x
                 lengths = np.linalg.norm(lengths, axis = 1)
-                val += 3*sum(lengths**2)/4
+                val += 3*sum(lengths**2)
 
     return weight * val 
 
@@ -135,39 +135,44 @@ def balanced(positions, room):
         positions: list of floats, x, y, theta values for all objects in the room
         room: rectangular Room object
     """
-
+    
     objs = room.moving_objects
     room_x, room_y = room.width/2, room.length/2
     av_x, av_y = 0.0, 0.0
-
+    total_weight = 0.0
     for i in range(len(objs)):
         x, y, theta = get_position(positions, room, i)
-        av_x += x
-        av_y += y
+        weight = objs[i].width * objs[i].length
+        total_weight += weight
+        av_x += weight * x
+        av_y += weight * y
     
-    av_x /= len(objs)
-    av_y /= len(objs)
+    av_x /= total_weight
+    av_y /= total_weight
 
     val = (av_x - room_x)**2 + (av_y - room_y)**2
+    return val 
+
+
+def wall_attraction(positions, room): 
+    """ This function is a very weak constraint that attracts the objects to near the walls 
+        in order to prevent 'floating' objects - objects that are placed in the middle of the room. 
+        This should be used in all rooms.
         
-    return 0.3*val
+        Args:
+        positions: list of floats, x, y, theta values for all objects in the room
+        room: rectangular Room object
+    """
 
-## Do I want to try the weighted version of this? 
-    # objs = room.moving_objects
-    # room_x, room_y = room.width/2, room.length/2
-    # av_x, av_y = 0.0, 0.0
-    # total_weight = 0.0
-    # for i in range(len(objs)):
-    #     x, y, theta = get_position(positions, room, i)
-    #     weight = objs[i].width * objs[i].length
-    #     total_weight += weight
-    #     av_x += weight * x
-    #     av_y += weight * y
-    
-    # av_x /= total_weight
-    # av_y /= total_weight
+    objs = room.moving_objects
+    val = 0
+    for i in range(len(objs)):
+        x, y, theta = get_position(positions, room, i)
+        width, length = objs[i].width, objs[i].length
+        half_diag = np.sqrt(width**2 + length**2)/2
+        val += 0.05 * ind_near_wall(positions, room, i, half_diag + 0.5)
 
-    # val = (av_x - room_x)**2 + (av_y - room_y)**2
+    return val 
 
 
 

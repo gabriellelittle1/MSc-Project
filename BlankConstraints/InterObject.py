@@ -9,9 +9,10 @@ from shapely.geometry import Polygon
 # 'right' would be the right side of the object, when standing behind it
 
 
-def p_next_to(positions, room, object1_index, object2_index, side1 = None, side2 = None):
-    """ The function next_to ensures that two objects are next to each other in a room. 
+def io_next_to(positions, room, object1_index, object2_index, side1 = None, side2 = None):
+    """ This function ensures that two objects are next to each other in a room. 
         This should only be used when necessary e.g. for nightstands and a bed, or a desk and desk chair. 
+        This should not be used for dining chairs around a table or similar relationship, for that use io_surround.
         If side1 is given, the specific side of object1 will be used. If side2 is given, 
         the specific side of object2 will be used. E.g. the 'front' of the chair should be next to the 'back' of the desk. 
         If no side is given, then any of the sides will be used.
@@ -25,8 +26,8 @@ def p_next_to(positions, room, object1_index, object2_index, side1 = None, side2
     """
     return
 
-def p_away_from(positions, room, object1_index, object2_index, min_dist = 2.0):
-    """ The function p_away_from ensures that two objects are away from each other in a room.
+def io_away_from(positions, room, object1_index, object2_index, min_dist = 2.0):
+    """ This function ensures that two objects are away from each other in a room.
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
@@ -38,8 +39,8 @@ def p_away_from(positions, room, object1_index, object2_index, min_dist = 2.0):
     """
     return
 
-def p_near(positions, room, object1_index, object2_index, max_dist = 3.0):
-    """ The function next_to ensures that two objects are within a certain distance to each other. 
+def io_near(positions, room, object1_index, object2_index, max_dist = 3.0):
+    """ This function ensures that two objects are within a certain distance to each other. 
         They are not necessarily next to each other, but they are close.
         
         Args:
@@ -51,25 +52,21 @@ def p_near(positions, room, object1_index, object2_index, max_dist = 3.0):
     """
     return 
 
-def p_aligned(positions, room, object1_index, object2_index, center_object_info = None, max_dist = 2.0):
-    """ The function aligned ensures that two objects are parallel (if no center object given) or aligned about a center object.
-        If center is given, the objects will be aligned about that point. For example, 
-        2 nightstands should be aligned about the bed. If center is not given, the objects will 
-        be made close together with their orientations the same. 
+def io_parallel(positions, room, object1_index, object2_index, center_object_info = None, max_dist = 2.0):
+    """ This function ensures that two objects have the same orientation in a room.
+        That is, that they are parallel to each other. It does not handle distance, so if 
+        proximity is important, please combine this function with p_near, or p_next to, or even p_between. 
         
         Args:
-
         positions: list of floats, x, y, theta values for all objects in the room
         room: rectangular Room object
         object1_index: int, index of object1 in the room
-        object2_index: int, index of object2 in the room
-        center_object_info: optional list where first element is the name of the object e.g. 'window' or 'bed' and the second element is the object index.
-        max_dist: float, maximum distance between the two objects. Please write this as a float, e.g. 2.0.
+        object2_index: int, index of object2 in the room 
     """
     return
 
-def p_facing(positions, room, object1_index, object2_index, both = False):
-    """ The function facing ensures that object1 is facing object2 in a room.
+def io_facing(positions, room, object1_index, object2_index, both = False):
+    """ This function ensures that object1 is facing object2 in a room.
         If both is True, then object2 will also be facing object1.
         
         Args:
@@ -80,8 +77,8 @@ def p_facing(positions, room, object1_index, object2_index, both = False):
     """
     return
 
-def p_under_central(positions, room, object1_index, object2_index):
-    """ The function under ensures that object1 (a rug) is underneath object2 (any moving_object) and centered.
+def io_under_central(positions, room, object1_index, object2_index):
+    """ This function ensures that object1 (a rug) is underneath object2 (any moving_object) and centered.
         object1 MUST be a rug.
         
         Args:
@@ -93,8 +90,8 @@ def p_under_central(positions, room, object1_index, object2_index):
 
     return
 
-def p_on_top_of(positions, room, object1_index, object2_index):
-    """ The function under ensures that object1 is on top of object2 (a rug)but does not ensure that it is centered.
+def io_on(positions, room, object1_index, object2_index):
+    """ This function ensures that object1 is on top of object2 (a rug) but does not ensure that it is centered.
         object2 MUST be a rug. 
 
         Args:
@@ -106,8 +103,8 @@ def p_on_top_of(positions, room, object1_index, object2_index):
 
     return
 
-def p_infront(positions, room, object1_index, object2_index, dist = 0.8):
-    """ The function p_infront ensures that object1 is in front of object2 (both moving_objects i.e. not windows or doors). E.g a coffee table should be in front of a sofa....
+def io_infront(positions, room, object1_index, object2_index, dist = 0.8):
+    """ This function ensures that object1 is in front of object2 (both moving_objects i.e. not windows or doors). E.g a coffee table should be in front of a sofa....
 
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
@@ -120,8 +117,8 @@ def p_infront(positions, room, object1_index, object2_index, dist = 0.8):
 
     return
 
-def p_perpendicular_aligned(positions, room, object1_index, object2_index, center_object_index = None):
-    """ The function p_perpendicular_aligned ensures that two objects are aligned in a room perpendicularly. 
+def io_perp(positions, room, object1_index, object2_index, center_object_index = None):
+    """ This function ensures that two objects are aligned in a room perpendicularly. 
         If center is given, the objects will be aligned about that point. For example, 
         a sofa and chair might be aligned perpendicularly about a coffee table or a side table. Or a chair at the head of the table 
         might be aligned perpendicularly with the chairs closest to it on the sides of the table. 
@@ -138,9 +135,11 @@ def p_perpendicular_aligned(positions, room, object1_index, object2_index, cente
 
     return
 
-def p_surround(positions, room, central_object_index, object_indices):
-    """ The function p_surroudn ensures that central_object is surrounded by all the objects in object_indices.
-        This would be used for chairs around a dining table.
+def io_surround(positions, room, central_object_index, object_indices):
+    ## IF YOU USE THIS FUNCTON, DO NOT ALSO USE "IO_NEXT_TO" AS IT WILL BE REDUNDANT OR CONTRADICTORY. 
+    """ This function ensures that central_object is surrounded by all the objects in object_indices.
+        This would be used for chairs around a dining table. This should NOT be combined with io_next_to, as that would be redundant or 
+        it would contradict. 
 
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
@@ -151,8 +150,8 @@ def p_surround(positions, room, central_object_index, object_indices):
 
     return
 
-def p_not_facing(positions, room, object1_index, object2_index):
-    """ The function facing ensures that object1 is NOT facing object2 in a room.
+def io_not_facing(positions, room, object1_index, object2_index):
+    """ This function ensures that object1 is NOT facing object2 in a room.
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
@@ -162,13 +161,12 @@ def p_not_facing(positions, room, object1_index, object2_index):
     """
     return 
 
-def p_between(positions, room, object1_index, object2_index, object3_index): 
-    
-    """ The function p_between ensures that object1 is in between the two objects object2 and object3. 
+def io_between(positions, room, object1_index, object2_index, object3_index): 
+    """ This function ensures that object1 is in between the two objects object2 and object3. 
         This would be used for something like a side table being between two chairs, or maybe a bed being between two nightstands. 
         Or even a nightstand going between two beds.
         
-        Args: 
+        Args: w
         positions: list of floats, x, y, theta values for all objects in the room
         room: rectangular Room object
         object1_index: int, index of object1 in the room (** this is the object that will go in between the other two objects)
