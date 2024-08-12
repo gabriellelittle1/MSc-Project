@@ -88,7 +88,7 @@ def ind_next_to_wall(positions, room, object_index, side = 'back'):
         ## Assume side is meant to be back, 
         return ind_next_to_wall(positions, room, object_index, 'back') 
     
-    return val
+    return 3*val
 
 @ safe_execution
 def ind_near_wall(positions, room, object_index, max_dist = 0.5):

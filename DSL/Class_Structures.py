@@ -7,6 +7,7 @@ import scipy as sp
 import sys
 import copy
 from shapely.geometry import Polygon, Point
+from Individual import get_position
 
 def TR(x, y, theta, w, l):
     return (x + w/2 * np.cos(theta) + l/2 * np.sin(theta), y + w/2 * np.sin(theta) - l/2 * np.cos(theta))
@@ -24,7 +25,322 @@ def corners(x, y, theta, w, l): # TL, TR, BR, BL
     return [TL(x, y, theta, w, l), TR(x, y, theta, w, l), BR(x, y, theta, w, l), BL(x, y, theta, w, l)]
 
 def back_corners(x, y, theta, w, l):
-    return [TL(x, y, theta, w, l), TR(x, y, theta, w, l), ]
+    return [TL(x, y, theta, w, l), TR(x, y, theta, w, l)]
+
+def draw_medial_axis(room, points, weights): 
+
+    fig, ax = plt.subplots(figsize = (10, 10))
+    ax.set_xlim(-1, room.width + 1)
+    ax.set_ylim(-1, room.length + 1)
+    ax.set_aspect('equal')
+    ax.grid(linestyle = '--')
+    room.draw(ax = ax)
+    ax.scatter(points[:, 0], points[:, 1], c = weights)
+    return 
+
+def medial_axis(room, draw = False):
+
+        final_points = []
+
+        # Draw the room
+        rect = patches.Rectangle((0, 0), room.width, room.length, linewidth=2, edgecolor='black', facecolor='none', label='_nolegend_')
+
+        points = []
+        cs = rect.get_corners()
+        num_points = int(np.ceil(2 * (5 * room.width + 5 * room.length)))
+        for i in range(num_points):
+            points.append(cs[0] + (cs[1] - cs[0]) * i / num_points)  # Bottom side
+            points.append(cs[1] + (cs[2] - cs[1]) * i / num_points)  # Right side
+            points.append(cs[2] + (cs[3] - cs[2]) * i / num_points)  # Top side
+            points.append(cs[3] + (cs[0] - cs[3]) * i / num_points)  # Left side
+        final_points.append(points)
+
+        rug_names = ['rug', 'mat', 'Rug', 'Mat', 'RUG', 'MAT', 'carpet', 'Carpet']
+        if room.moving_objects:
+            for obj in room.moving_objects:
+                rug = False
+                for name in rug_names: 
+                    if name in obj.name:
+                        rug = True
+                        break
+                if rug: 
+                    continue 
+                cs_tup = obj.corners()
+                cs = [np.array(i) for i in cs_tup]
+                points = []
+                num_points = int(np.ceil(2 * (5 * obj.width + 5 * obj.length)))
+                for i in range(num_points):
+                    points.append(cs[0] + (cs[1] - cs[0]) * i / num_points)
+                    points.append(cs[1] + (cs[2] - cs[1]) * i / num_points)
+                    points.append(cs[2] + (cs[3] - cs[2]) * i / num_points)
+                    points.append(cs[3] + (cs[0] - cs[3]) * i / num_points)
+                
+                points = np.array(points)
+                final_points.append(points)
+
+        if room.fixed_objects:
+            for obj in room.fixed_objects:
+                if obj.name == 'door':
+
+                    wedge = patches.Wedge(center=obj.position[:2], r=obj.width, 
+                                            theta1=np.rad2deg(obj.position[2]), theta2=np.rad2deg(obj.position[2]) + 90, linewidth=3, edgecolor='r', facecolor='none')
+                    
+                    points = wedge.get_path().vertices
+                    if obj.position[2] == 0:
+                        points = [i for i in points if np.isclose(i[1], 0)]
+                        points = np.unique(points, axis = 0)
+                        min_x, max_x = sorted([i[0] for i in points])
+                        crit = lambda x: np.isclose(x[1], 0) and (min_x < x[0]) and (x[0] < max_x)
+                        crit2 = lambda x: np.isclose(x[1], 0)
+                    elif obj.position[2] == np.pi/2:
+                        points = [i for i in points if np.isclose(i[0], room.width)]
+                        points = np.unique(points, axis = 0)
+                        min_y, max_y = sorted([i[1] for i in points])
+                        crit = lambda x: np.isclose(x[0], room.width) and( min_y < x[1]) and (x[1] < max_y ) 
+                        crit2 = lambda x: np.isclose(x[0], room.width) 
+                    elif obj.position[2] == np.pi:
+                        points = [i for i in points if np.isclose(i[1], room.length)]
+                        points = np.unique(points, axis = 0)
+                        min_x, max_x = sorted([i[0] for i in points])
+                        crit = lambda x: np.isclose(x[1], room.length) and (min_x < x[0]) and (x[0] < max_x)
+                        crit2 = lambda x: np.isclose(x[1], room.length)
+                    elif obj.position[2] == 3*np.pi/2:
+                        points = [i for i in points if np.isclose(i[0], 0)]
+                        points = np.unique(points, axis = 0)
+                        min_y, max_y = sorted([i[1] for i in points])
+                        crit = lambda x: np.isclose(x[0], 0) and (min_y < x[1]) and (x[1] < max_y ) 
+                        crit2 = lambda x: np.isclose(x[0], 0)
+                    final_points.append(points)
+
+        final_points = np.concatenate(final_points)
+
+        door_points = []
+        for point in final_points:
+            if crit(point):
+                door_points += [point]
+                final_points = np.delete(final_points, np.where(np.all(final_points == point, axis = 1)), axis = 0)
+        vor = Voronoi(final_points)
+
+        new_edges = []
+        new_ridge_points = []
+
+        ## find the door ridge 
+        ridge_points = vor.ridge_points
+        for i in range(len(ridge_points)): 
+            edge = ridge_points[i]
+            p1, p2 = vor.points[edge]
+            if crit2(p1) and crit2(p2) and np.linalg.norm(p1 - p2) > 0.4:
+                new_edges.append(vor.ridge_vertices[i])
+                new_ridge_points.append(vor.ridge_points[i])
+
+        for i in range(len(vor.ridge_vertices)): 
+            edge = vor.ridge_vertices[i]
+            remove = False
+            p1 = vor.vertices[edge[0]]
+            p2 = vor.vertices[edge[1]]
+            if (edge[0] == -1 or edge[1] == -1):
+                continue
+            if p1[0] < 0 or p2[0] < 0 or p1[1] < 0 or p2[1] < 0:
+                continue
+            if p1[0] > room.width or p1[1] > room.length or p2[0] > room.width or p2[1] > room.length:
+                continue
+            for obj in room.moving_objects:
+                rug = False
+                for name in rug_names: 
+                    if name in obj.name:
+                        rug = True
+                        break
+                if rug:
+                    continue
+                poly = Polygon(obj.corners())
+                if any([poly.contains(Point(vor.vertices[v])) for v in edge]):
+                    remove = True
+                    break
+
+            if remove: 
+                continue
+            
+
+            regions = [j for j in range(len(vor.regions)) if edge[0] in vor.regions[j] and edge[1] in vor.regions[j]]
+            region_vs = [[], []]
+            for j in range(2): 
+                region_vs[j] = [v for v in vor.regions[regions[j]] if v != edge[0] and v != edge[1]]
+
+            dists = []
+            for j in range(len(region_vs[0])): 
+                for k in range(len(region_vs[1])):
+                    dists.append(np.linalg.norm(vor.vertices[region_vs[0][j]] - vor.vertices[region_vs[1][k]]))
+            if np.any(np.array(dists) < 1e-8): 
+                continue 
+            else: 
+                new_edges.append(edge)  
+                new_ridge_points.append(vor.ridge_points[i])  
+
+        new_vor = Voronoi(final_points)
+        new_vor.vertices = vor.vertices
+        new_vor.regions = vor.regions
+        new_vor.ridge_vertices = new_edges
+        new_vor.ridge_points = new_ridge_points
+
+        if draw:
+            fig, ax = plt.subplots(figsize = (10, 10))
+            voronoi_plot_2d(new_vor, ax=ax, show_points=True, show_vertices=False, line_colors='gray')
+
+        return new_vor
+
+
+def find_corner_points(points): 
+    """ A function to find the points that are inner corners (with three different directions of edges) in a set of points. 
+        Inputs: 
+        points: np.array, a set of points
+        Outputs: 
+        c_inds: list, indices of the corner points
+    """
+
+    c_inds =[]
+    neighbour_inds = []
+    for i in range(points.shape[0]): 
+        dists = np.linalg.norm(points - points[i], axis = 1)
+        inds = [j for j in np.where(dists < 0.15)[0] if j != i]
+        neighbours = points[inds]
+        ds = []
+        for n in neighbours:
+            direction = n - points[i]
+            if np.isnan(direction[0]/np.linalg.norm(direction)) or np.isnan(direction[1]/np.linalg.norm(direction)):
+                continue
+            ds += [direction / np.linalg.norm(direction)]
+        for j in range(len(ds) - 1): 
+            angles = np.arccos(np.dot(ds[j+1:], ds[j]))
+            if (np.any(np.isclose(angles, np.pi/2)) or np.any(np.isclose(angles, -np.pi/2))):
+                neighbour_inds += [inds]
+                c_inds.append(i)
+                break
+    
+    copy_inds = c_inds.copy()
+    for ind in range(len(copy_inds)): 
+        num = 0
+        new_ind = copy_inds[ind]
+        neighbours = points[neighbour_inds[ind]]
+        diff = (neighbours - points[new_ind])/np.linalg.norm(points[new_ind] - neighbours, axis = 1)[:, None]
+        for i in range(diff.shape[0]): 
+            new_diff = np.dot(np.concatenate([diff[:i], diff[i + 1:]]), diff[i])
+            if not np.any(new_diff < -0.9):
+                num += 1
+        if num == len(neighbours): 
+            c_inds.remove(new_ind)
+    
+    corner1 = np.argmin(points[:, 0] + points[:, 1])
+    corner2 = np.argmax(points[:, 0] + points[:, 1])
+    corner3 = np.argmax(points[:, 0] - points[:, 1])
+    corner4 = np.argmin(points[:, 0] - points[:, 1])
+    if corner1 not in c_inds: 
+        c_inds.append(corner1)
+    if corner2 not in c_inds:
+        c_inds.append(corner2)
+    if corner3 not in c_inds:
+        c_inds.append(corner3)
+    if corner4 not in c_inds:
+        c_inds.append(corner4)
+
+    return c_inds
+
+def path_points(room): 
+
+    vor, _ = medial_axis(room)
+    vor_points = vor.points
+    all_points = []
+    weights = []
+    mps = []
+
+    c_inds = find_corner_points(vor_points)
+    corner_points = vor_points[c_inds]
+
+    fig, axes = plt.subplots()
+    for i in range(len(vor.ridge_vertices)): 
+        mid_points = []
+        edge = vor.ridge_vertices[i]
+        if np.linalg.norm(vor.vertices[edge[0]] - vor.vertices[edge[1]]) > 0.1: 
+            points = np.linspace(vor.vertices[edge[0]], vor.vertices[edge[1]], 25)
+            verts = [i.tolist() for i in vor.vertices]
+            vor.vertices = np.array(verts + points.tolist())
+            mid_points = points
+
+        min_index = np.argmin([vor.vertices[edge[0]][0], vor.vertices[edge[1]][0]])
+        other_index = 1 - min_index
+        direction = vor.vertices[edge[other_index]] - vor.vertices[edge[min_index]]
+        direction = direction / np.linalg.norm(direction)
+        perpendicular_direction = np.array([direction[1], -direction[0]])
+        perpendicular_direction = perpendicular_direction / np.linalg.norm(perpendicular_direction)
+
+        ws = np.array([1, 2, 3, 5, 3, 2, 1])
+        if len(mid_points) > 0: 
+            for point in mid_points: 
+                mps += [point]
+                mid_point = point
+                dists = np.linalg.norm(corner_points - mid_point, axis = 1)
+                if np.any(dists < 0.25): 
+                    continue
+                x = np.linspace(mid_point[0] - 0.3 * perpendicular_direction[0], mid_point[0] + 0.3 * perpendicular_direction[0], 7)
+                y = np.linspace(mid_point[1] - 0.3 * perpendicular_direction[1], mid_point[1] + 0.3 * perpendicular_direction[1], 7)
+                for i in range(7): 
+                    all_points.append([x[i], y[i]])
+                axes.scatter(x, y)
+        else: 
+            
+            mid_point = (vor.vertices[edge[0]] + vor.vertices[edge[1]]) / 2
+            dists = np.linalg.norm(corner_points - mid_point, axis = 1)
+            if np.any(dists < 0.25): 
+                continue
+            mps += [mid_point]
+            val = False
+            for point in vor.points: 
+                if np.linalg.norm(point - mid_point) < 0: 
+                    val = True
+                    break
+            if val: 
+                continue
+
+            x = np.linspace(mid_point[0] - 0.3 * perpendicular_direction[0], mid_point[0] + 0.3 * perpendicular_direction[0], 7)
+            y = np.linspace(mid_point[1] - 0.3 * perpendicular_direction[1], mid_point[1] + 0.3 * perpendicular_direction[1], 7)
+            for xi, yi in zip(x, y):
+                all_points.append([xi, yi])
+        
+            
+    all_points = np.array(all_points)
+    weights = ws.tolist() * (all_points.shape[0]//7)
+
+    inds = []
+    for i in range(mps.shape[0]):
+        point = mps[i]
+        dists = np.linalg.norm(corner_points - point, axis = 1)
+        if np.all(dists > 0.1):
+            inds += [i]
+
+    axes.scatter(all_points[:, 0], all_points[:, 1], c = weights)
+    voronoi_plot_2d(vor, ax = axes, show_points=True, show_vertices=False, line_colors='gray')
+
+    return all_points, weights
+
+def cost(positions, room, points, weights): 
+
+    intersection = 0
+    rug_names = ['rug', 'mat', 'Rug', 'Mat', 'RUG', 'MAT', 'carpet', 'Carpet']
+    for i in range(len(room.moving_objects)): 
+        rug = False
+        for name in rug_names: 
+            if name in room.moving_objects[i].name:
+                rug = True
+                break
+        if rug: 
+            continue 
+        x, y, theta = get_position(positions, room, i)
+        cs = corners(x, y, theta, room.moving_objects[i].width, room.moving_objects[i].length)
+        poly = Polygon(cs)
+        for j in range(points.shape[0]): 
+            if poly.contains(Point(points[j, :])): 
+                intersection += weights[j]*poly.exterior.distance(Point(points[j, :]))**2
+
+    return intersection
 
 class Object:
 
@@ -161,14 +477,15 @@ class Room:
                 counter += 1
         return counter
     
-    def draw(self, draw_regions = False, buffers = False):
+    def draw(self, draw_regions = False, buffers = False, ax = None):
 
         """ Draws the room with all the objects in it."""
-        fig, ax = plt.subplots(figsize = (10, 10))
-        ax.set_xlim(-1, self.width + 1)
-        ax.set_ylim(-1, self.length + 1)
-        ax.set_aspect('equal')
-        ax.grid(linestyle = '--')
+        if ax is None: 
+            fig, ax = plt.subplots(figsize = (10, 10))
+            ax.set_xlim(-1, self.width + 1)
+            ax.set_ylim(-1, self.length + 1)
+            ax.set_aspect('equal')
+            ax.grid(linestyle = '--')
 
         # Draw the room
         rect = patches.Rectangle((0, 0), self.width, self.length, linewidth=2, edgecolor='black', facecolor='none', label='_nolegend_')
@@ -299,130 +616,85 @@ class Room:
                     ax.plot([x - 0.05, x + 0.05], [y - 0.05, y + 0.05], color='red', linewidth=2)
                     ax.plot([x - 0.05, x + 0.05], [y + 0.05, y - 0.05], color='red', linewidth=2)
         
-        plt.show()
-        return 
+        return
     
-    def medial_axis(self):
-        final_points = []
 
-        # Draw the room
-        rect = patches.Rectangle((0, 0), self.width, self.length, linewidth=2, edgecolor='black', facecolor='none', label='_nolegend_')
-        points = []
-        cs = rect.get_corners()
-        num_points = 100
-        for i in range(num_points):
-            points.append(cs[0] + (cs[1] - cs[0]) * i / num_points)  # Bottom side
-            points.append(cs[1] + (cs[2] - cs[1]) * i / num_points)  # Right side
-            points.append(cs[2] + (cs[3] - cs[2]) * i / num_points)  # Top side
-            points.append(cs[3] + (cs[0] - cs[3]) * i / num_points)  # Left side
-        final_points.append(points)
 
-        rug_names = ['rug', 'mat', 'Rug', 'Mat', 'RUG', 'MAT', 'carpet', 'Carpet']
-        # Draw the objects
-        if self.moving_objects:
-            for obj in self.moving_objects:
-                rug = False
-                for name in rug_names: 
-                    if name in obj.name:
-                        rug = True
-                        break
-                if rug: 
-                    continue 
-                cs_tup = obj.corners()
-                cs = [np.array(i) for i in cs_tup]
-                points = []
-                num_points = 25
-                for i in range(num_points):
-                    points.append(cs[0] + (cs[1] - cs[0]) * i / num_points)  # Bottom side
-                    points.append(cs[1] + (cs[2] - cs[1]) * i / num_points)  # Right side
-                    points.append(cs[2] + (cs[3] - cs[2]) * i / num_points)  # Top side
-                    points.append(cs[3] + (cs[0] - cs[3]) * i / num_points)  # Left side
-                
-                points = np.array(points)
-                final_points.append(points)
 
-        if self.fixed_objects:
-            for obj in self.fixed_objects:
-                if obj.name == 'door':
-                    wedge = patches.Wedge(center=obj.position[:2], r=obj.width, 
-                                            theta1=np.rad2deg(obj.position[2]), theta2=np.rad2deg(obj.position[2]) + 90, linewidth=3, edgecolor='r', facecolor='none')
-                    
-                    points = wedge.get_path().vertices
-                    if obj.position[2] == 0:
-                        points = [i for i in points if np.isclose(i[1], 0)]
-                        points = np.unique(points, axis = 0)
-                        min_x, max_x = sorted([i[0] for i in points])
-                        crit = lambda x: np.isclose(x[1], 0) and (min_x < x[0]) and (x[0] < max_x)
-                    elif obj.position[2] == np.pi/2:
-                        points = [i for i in points if np.isclose(i[0], self.width)]
-                        points = np.unique(points, axis = 0)
-                        min_y, max_y = sorted([i[1] for i in points])
-                        crit = lambda x: np.isclose(x[0], self.width) and( min_y < x[1]) and (x[1] < max_y )   
-                    elif obj.position[2] == np.pi:
-                        points = [i for i in points if np.isclose(i[1], self.length)]
-                        points = np.unique(points, axis = 0)
-                        min_x, max_x = sorted([i[0] for i in points])
-                        crit = lambda x: np.isclose(x[1], self.length) and (min_x < x[0]) and (x[0] < max_x)
-                    elif obj.position[2] == 3*np.pi/2:
-                        points = [i for i in points if np.isclose(i[0], 0)]
-                        points = np.unique(points, axis = 0)
-                        min_y, max_y = sorted([i[1] for i in points])
-                        crit = lambda x: np.isclose(x[0], 0) and (min_y < x[1]) and (x[1] < max_y )  
-                    final_points.append(points)
 
-        final_points = np.concatenate(final_points)
+    def path_points(self): 
 
-        for point in final_points:
-            if crit(point):
-                final_points = np.delete(final_points, np.where(np.all(final_points == point, axis = 1)), axis = 0)
+        vor, _ = self.medial_axis()
+        vor_points = vor.points
+        all_points = []
+        weights = []
+        mps = []
 
-        vor = Voronoi(final_points)
-        new_edges = []
-        max_distances = []
-        for edge in vor.ridge_vertices: 
-            remove = False
-            if edge[0] == -1 or edge[1] == -1:
-                continue
-            if vor.vertices[edge[0]][0] < 0 or vor.vertices[edge[1]][0] < 0 or vor.vertices[edge[0]][1] < 0 or vor.vertices[edge[1]][1] < 0:
-                continue
-            if vor.vertices[edge[0]][0] > self.width or vor.vertices[edge[0]][1] > self.length or vor.vertices[edge[1]][0] > self.width or vor.vertices[edge[1]][1] > self.length:
-                continue
-            for obj in self.moving_objects:
-                rug = False
-                for name in rug_names: 
-                    if name in obj.name:
-                        rug = True
-                        break
-                if rug:
-                    continue
-                poly = Polygon(obj.corners())
-                if any([poly.contains(Point(vor.vertices[v])) for v in edge]):
-                    remove = True
-                    break
-            if remove: 
-                continue 
+        c_inds = find_corner_points(vor_points)
+        corner_points = vor_points[c_inds]
 
-            regions = [i for i in range(len(vor.regions)) if edge[0] in vor.regions[i] and edge[1] in vor.regions[i]]
-            region_vs = [[], []]
-            for i in range(2): 
-                region_vs[i] = [v for v in vor.regions[regions[i]] if v != edge[0] and v != edge[1]]
+        fig, axes = plt.subplots()
+        for i in range(len(vor.ridge_vertices)): 
+            mid_points = []
+            edge = vor.ridge_vertices[i]
+            if np.linalg.norm(vor.vertices[edge[0]] - vor.vertices[edge[1]]) > 0.1: 
+                points = np.linspace(vor.vertices[edge[0]], vor.vertices[edge[1]], 25)
+                verts = [i.tolist() for i in vor.vertices]
+                vor.vertices = np.array(verts + points.tolist())
+                mid_points = points
 
-            dists = []
-            for i in range(len(region_vs[0])): 
-                for j in range(len(region_vs[1])):
-                    dists.append(np.linalg.norm(vor.vertices[region_vs[0][i]] - vor.vertices[region_vs[1][j]]))
-            if np.any(np.array(dists) < 1e-6): 
-                continue 
+            min_index = np.argmin([vor.vertices[edge[0]][0], vor.vertices[edge[1]][0]])
+            other_index = 1 - min_index
+            direction = vor.vertices[edge[other_index]] - vor.vertices[edge[min_index]]
+            direction = direction / np.linalg.norm(direction)
+            perpendicular_direction = np.array([direction[1], -direction[0]])
+            perpendicular_direction = perpendicular_direction / np.linalg.norm(perpendicular_direction)
+
+            ws = np.array([1, 2, 3, 5, 3, 2, 1])
+            if len(mid_points) > 0: 
+                for point in mid_points: 
+                    mps += [point]
+                    mid_point = point
+                    dists = np.linalg.norm(corner_points - mid_point, axis = 1)
+                    if np.any(dists < 0.25): 
+                        continue
+                    x = np.linspace(mid_point[0] - 0.3 * perpendicular_direction[0], mid_point[0] + 0.3 * perpendicular_direction[0], 7)
+                    y = np.linspace(mid_point[1] - 0.3 * perpendicular_direction[1], mid_point[1] + 0.3 * perpendicular_direction[1], 7)
+                    for i in range(7): 
+                        all_points.append([x[i], y[i]])
+                    axes.scatter(x, y)
             else: 
-                max_distances.append(np.min(dists))
-                new_edges.append(edge)    
+                
+                mid_point = (vor.vertices[edge[0]] + vor.vertices[edge[1]]) / 2
+                dists = np.linalg.norm(corner_points - mid_point, axis = 1)
+                if np.any(dists < 0.25): 
+                    continue
+                mps += [mid_point]
+                val = False
+                for point in vor.points: 
+                    if np.linalg.norm(point - mid_point) < 0: 
+                        val = True
+                        break
+                if val: 
+                    continue
 
-        new_vor = Voronoi(final_points)
-        new_vor.vertices = vor.vertices
-        new_vor.regions = vor.regions
-        new_vor.ridge_vertices = new_edges
+                x = np.linspace(mid_point[0] - 0.3 * perpendicular_direction[0], mid_point[0] + 0.3 * perpendicular_direction[0], 7)
+                y = np.linspace(mid_point[1] - 0.3 * perpendicular_direction[1], mid_point[1] + 0.3 * perpendicular_direction[1], 7)
+                for xi, yi in zip(x, y):
+                    all_points.append([xi, yi])
+            
+                
+        all_points = np.array(all_points)
+        weights = ws.tolist() * (all_points.shape[0]//7)
 
-        fig, ax = plt.subplots(figsize = (10, 10))
-        voronoi_plot_2d(new_vor, ax=ax, show_points=True, show_vertices=False, line_colors='gray')
+        inds = []
+        for i in range(mps.shape[0]):
+            point = mps[i]
+            dists = np.linalg.norm(corner_points - point, axis = 1)
+            if np.all(dists > 0.1):
+                inds += [i]
+  
+        axes.scatter(all_points[:, 0], all_points[:, 1], c = weights)
+        voronoi_plot_2d(vor, ax = axes, show_points=True, show_vertices=False, line_colors='gray')
 
-        return new_vor, max_distances
+        return all_points, weights

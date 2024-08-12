@@ -82,7 +82,7 @@ def ind_accessible(positions, room, object_index, sides, min_dist = None):
         positions: list of floats, x, y, theta values for all objects in the room
         room: rectangular Room object
         object_index: int, index of the object in the room's object list
-        sides: a list of strings, each one one of 'back', 'front', 'left', 'right', defines which side of the object to check
+        sides: a list of strings, each one one of 'front', 'left', 'right', defines which side of the object to check
         min_dist: float (optional), minimum distance between the object and the object on the side. Please write this as a float, e.g. 1.0.
     """
     
