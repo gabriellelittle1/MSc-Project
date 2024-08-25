@@ -57,7 +57,7 @@ def ind_next_to_wall(positions, room, object_index, side = 'back'):
         distances[i, :] = np.array([(cs[i][1] - room.length)**2, (cs[i][0] - room.width)**2, cs[i][1]**2, cs[i][0]**2])
 
     distances = np.sqrt(distances)
-    side_distances = np.zeros_like(distances) # columns: N, E, S, W, rows: top, bottom, left, right
+    side_distances = np.zeros_like(distances) # columns: N, E, S, W, rows: back, top, left, right
     for i in range(4):
         side_distances[i, :] = distances[sides[i][0], :] + distances[sides[i][1], :]
 
@@ -86,9 +86,9 @@ def ind_next_to_wall(positions, room, object_index, side = 'back'):
         val += max(ds[3] - ds[0], 0.0)**2 + max(ds[3] - ds[1], 0.0)**2 + max(ds[3] - ds[2], 0.0)**2
     else: 
         ## Assume side is meant to be back, 
-        return ind_next_to_wall(positions, room, object_index, 'back') 
+        return ind_next_to_wall(positions, room, object_index, side = 'back') 
     
-    return 3*val
+    return val
 
 @ safe_execution
 def ind_near_wall(positions, room, object_index, max_dist = 0.5):
@@ -270,6 +270,9 @@ def ind_accessible(positions, room, object_index, sides = [], min_dist = None):
     
     if sides == []: 
         sides = ['front']
+
+    if sides == ['sides']: 
+        sides = ['left', 'right']
     
     for i in range(len(sides)): 
 

@@ -166,7 +166,7 @@ def io_between(positions, room, object1_index, object2_index, object3_index):
         This would be used for something like a side table being between two chairs, or maybe a bed being between two nightstands. 
         Or even a nightstand going between two beds.
         
-        Args: w
+        Args: 
         positions: list of floats, x, y, theta values for all objects in the room
         room: rectangular Room object
         object1_index: int, index of object1 in the room (** this is the object that will go in between the other two objects)

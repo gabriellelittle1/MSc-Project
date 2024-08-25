@@ -56,7 +56,7 @@ def io_next_to(positions, room, object1_index, object2_index, side1 = None, side
         direction1 = np.array([point2[0] - point1[0], point2[1] - point1[1]]) # side1
         direction2 = np.array([point4[0] - point3[0], point4[1] - point3[1]]) # side2
 
-        angle_diff = np.arccos(np.dot(direction1, direction2)/(np.linalg.norm(direction1)*np.linalg.norm(direction2)))
+        angle_diff = np.arccos(np.dot(direction1, direction2)/(max(np.linalg.norm(direction1), 1e-6)*max(np.linalg.norm(direction2), 1e-6)))
         val += 2 * np.sin(angle_diff)**2
 
         if np.linalg.norm(direction1) > np.linalg.norm(direction2):
@@ -368,6 +368,8 @@ def io_surround(positions, room, central_object_index, object_indices):
     center_x, center_y, center_theta = get_position(positions, room, central_object_index)
     center_obj = room.moving_objects[central_object_index]
 
+    other_length = room.moving_objects[object_indices[0]].length 
+
     pos = np.array(positions).reshape(-1, 3)
     indices = [positions_index(room, i)//3 for i in object_indices]
     pos = pos[indices, :]
@@ -375,28 +377,60 @@ def io_surround(positions, room, central_object_index, object_indices):
     center_of_mass = np.mean(pos[:, :2], axis = 0)
     val += (center_of_mass[0] - center_x)**2 + (center_of_mass[1] - center_y)**2 # center of mass of all the objects
 
-    num = len(object_indices) // 4
-    remaining = len(object_indices) % 4
+
+    ## Need to check if any of the sides are too close to walls. 
+    cs = corners(center_x, center_y, center_theta, center_obj.width, center_obj.length) # TL, TR, BR, BL
+    sides = [[cs[0], cs[1]],  [cs[2], cs[3]], [cs[1], cs[2]], [cs[3], cs[0]]] # back, front, right, left
+    wall_distances = np.zeros((4, 4)) # each row is a side, each column is a wall 
+    for i in range(4): 
+        for j in range(2):
+            side = sides[i][j]
+            wall_distances[i, :] += 0.5 * np.array([side[0]**2, side[1]**2, (room.width - side[0])**2, (room.length - side[1])**2])
+    
+    wall_distances = np.min(wall_distances, axis = 1)
+    sides = ['back', 'front', 'right', 'left']
+    inds = []
+    for i in range(4): 
+        if wall_distances[i] >= 0.2 + other_length: 
+            inds.append(i)
+
+    sides = [sides[i] for i in inds]
+    num = len(object_indices) // len(sides)
+    remaining = len(object_indices) % len(sides)
     
     for i in range(num): 
-        val += io_next_to(positions, room, object_indices[4*i], central_object_index, side1 = 'front', side2 = 'left')
-        val += io_next_to(positions, room, object_indices[4*i + 1], central_object_index, side1 = 'front', side2 = 'right')
-        val += io_next_to(positions, room, object_indices[4*i + 2], central_object_index, side1 = 'front', side2 = 'front')
-        val += io_next_to(positions, room, object_indices[4*i + 3], central_object_index, side1 = 'front', side2 = 'back')
+        for j in range(len(sides)*i, len(sides)*(i+1)):
+            val += io_next_to(positions, room, object_indices[j], central_object_index, side1 = 'front', side2 = sides[j])
     
-    index = 4*num
+    new_sides = []
+    index = len(sides)*num
     if center_obj.width >= center_obj.length:
-        sides = ['back', 'front', 'left']
+        if 'back' in sides: 
+            new_sides.append('back')
+        if 'front' in sides:
+            new_sides.append('front')
+        if 'left' in sides:
+            new_sides.append('left')
+        if 'right' in sides:
+            new_sides.append('right')
     else: 
-        sides = ['left', 'right', 'front']
+        if 'left' in sides:
+            new_sides.append('left')
+        if 'right' in sides:
+            new_sides.append('right')
+        if 'back' in sides:
+            new_sides.append('back')
+        if 'front' in sides:
+            new_sides.append('front')
 
     for i in range(remaining):
-        val += io_next_to(positions, room, object_indices[index + i], central_object_index, side1 = 'front', side2 = sides[i])
+        val += io_next_to(positions, room, object_indices[index + i], central_object_index, side1 = 'front', side2 = new_sides[i])
     
     for i in range(len(object_indices)):
         val += io_facing(positions, room, object_indices[i], central_object_index)
 
     return val
+
 
 @safe_execution
 def io_not_facing(positions, room, object1_index, object2_index):
@@ -431,8 +465,11 @@ def io_not_facing(positions, room, object1_index, object2_index):
 @safe_execution
 def io_between(positions, room, object1_index, object2_index, object3_index): 
     
-    """ The function p_between ensures that object1 is in between the two objects object2 and object3. 
+    """ The function p_between ensures that object1 is in between the two objects object2 and object3 (specifically 
+        between the left and right side of the two objects).  
         This would be used for something like a side table being between two chairs, or a bed being between two nightstands. 
+        This is not used for something like a dining table between two chairs, as the chairs are not side by side. It is also 
+        not used for a coffee table between a sofa and a tv, as the sofa and tv are not side by side.
         Or even a nightstand going between two beds. This can be used instead of two p_next_to functions, or in conjunction with them.
         
         Args: 
@@ -441,7 +478,11 @@ def io_between(positions, room, object1_index, object2_index, object3_index):
         object1_index: int, index of object1 in the room (** this is the object that will go in between the other two objects)
         object2_index: int, index of object2 in the room
         object3_index: int, index of object3 in the room
+        sides: list of two strings, either ['left', 'right'] or ['front', 'front']. ['left', 'right'] would be used to place an object in between the 
+                left and right sides of the other objects (e.g. a bed between 2 nighstands) and ['front', 'front'] would be used to place an object in between the
+                front sides of the other objects (e.g. for a coffee table between a sofa and a tv/fireplace. )
     """
+
 
     vali1 = io_next_to(positions, room, object1_index, object2_index, side1 = 'left', side2 = 'right')
     valj1 = io_next_to(positions, room, object1_index, object3_index, side1 = 'right', side2 = 'left')

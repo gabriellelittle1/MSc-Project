@@ -175,6 +175,9 @@ def medial_axis(room, draw = False):
             else: 
                 new_edges.append(edge)  
                 new_ridge_points.append(vor.ridge_points[i])  
+        
+
+        
 
         new_vor = Voronoi(final_points)
         new_vor.vertices = vor.vertices
@@ -210,7 +213,7 @@ def find_corner_points(points):
                 continue
             ds += [direction / np.linalg.norm(direction)]
         for j in range(len(ds) - 1): 
-            angles = np.arccos(np.dot(ds[j+1:], ds[j]))
+            angles = np.arccos(np.clip(np.dot(ds[j+1:], ds[j]), -1, 1))
             if (np.any(np.isclose(angles, np.pi/2)) or np.any(np.isclose(angles, -np.pi/2))):
                 neighbour_inds += [inds]
                 c_inds.append(i)
@@ -246,11 +249,10 @@ def find_corner_points(points):
 
 def path_points(room): 
 
-    vor, _ = medial_axis(room)
+    vor = medial_axis(room)
     vor_points = vor.points
     all_points = []
     weights = []
-    mps = []
 
     c_inds = find_corner_points(vor_points)
     corner_points = vor_points[c_inds]
@@ -275,7 +277,6 @@ def path_points(room):
         ws = np.array([1, 2, 3, 5, 3, 2, 1])
         if len(mid_points) > 0: 
             for point in mid_points: 
-                mps += [point]
                 mid_point = point
                 dists = np.linalg.norm(corner_points - mid_point, axis = 1)
                 if np.any(dists < 0.25): 
@@ -291,7 +292,7 @@ def path_points(room):
             dists = np.linalg.norm(corner_points - mid_point, axis = 1)
             if np.any(dists < 0.25): 
                 continue
-            mps += [mid_point]
+
             val = False
             for point in vor.points: 
                 if np.linalg.norm(point - mid_point) < 0: 
@@ -308,14 +309,6 @@ def path_points(room):
             
     all_points = np.array(all_points)
     weights = ws.tolist() * (all_points.shape[0]//7)
-
-    inds = []
-    for i in range(mps.shape[0]):
-        point = mps[i]
-        dists = np.linalg.norm(corner_points - point, axis = 1)
-        if np.all(dists > 0.1):
-            inds += [i]
-
     axes.scatter(all_points[:, 0], all_points[:, 1], c = weights)
     voronoi_plot_2d(vor, ax = axes, show_points=True, show_vertices=False, line_colors='gray')
 
@@ -344,7 +337,7 @@ def cost(positions, room, points, weights):
 
 class Object:
 
-    def __init__(self, name, width, length, region = None, index = None, position = (0, 0, 0)):
+    def __init__(self, name, width, length, region = None, index = None, position = (0, 0, 0), tertiary = False):
         """ Initialization of an object in a scene. 
             Inputs: 
             name: str, name of the object all lowercase
@@ -353,6 +346,7 @@ class Object:
             index : int, index of the object in the room's object list (optional, only used for moving_objects)
             position: tuple (x, y, theta), where x, y are the coordinates of the center of the 
                       object and theta is the orientation of the object in radians.
+            tertiary: string, one of "wall" or "floor" (optional, only used for tertiary_objects) which determines the type of teriary object
         """
 
         self.position = position
@@ -364,6 +358,9 @@ class Object:
             self.region = region
         else: 
             self.region = None
+        
+        if tertiary: 
+            self.tertiary = tertiary 
 
     def TR(self):
         x, y, theta = self.position
@@ -383,30 +380,29 @@ class Object:
     
     def corners(self):
 
-
         if self.name != 'door' and self.name != 'window':
             return [self.TL(), self.TR(), self.BR(), self.BL()]
         elif self.name == 'door': 
             if self.position[2] == 0: 
-                BL = [self.position[0] - self.width, self.position[1] - 0.2]
+                BL = [self.position[0] - 0.2, self.position[1] - 0.2]
                 BR = [self.position[0] + self.width + 0.2, self.position[1] - 0.2]
                 TR = [self.position[0] + self.width + 0.2, self.position[1] + self.width + 0.2]
-                TL = [self.position[0] - self.width, self.position[1] + self.width + 0.2]    
+                TL = [self.position[0] - 0.2, self.position[1] + self.width + 0.2]    
             elif self.position[2] == np.pi/2:
-                BL = [self.position[0] + 0.2, self.position[1] - self.width]
+                BL = [self.position[0] + 0.2, self.position[1] - 0.2]
                 BR = [self.position[0] + 0.2, self.position[1] + self.width + 0.2]
                 TR = [self.position[0] - self.width - 0.2, self.position[1] + self.width + 0.2]
-                TL = [self.position[0] - self.width - 0.2, self.position[1] - self.width]
+                TL = [self.position[0] - self.width - 0.2, self.position[1] - 0.2]
             elif self.position[2] == np.pi:
-                BL = [self.position[0] + self.width + 0.2, self.position[1]]
+                BL = [self.position[0] + 0.2, self.position[1]]
                 BR = [self.position[0] - self.width - 0.2, self.position[1]]
                 TR = [self.position[0] - self.width - 0.2, self.position[1] - self.width - 0.2]
-                TL = [self.position[0] + self.width + 0.2, self.position[1] - self.width - 0.2]
+                TL = [self.position[0] + 0.2, self.position[1] - self.width - 0.2]
             elif self.position[2] == 3*np.pi/2:
-                BL = [self.position[0] - 0.2, self.position[1] + self.width ]
+                BL = [self.position[0] - 0.2, self.position[1] + 0.2]
                 BR = [self.position[0] - 0.2, self.position[1] - self.width - 0.2]
                 TR = [self.position[0] + self.width + 0.2, self.position[1] - self.width - 0.2]
-                TL = [self.position[0] + self.width + 0.2, self.position[1] + self.width]
+                TL = [self.position[0] + self.width + 0.2, self.position[1] + 0.2]
 
             return [TL, TR, BR, BL]
         else: 
@@ -440,6 +436,7 @@ class Room:
         self.fm_indices = []
         self.center = (width/2, length/2)
         self.regions = []
+        self.tertiary_objects = []
 
     def find_region_index(self, region_name):
 
@@ -480,7 +477,9 @@ class Room:
     def draw(self, draw_regions = False, buffers = False, ax = None):
 
         """ Draws the room with all the objects in it."""
+        show = True
         if ax is None: 
+            show = False
             fig, ax = plt.subplots(figsize = (10, 10))
             ax.set_xlim(-1, self.width + 1)
             ax.set_ylim(-1, self.length + 1)
@@ -600,6 +599,17 @@ class Room:
                 for corner in cs:
                     ax.plot(corner[0], corner[1], color = line.get_color(), marker = 'o')
 
+        # Draw the objects
+        if self.tertiary_objects:
+            for obj in self.tertiary_objects:
+                rectangle = patches.Rectangle(obj.position[:2]  - np.array([obj.width/2, obj.length/2]), obj.width, obj.length, linewidth=2, edgecolor='none', facecolor='none', angle=np.rad2deg(obj.position[2]), rotation_point='center')
+                ax.add_patch(rectangle)
+                rectangle.set_edgecolor('b')  # Use the line's color for the rectangle
+                ax.text(obj.position[0], obj.position[1], obj.name, fontsize=10)
+                cs = obj.back_corners()
+                for corner in cs:
+                    ax.plot(corner[0], corner[1], color = 'b', marker = 'o')
+
         if self.fixed_objects:
             for obj in self.fixed_objects:
                 if obj.name == 'window':
@@ -615,11 +625,12 @@ class Room:
                     x, y = obj.position[:2]
                     ax.plot([x - 0.05, x + 0.05], [y - 0.05, y + 0.05], color='red', linewidth=2)
                     ax.plot([x - 0.05, x + 0.05], [y + 0.05, y - 0.05], color='red', linewidth=2)
+
+        if show: 
+            plt.show()
         
         return
     
-
-
 
 
     def path_points(self): 

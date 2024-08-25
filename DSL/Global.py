@@ -106,7 +106,7 @@ def no_overlap(positions, room, weight = 5):
                 x = np.array([[i, j] for i, j in zip(intersection.exterior.xy[0], intersection.exterior.xy[1])])
                 lengths = np.roll(x, -1, axis = 0) - x
                 lengths = np.linalg.norm(lengths, axis = 1)
-                val += 3*sum(lengths**2)
+                val += 100*sum(lengths**2)
 
     return weight * val 
 

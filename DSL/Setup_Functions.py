@@ -138,30 +138,30 @@ def create_moving_object(room, name, width, length, region_name, index):
             theta = np.pi
         return theta
     
-    # Ensure the initial position is within the room 
     obj_theta = closest_wall(room, room.regions[region_index].x, room.regions[region_index].y)
-    # new_object = Object(name, width, length, position =(room.regions[region_index].x, room.regions[region_index].y, obj_theta), index = index)
-    # corners = np.array(new_object.corners())
-    # x_max_index, y_max_index = corners.argmax(axis=0)
-    # x_min_index, y_min_index = corners.argmin(axis=0)
-
-    # if corners[x_max_index][0] > room.width:
-    #     obj_x = new_object.position[0] - (corners[x_max_index][0] - room.width)
-    # elif corners[x_min_index][0] < 0:
-    #     obj_x = new_object.position[0] - corners[x_min_index][0]
-    # else: 
-    #     obj_x = new_object.position[0]
-
-    # if corners[y_max_index][1] > room.length:
-    #     obj_y = new_object.position[1] - (corners[y_max_index][1] - room.length)
-    # elif corners[y_min_index][1] < 0:
-    #     obj_y = new_object.position[1] - corners[y_min_index][1]
-    # else: 
-    #     obj_y = new_object.position[1]
     obj_x = np.random.uniform(0, room.width)
     obj_y = np.random.uniform(0, room.length)
 
     room.moving_objects += [Object(name, width, length, region = region_name, index = index, position = (obj_x, obj_y, obj_theta))]
+
+    return
+
+def create_tertiary_object(room, name, width, length, tertiary, index):
+    """ A function that creates and places a tertiary object 
+        Inputs:
+        room: Room for the object to be put in
+        name: str, name of the object all lowercase. E.g. 'painting'
+        width: float, width of the object (m)
+        length: float, length of the object (m)
+        index: int, index of the object in the room's tertiary object list
+        tertiary: str, tertiary object type, one of "wall" (for objects that go on the wall e.g. painting),
+                 "floor" (for objects that go on the floor e.g. rug), "ceiling" (for objects that go on the ceiling e.g. chandelier), 
+                 "table" (for objects that go on a table e.g. lamp). 
+    """
+    orientations = [0, np.pi/2, np.pi, 3*np.pi/2]
+    position = (np.random.uniform(0, room.width), np.random.uniform(0, room.length), orientations[np.random.randint(0, 4)])
+    new_object = Object(name, width, length, position = position, index = index, tertiary = tertiary)
+    room.tertiary_objects += [new_object]
 
     return
 
