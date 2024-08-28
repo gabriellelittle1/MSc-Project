@@ -34,12 +34,7 @@ def no_overlap(positions, room, weight = 5):
 
     val = 0
     objs = room.moving_objects
-    rug_names = ['rug', 'mat', 'Rug', 'Mat', 'RUG', 'MAT', 'carpet', 'Carpet']
-    indices = []
-    for i in range(len(objs)):
-        inds = [j for j in rug_names if j in objs[i].name]
-        if len(inds) == 0: 
-            indices += [i]
+    indices = [i for i in range(len(room.moving_objects))]
         
     doors = room.find_all('door')
     door_polygons = [] 
