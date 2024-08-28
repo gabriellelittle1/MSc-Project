@@ -14,7 +14,7 @@ def io_next_to(positions, room, object1_index, object2_index, side1 = None, side
         This should only be used when necessary e.g. for nightstands and a bed, or a desk and desk chair. 
         This should not be used for dining chairs around a table or similar relationship, for that use io_surround.
         If side1 is given, the specific side of object1 will be used. If side2 is given, 
-        the specific side of object2 will be used. E.g. the 'front' of the chair should be next to the 'back' of the desk. 
+        the specific side of object2 will be used. E.g. the 'front' of the chair should be next to the 'front' of the desk. 
         If no side is given, then any of the sides will be used.
         
         Args:
@@ -28,6 +28,7 @@ def io_next_to(positions, room, object1_index, object2_index, side1 = None, side
 
 def io_away_from(positions, room, object1_index, object2_index, min_dist = 2.0):
     """ This function ensures that two objects are away from each other in a room.
+        For example, a bed should be away from a desk. 
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
@@ -41,7 +42,8 @@ def io_away_from(positions, room, object1_index, object2_index, min_dist = 2.0):
 
 def io_near(positions, room, object1_index, object2_index, max_dist = 3.0):
     """ This function ensures that two objects are within a certain distance to each other. 
-        They are not necessarily next to each other, but they are close.
+        They are not necessarily next to each other, but they are close. This might be for a bookshelf 
+        and an armchair, or a mirror and a wardrobe. 
         
         Args:
         room: rectangular Room object
@@ -55,7 +57,7 @@ def io_near(positions, room, object1_index, object2_index, max_dist = 3.0):
 def io_parallel(positions, room, object1_index, object2_index, center_object_info = None, max_dist = 2.0):
     """ This function ensures that two objects have the same orientation in a room.
         That is, that they are parallel to each other. It does not handle distance, so if 
-        proximity is important, please combine this function with p_near, or p_next to, or even p_between. 
+        proximity is important, please combine this function with io_near, or io_next to, or even io_between. 
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
@@ -66,45 +68,22 @@ def io_parallel(positions, room, object1_index, object2_index, center_object_inf
     return
 
 def io_facing(positions, room, object1_index, object2_index, both = False):
-    """ This function ensures that object1 is facing object2 in a room.
+    """ This function ensures that object1 is facing object2 in a room. 
         If both is True, then object2 will also be facing object1.
+        For example, a sofa and tv should face each other, so in that instance both would be True.
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
         room: rectangular Room object
         object1_index: int, index of object1 in the room
         object2_index: int, index of object2 in the room
+        both: bool, if True, object2 will also be facing object1
     """
-    return
-
-def io_under_central(positions, room, object1_index, object2_index):
-    """ This function ensures that object1 (a rug) is underneath object2 (any moving_object) and centered.
-        object1 MUST be a rug.
-        
-        Args:
-        positions: list of floats, x, y, theta values for all objects in the room
-        room: rectangular Room object
-        object1_index: int, index of object1 in the room
-        object2_index: int, index of object2 in the room
-    """
-
-    return
-
-def io_on(positions, room, object1_index, object2_index):
-    """ This function ensures that object1 is on top of object2 (a rug) but does not ensure that it is centered.
-        object2 MUST be a rug. 
-
-        Args:
-        positions: list of floats, x, y, theta values for all objects in the room
-        room: rectangular Room object
-        object1_index: int, index of object1 in the room
-        object2_index: int, index of object2 in the room
-    """
-
     return
 
 def io_infront(positions, room, object1_index, object2_index, dist = 0.8):
-    """ This function ensures that object1 is in front of object2 (both moving_objects i.e. not windows or doors). E.g a coffee table should be in front of a sofa....
+    """ This function ensures that object1 is in front of object2 (both moving_objects i.e. not windows or doors).
+        E.g a coffee table should be in front of a sofa. 
 
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
@@ -152,7 +131,7 @@ def io_surround(positions, room, central_object_index, object_indices):
 
 def io_not_facing(positions, room, object1_index, object2_index):
     """ This function ensures that object1 is NOT facing object2 in a room.
-        
+        For example, a bed should not face a mirror.         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room
         room: rectangular Room object

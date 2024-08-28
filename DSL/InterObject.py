@@ -1,7 +1,7 @@
 import numpy as np 
 from Class_Structures import * 
 from shapely.geometry import Polygon
-from Individual import positions_index, get_position, safe_execution
+from Individual import *
 
 @safe_execution
 def io_next_to(positions, room, object1_index, object2_index, side1 = None, side2 = None):
@@ -29,13 +29,13 @@ def io_next_to(positions, room, object1_index, object2_index, side1 = None, side
 
     if side1: 
         if side1 == 'top' or side1 == 'back':
-            point1, point2 = cs1[0], cs1[1]
+            point1, point2 = cs1[0], cs1[1] # TL, TR
         elif side1 == 'bottom' or side1 == 'front':
-            point1, point2 = cs1[2], cs1[3]
+            point1, point2 = cs1[2], cs1[3] # BR, BL
         elif side1 == 'left':
-            point1, point2 = cs1[0], cs1[3]
+            point1, point2 = cs1[0], cs1[3] # TL, BL
         elif side1 == 'right':
-            point1, point2 = cs1[1], cs1[2]
+            point1, point2 = cs1[1], cs1[2] # TR, BR
         else:
             return io_next_to(positions, room, object1_index, object2_index, side2 = side2)
     if side2: 
@@ -49,6 +49,7 @@ def io_next_to(positions, room, object1_index, object2_index, side1 = None, side
             point3, point4 = cs2[1], cs2[2]
         else:
             return io_next_to(positions, room, object1_index, object2_index, side1 = side1)
+        
     if side1 and side2:
 
         ### if two sides are given, we want the two sides to be parallel, as well as the two objects to be close to each other
@@ -61,6 +62,7 @@ def io_next_to(positions, room, object1_index, object2_index, side1 = None, side
 
         if np.linalg.norm(direction1) > np.linalg.norm(direction2):
             point5 = np.array([(point3[0] + point4[0]) / 2, (point3[1] + point4[1]) / 2]) # point on the shorter side
+            point6 = np.array([(point1[0] + point2[0]) / 2, (point1[1] + point2[1]) / 2]) # point on the longer side
             dim_shorter = np.linalg.norm(direction2)
             direction3 = np.array([point5[0] - point1[0], point5[1] - point1[1]])
             direction4 = np.array([point5[0] - point2[0], point5[1] - point2[1]])
@@ -68,15 +70,20 @@ def io_next_to(positions, room, object1_index, object2_index, side1 = None, side
             direction5 = direction1
         else: 
             point5 = np.array([(point1[0] + point2[0]) / 2, (point1[1] + point2[1]) / 2]) # point on the shorter side
+            point6 = np.array([(point3[0] + point4[0]) / 2, (point3[1] + point4[1]) / 2]) # point on the longer side
             dim_shorter = np.linalg.norm(direction1)
             direction3 = np.array([point5[0] - point3[0], point5[1] - point3[1]])
             direction4 = np.array([point5[0] - point4[0], point5[1] - point4[1]])
             t = np.dot(direction2, direction3)/np.linalg.norm(direction2)
             direction5 = direction2
         if t < 0: 
-            val += np.linalg.norm(direction3)**2 + (t)**2
-        if t > 1: 
-            val += np.linalg.norm(direction4)**2 + (t - 1)**2
+            val += np.linalg.norm(direction3)**2 + (t)**2 + 0.1 * np.linalg.norm(point5 - point6)**2
+        elif t > 1: 
+            val += np.linalg.norm(direction4)**2 + (t - 1)**2 + 0.1 * np.linalg.norm(point5 - point6)**2
+        elif t >= 0 and t <= 1:
+            val += 0.1 * np.linalg.norm(point5 - point6)**2
+        if (side1 == 'front' and side2 == 'front') or (side1 == 'front' and side2 == 'back') or (side1 == 'back' and side2 == 'front') or (side1 == 'back' and side2 == 'back'):
+            val += 10*np.linalg.norm(point5 - point6)**2
         if np.linalg.norm(t*direction5) < dim_shorter/2: 
             val += 10*(dim_shorter/2 - np.linalg.norm(t*direction5))**2
         if np.linalg.norm((1 - t)*direction5) < dim_shorter/2:
@@ -112,6 +119,7 @@ def io_next_to(positions, room, object1_index, object2_index, side1 = None, side
         val += distance**2
 
     return 2*val 
+
 
 @safe_execution
 def io_away_from(positions, room, object1_index, object2_index, min_dist = 2):

@@ -2,6 +2,28 @@
 from Class_Structures import *
 from shapely.geometry import Polygon
 
+## Sides of Objects 
+# - Options for sides: 'front', 'back', 'left', 'right'. 
+# All the code is for 2D positioning, so if there is something to do with the 'top' of the object normally ignore it. 
+# - 'front' is the side of the object that is the front like the side of a wardrobe with doors, or the foot of the bed. This would never be placed against a wall. 
+# - 'back' is the back of an object like the headboard of a bed, or the back of a sofa. 
+# -'left' and 'right' are the sides of the object, like the left side of a bed or the right side of a sofa. These are from the perspective of standing behind the object. 
+
+def TR(x, y, theta, w, l):
+    return (x + w/2 * np.cos(theta) + l/2 * np.sin(theta), y + w/2 * np.sin(theta) - l/2 * np.cos(theta))
+
+def TL(x, y, theta, w, l):
+    return (x - w/2 * np.cos(theta) + l/2 * np.sin(theta), y - w/2 * np.sin(theta) - l/2 * np.cos(theta))
+
+def BR(x, y, theta, w, l):
+    return (x + w/2 * np.cos(theta) - l/2 * np.sin(theta), y + w/2 * np.sin(theta) + l/2 * np.cos(theta))
+
+def BL(x, y, theta, w, l):
+    return (x - w/2 * np.cos(theta) - l/2 * np.sin(theta), y - w/2 * np.sin(theta) + l/2 * np.cos(theta))
+
+def corners(x, y, theta, w, l):
+    return [TL(x, y, theta, w, l), TR(x, y, theta, w, l), BR(x, y, theta, w, l), BL(x, y, theta, w, l)]
+
 def safe_execution(func):
     def wrapper(*args, **kwargs):
         try:
@@ -88,7 +110,7 @@ def ind_next_to_wall(positions, room, object_index, side = 'back'):
         ## Assume side is meant to be back, 
         return ind_next_to_wall(positions, room, object_index, side = 'back') 
     
-    return val
+    return 2*val
 
 @ safe_execution
 def ind_near_wall(positions, room, object_index, max_dist = 0.5):
@@ -227,7 +249,7 @@ def ind_away_from_fixed_object(positions, room, object_index, fixed_object_type,
      
     val = sum(distances)
     
-    return val
+    return 0.8*val
 
 @safe_execution
 def ind_accessible(positions, room, object_index, sides = [], min_dist = None):
@@ -240,6 +262,7 @@ def ind_accessible(positions, room, object_index, sides = [], min_dist = None):
         room: rectangular Room object
         object_index: int, index of the object in the room's object list
         sides: a list of strings, each one one of 'top' or 'back', 'bottom' or 'front', 'left', 'right', defines which side of the object to check
+        min_dist: float, minimum distance of clearance there should be on the sides. 
     """
     
     val = 0.0 # initialise output value 
@@ -358,7 +381,7 @@ def ind_accessible(positions, room, object_index, sides = [], min_dist = None):
                     lengths = np.linalg.norm(lengths, axis = 1)
                     val += 5*sum(lengths**2)
 
-    return val
+    return 3*val
 
 @safe_execution
 def ind_central(positions, room, object_index, both = False):
@@ -379,22 +402,7 @@ def ind_central(positions, room, object_index, both = False):
     x, y, _ = get_position(positions, room, object_index)
     if both: 
         val = min(x - lower_x, 0.0)**2 + min(upper_x - x, 0.0)**2 + min(y - lower_y, 0.0)**2 + min(upper_y - y, 0.0)**2 + 0.01*((x - mid_x)**2 + (y - mid_y)**2)
-    # if both: 
-    #     val = 0
-    #     if x < lower_x: 
-    #         val += (lower_x - x)**2
-    #     elif x > upper_x: 
-    #         val += (x - upper_x)**2
-    #     else: 
-    #         val += 0.01*(x - mid_x)**2
-    #     if y < lower_y:
-    #         val += (lower_y - y)**2
-    #     elif y > upper_y:
-    #         val += (y - upper_y)**2
-    #     else:
-    #         val += 0.01*(y - mid_y)**2
     else: 
-
         val = (min(x - lower_x, 0.0) + min(upper_x - x, 0.0))*(min(y - lower_y, 0.0) + min(upper_y - y, 0.0))
 
     return val
@@ -523,7 +531,7 @@ def ind_facing_into_room(positions, room, object_index):
     direction1 = np.array([room.width/2 - x, room.length/2 - y])
     direction1 /= np.linalg.norm(direction1)
 
-    direction2 = np.array([tl[0] - bl[0], tl[1] - bl[1]])
+    direction2 = np.array([bl[0] - tl[0], bl[1] - tl[1]])
     direction2 /= np.linalg.norm(direction2)
 
     angle = np.arccos(np.dot(direction1, direction2))

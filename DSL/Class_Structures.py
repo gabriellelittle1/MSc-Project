@@ -24,20 +24,6 @@ def BL(x, y, theta, w, l):
 def corners(x, y, theta, w, l): # TL, TR, BR, BL
     return [TL(x, y, theta, w, l), TR(x, y, theta, w, l), BR(x, y, theta, w, l), BL(x, y, theta, w, l)]
 
-def back_corners(x, y, theta, w, l):
-    return [TL(x, y, theta, w, l), TR(x, y, theta, w, l)]
-
-def draw_medial_axis(room, points, weights): 
-
-    fig, ax = plt.subplots(figsize = (10, 10))
-    ax.set_xlim(-1, room.width + 1)
-    ax.set_ylim(-1, room.length + 1)
-    ax.set_aspect('equal')
-    ax.grid(linestyle = '--')
-    room.draw(ax = ax)
-    ax.scatter(points[:, 0], points[:, 1], c = weights)
-    return 
-
 def medial_axis(room, draw = False):
 
         final_points = []

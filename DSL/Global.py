@@ -1,7 +1,7 @@
 ## All the Individual Object constraint functions are defined here
 from Class_Structures import *
 from shapely.geometry import Polygon
-from Individual import safe_execution, get_position, positions_index, nan_check, ind_near_wall
+from Individual import *
 
 @safe_execution
 def in_bounds(positions, room, weight = 10): 
