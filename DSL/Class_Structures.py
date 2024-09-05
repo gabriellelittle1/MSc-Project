@@ -8,6 +8,7 @@ import sys
 import copy
 from shapely.geometry import Polygon, Point
 from Individual import get_position
+import matplotlib.colors as mcolors
 
 def TR(x, y, theta, w, l):
     return (x + w/2 * np.cos(theta) + l/2 * np.sin(theta), y + w/2 * np.sin(theta) - l/2 * np.cos(theta))
@@ -460,7 +461,8 @@ class Room:
                 counter += 1
         return counter
     
-    def draw(self, draw_regions = False, buffers = False, ax = None):
+    
+    def draw(self, draw_regions = False, buffers = False, ax = None, level = 2, arrows = False):
 
         """ Draws the room with all the objects in it."""
         show = True
@@ -471,6 +473,17 @@ class Room:
             ax.set_ylim(-1, self.length + 1)
             ax.set_aspect('equal')
             ax.grid(linestyle = '--')
+        
+        def lighten_color(color, amount=0.5):
+            # Convert color to RGB
+            try:
+                c = mcolors.cnames[color]
+            except KeyError:
+                c = color
+            c = mcolors.to_rgb(c)
+    
+            # Blend with white
+            return mcolors.to_rgba([(1.0 - amount) * x + amount for x in c])
 
         # Draw the room
         rect = patches.Rectangle((0, 0), self.width, self.length, linewidth=2, edgecolor='black', facecolor='none', label='_nolegend_')
@@ -481,9 +494,9 @@ class Room:
 
             def in_box(towers, bounding_box):
                 return np.logical_and(np.logical_and(bounding_box[0] <= towers[:, 0],
-                                         towers[:, 0] <= bounding_box[1]),
-                          np.logical_and(bounding_box[2] <= towers[:, 1],
-                                         towers[:, 1] <= bounding_box[3]))
+                                            towers[:, 0] <= bounding_box[1]),
+                            np.logical_and(bounding_box[2] <= towers[:, 1],
+                                            towers[:, 1] <= bounding_box[3]))
             def voronoi(towers, bounding_box):
                 # Select towers inside the bounding box
                 i = in_box(towers, bounding_box)
@@ -579,22 +592,45 @@ class Room:
                 rectangle = patches.Rectangle(obj.position[:2]  - np.array([obj.width/2, obj.length/2]), obj.width, obj.length, linewidth=2, edgecolor='none', facecolor='none', angle=np.rad2deg(obj.position[2]), rotation_point='center')
                 ax.add_patch(rectangle)
                 line, = plt.plot([], [], label=obj.name)  # Create an invisible line
-                rectangle.set_edgecolor(line.get_color())  # Use the line's color for the rectangle
-                ax.text(obj.position[0], obj.position[1], obj.name, fontsize=10)
-                cs = obj.back_corners()
-                for corner in cs:
-                    ax.plot(corner[0], corner[1], color = line.get_color(), marker = 'o')
+
+                if level == 0 or level == 2: 
+                    rectangle.set_edgecolor(line.get_color())  # Use the line's color for the rectangle
+                else: 
+                    rectangle.set_edgecolor(lighten_color(line.get_color(), 0.5))
+
+                cs = np.array(obj.corners()) # TL, TR, BR, BL
+                front_mid = 3*((cs[2, :] + cs[3, :]) / 2 - obj.position[:2])/4
+                if level == 2 or level == 0:
+                    ax.text(obj.position[0] - 0.5*front_mid[0], obj.position[1]-0.5*front_mid[1], obj.name, fontsize=12)
+
+                if (arrows and level == 2) or (arrows and level == 0): 
+                    ax.arrow(obj.position[0]-0.5*front_mid[0], obj.position[1]- 0.5*front_mid[1], front_mid[0], front_mid[1], head_width=0.1, head_length=0.1, fc=line.get_color(), ec=line.get_color())
+                
+                if not arrows: 
+                    cs = obj.back_corners()
+                    for corner in cs:
+                        ax.plot(corner[0], corner[1], color = line.get_color(), marker = 'o')
 
         # Draw the objects
         if self.tertiary_objects:
             for obj in self.tertiary_objects:
                 rectangle = patches.Rectangle(obj.position[:2]  - np.array([obj.width/2, obj.length/2]), obj.width, obj.length, linewidth=2, edgecolor='none', facecolor='none', angle=np.rad2deg(obj.position[2]), rotation_point='center')
                 ax.add_patch(rectangle)
-                rectangle.set_edgecolor('b')  # Use the line's color for the rectangle
-                ax.text(obj.position[0], obj.position[1], obj.name, fontsize=10)
-                cs = obj.back_corners()
-                for corner in cs:
-                    ax.plot(corner[0], corner[1], color = 'b', marker = 'o')
+                if level == 2 or level == 1: 
+                    rectangle.set_edgecolor('b')  # Use the line's color for the rectangle
+                else:
+                    rectangle.set_edgecolor(lighten_color('b', 0.8))
+                if level == 2 or level == 1:
+                    ax.text(obj.position[0] - 0.5*front_mid[0], obj.position[1]-0.5*front_mid[1], obj.name, fontsize=12)
+                cs = np.array(obj.corners()) # TL, TR, BR, BL
+                front_mid = 3*((cs[2, :] + cs[3, :]) / 2 - obj.position[:2])/4
+                if (arrows and level == 2) or (arrows and level == 1): 
+                    ax.arrow(obj.position[0]-0.5*front_mid[0], obj.position[1]- 0.5*front_mid[1], front_mid[0], front_mid[1], head_width=0.1, head_length=0.1, fc='b', ec='b')
+
+                if not arrows: 
+                    cs = obj.back_corners()
+                    for corner in cs:
+                        ax.plot(corner[0], corner[1], color = 'b', marker = 'o')
 
         if self.fixed_objects:
             for obj in self.fixed_objects:
@@ -604,7 +640,7 @@ class Room:
                     #ax.text(obj.position[0], obj.position[1], obj.name, fontsize=10)
                 elif obj.name == 'door':
                     wedge = patches.Wedge(center=obj.position[:2], r=obj.width, 
-                                          theta1=np.rad2deg(obj.position[2]), theta2=np.rad2deg(obj.position[2]) + 90, linewidth=3, edgecolor='r', facecolor='none')
+                                            theta1=np.rad2deg(obj.position[2]), theta2=np.rad2deg(obj.position[2]) + 90, linewidth=3, edgecolor='r', facecolor='none')
                     ax.add_patch(wedge)
 
                 elif obj.name == 'socket' or obj.name == 'plug' or obj.name == 'electrical plug':

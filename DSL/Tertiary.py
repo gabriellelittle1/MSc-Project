@@ -315,6 +315,10 @@ def on_wall_in_region(positions, room, tertiary_index, region_name):
     if room.tertiary_objects[tertiary_index].tertiary != 'wall':
         return 0
 
+    region_names = [region.name for region in room.regions]
+    if region_name not in region_names:
+        return 0
+
     val = 0
     region_index = room.find_region_index(region_name)
     object_x, object_y, object_theta = positions[3*tertiary_index: 3*tertiary_index + 3]

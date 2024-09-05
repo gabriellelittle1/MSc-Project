@@ -120,7 +120,8 @@ def ind_under_window(positions, room, object_index):
 
     """ This function ensures that the object will be placed underneath a window.
         For example, you might want a desk or a dresser below (but not blocking) a window. You would NOT use this for any 
-        objects that would be tall, for example a wardrobe or a fridge.
+        objects that would be tall, for example a wardrobe or a fridge. Example constraint "The desk should be under the window", 
+        "The desk should look out the window". Don't use with ind_not_block_fixed_object for a window and the same object. 
         
         Args:
         positions: list of floats, x, y, theta values for all objects in the room

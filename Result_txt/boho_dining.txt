@@ -1,0 +1,128 @@
+prompt: A small green boho dining room.
+room_width: 4
+room_length: 5
+rectangular dining table: {'position': [2.51042458, 2.79741786, 1.5705776], 'width': 1.5, 'length': 2.0}
+large indoor plant: {'position': [0.24587333, 4.35695157, 3.22656595], 'width': 0.5, 'length': 0.5}
+armchair: {'position': [0.39613517, 0.39557378, -0.00175959], 'width': 0.8, 'length': 0.8}
+dining chair: {'position': [1.24871249, 2.85140877, 10.82262946], 'width': 0.5, 'length': 0.5}
+dining chair0: {'position': [2.81082143, 3.90405269, 3.11708849], 'width': 0.5, 'length': 0.5}
+dining chair1: {'position': [2.92346272, 1.77237575, 6.36016765], 'width': 0.5, 'length': 0.5}
+dining chair2: {'position': [2.09813872, 1.78053305, -0.06530327], 'width': 0.5, 'length': 0.5}
+plant stand: {'position': [0.78465421, 4.8248074, 4.67919163], 'width': 0.4, 'length': 0.4}
+small bookshelf: {'position': [1.19594595, 0.15005973, -0.00014593], 'width': 0.8, 'length': 0.3}
+side table: {'position': [0.55073905, 1.32857237, 2.90803306], 'width': 0.5, 'length': 0.5}
+window: {'position': (1.75, 5, 3.141592653589793), 'width': 1.5, 'length': 0.1}
+window1: {'position': (2.5, 5, 3.141592653589793), 'width': 1.5, 'length': 0.1}
+door: {'position': (4, 0.42000000000000004, 1.5707963267948966), 'width': 0.8, 'length': 0.1}
+socket: {'position': (1.24, 0, 0), 'width': 0.2, 'length': 0.1}
+socket2: {'position': (0, 2.5, 4.71238898038469), 'width': 0.2, 'length': 0.1}
+socket3: {'position': (4, 2.98, 1.5707963267948966), 'width': 0.2, 'length': 0.1}
+chandelier: {'position': [1.95431482, 2.79830116, 1.57079722], 'width': 0.8, 'length': 0.8}
+table runner: {'position': [2.51042541, 2.79742004, 1.57075282], 'width': 0.3, 'length': 2.0}
+wall art: {'position': [3.94797448, 2.79830116, 1.57079722], 'width': 0.8, 'length': 0.1}
+hanging planters: {'position': [0.24587546, 4.35695156, 9.42477787], 'width': 0.3, 'length': 0.3}
+plant pot: {'position': [3.81529686, 4.03787266, 9.42477797], 'width': 0.3, 'length': 0.3}
+reading lamp: {'position': [0.55073886, 1.32857235, 3.09466059], 'width': 0.2, 'length': 0.2}
+book: {'position': [1.19594819, 0.15054735, -2.91493389e-05], 'width': 0.2, 'length': 0.3}
+wall sconce: {'position': [0.395431482, 0.0499827922, -7.31534263e-09], 'width': 0.2, 'length': 0.1}
+area rug: {'position': [2.50001042, 2.79741902, 7.85398162], 'width': 2, 'length': 3}
+style: 
+### Room Details
+**Walls:** The walls are a calming shade of sage green paint. This color is both earthy and relaxing, lending a tranquil yet vibrant atmosphere to the boho dining room.
+
+**Floor:** The floor is made of light, natural oak wood with a smooth matte finish, adding warmth and grounding the space without overpowering the other elements in the room.
+
+## Doors: 
+- **Colour**: Deep mahogany with natural grain visible
+- **Material**: Solid wood
+- **Style**:  Rustic with a slight vintage touch
+
+## Windows: 
+- **Colour**: Off-white with a distressed finish
+- **Material**: Painted wood
+- **Style**: Vintage boho
+
+### Object Details:
+
+1. **Rectangular Dining Table:**
+   - **Colour:** Natural wood finish
+   - **Style:** Rustic with a minimalist design
+   - **Description:** The rectangular dining table serves as the central piece of the room. Its natural wood finish complements the light oak floor and enhances the earthy boho vibe.
+
+2. **Large Indoor Plant:**
+   - **Colour:** Deep green leaves
+   - **Style:** A large monstera in a woven seagrass basket
+   - **Description:** This plant adds a touch of lush greenery, reinforcing the natural, organic feel of the room.
+
+3. **Armchair:**
+   - **Colour:** Soft cream upholstery with wooden legs
+   - **Style:** Mid-century modern with a boho twist
+   - **Description:** The armchair provides an extra seating option or a cozy spot to relax. The soft cream color ties in well with the natural wood tones and the green hues of the room.
+
+4. **Dining Chairs (4):**
+   - **Colour:** Mix of natural wood and white
+   - **Style:** Rustic with woven rattan seats
+   - **Description:** These chairs coordinate with the dining table and add texture to the room with their woven seats.
+
+5. **Plant Stand:**
+   - **Colour:** Black metal
+   - **Style:** Industrial chic
+   - **Description:** The black metal plant stand brings a subtle contrast and elevates smaller plants to eye level, adding visual interest.
+
+6. **Small Bookshelf:**
+   - **Colour:** Dark-stained wood
+   - **Style:** Vintage boho
+   - **Description:** The small bookshelf is home to books, decorative items, and plants. Its dark stain is a nice counterbalance to the lighter wood tones in the room.
+
+7. **Side Table:**
+   - **Colour:** Natural bamboo
+   - **Style:** Boho eclectic
+   - **Description:** Placed near the armchair, the side table offers a convenient spot for a lamp and a couple of books, and its bamboo material adds to the bohemian aesthetic.
+
+8. **Chandelier:**
+   - **Colour:** Black wrought iron with warm white bulbs
+   - **Style:** Vintage bohemian with an industrial edge
+   - **Description:** Hanging over the dining table, the chandelier provides ambient lighting and ties together the rustic and boho elements of the room.
+
+9. **Table Runner:**
+   - **Colour:** Earthy tones with geometric patterns
+   - **Style:** Bohemian chic
+   - **Description:** This table runner adds a pop of pattern and color to the dining table, enhancing the overall boho vibe.
+
+10. **Wall Art:**
+    - **Colour:** Mixed warm tones, including reds, oranges, and earthy browns
+    - **Style:** Abstract bohemian
+    - **Description:** The wall art introduces vibrant color and artistic flair to the room, acting as a focal point on one of the green-painted walls.
+
+11. **Hanging Planters:**
+    - **Colour:** White ceramic with macramé hangers
+    - **Style:** Boho and minimalist
+    - **Description:** These planters hang near the windows, bringing in more greenery and texture through their macramé hangers.
+
+12. **Plant Pot:**
+    - **Colour:** Terracotta
+    - **Style:** Classic bohemian
+    - **Description:** Placed on the plant stand, the terracotta pot adds a warm, earthy element to the room.
+
+13. **Reading Lamp:**
+    - **Colour:** Brass with a white shade
+    - **Style:** Vintage-inspired
+    - **Description:** Positioned next to the armchair, the reading lamp provides focused light and a touch of vintage elegance.
+
+14. **Book:**
+    - **Colour:** Various natural shades
+    - **Style:** Eclectic collection
+    - **Description:** Arranged on the bookshelf, the book covers display a mix of muted and earthy tones, fitting perfectly with the room’s color palette.
+
+15. **Wall Sconce:**
+    - **Colour:** Brass
+    - **Style:** Retro bohemian
+    - **Description:** Installed on either side of the wall art, the wall sconces provide accent lighting with a vintage charm.
+
+16. **Area Rug:**
+    - **Colour:** Neutral base with rich, warm patterns
+    - **Style:** Boho-chic
+    - **Description:** The area rug anchors the dining table, adding comfort underfoot and cohesion to the room’s design elements through its colorful, intricate patterns.
+
+Overall, each object in the room maintains a harmonious balance of natural materials, earthy tones, and boho aesthetics, creating a cohesive and inviting dining space.
+

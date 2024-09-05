@@ -1,0 +1,131 @@
+prompt: A bedroom that is 5x5 for a young girl who likes to paint whilst looking out of her window.
+room_width: 5
+room_length: 5
+easel: {'position': [3.49389401, 4.57015947, 11.1086155], 'width': 0.6, 'length': 1}
+bed: {'position': [0.99999982, 1.96025305, -1.57079628], 'width': 1, 'length': 2}
+wardrobe: {'position': [4.6999257, 2.26019795, 1.57069717], 'width': 1.5, 'length': 0.6}
+small table: {'position': [2.30584377, 4.80299024, 3.13131425], 'width': 0.6, 'length': 0.4}
+stool: {'position': [2.78227363, 4.42673821, 2.40251211], 'width': 0.3, 'length': 0.3}
+nightstand: {'position': [0.19999988, 1.21024517, 4.71230281], 'width': 0.5, 'length': 0.4}
+bookshelf: {'position': [3.29302665, 0.15000005, 6.28318512], 'width': 0.8, 'length': 0.3}
+storage ottoman: {'position': [2.45279131, 2.0606076, 4.71335921], 'width': 0.8, 'length': 0.4}
+painting: {'position': [0.05314759, 4.70587796, 4.71070224], 'width': 0.6, 'length': 0.1}
+plant: {'position': [2.30405547, 4.80275674, 3.13934425], 'width': 0.2, 'length': 0.2}
+lamp: {'position': [0.19859889, 1.33427594, 4.71180638], 'width': 0.2, 'length': 0.2}
+picture: {'position': [0.04998013, 1.96026418, 4.71238902], 'width': 0.5, 'length': 0.1}
+clock: {'position': [0.19977431, 1.08427402, 4.71181833], 'width': 0.2, 'length': 0.2}
+mirror: {'position': [4.95007685, 2.26016452, 1.57079633], 'width': 0.6, 'length': 0.1}
+jewelrybox: {'position': [2.45279975, 2.06071524, 4.71276118], 'width': 0.2, 'length': 0.2}
+rug: {'position': [1.00008604, 1.95929051, 4.71250928], 'width': 1.5, 'length': 2}
+window: {'position': (1.25, 5, 3.141592653589793), 'width': 1.5, 'length': 0.1}
+door: {'position': (0.5, 0, 0), 'width': 0.9, 'length': 0.1}
+socket: {'position': (0, 1.0150000000000001, 4.71238898038469), 'width': 0.1, 'length': 0.1}
+socket2: {'position': (4.5, 2.05, 1.5707963267948966), 'width': 0.1, 'length': 0.1}
+style: 
+Certainly! Given the described room and the objects within it, we can create a cohesive and aesthetically pleasing setup.
+
+### Walls:
+**Colour:** Soft pastel pink.
+**Type:** Paint.
+**Reasoning:** Soft pastel pink is a calming and pleasant colour often liked by young girls. It also provides a neutral backdrop for her paintings and adds a touch of warmth and creativity to the room.
+
+### Floor:
+**Material:** Light oak wood.
+**Colour:** Warm, natural light oak.
+**Reasoning:** The light oak provides a warm, natural feel that complements the pastel walls and creates a clean, chic look suitable for a young girl's bedroom. It's durable and easy to clean, ideal for an active, creative environment.
+
+## Door: 
+- **Colour**: White with pastel lavender detailing.
+- **Material**: Wood with a semi-gloss finish.
+- **Style**: Paneled Door with a soft, classic design featuring gentle curves or moulding.
+
+## Windows: 
+- **Colour**: White frames with pastel pink accents.
+- **Material**: Wood with a smooth, painted finish.
+- **Style**: French Windows with large panes.
+
+### Objects:
+
+1. **Easel:**
+   - **Colour:** White.
+   - **Style:** Minimalist wood with a simple design.
+   - **Reasoning:** A white easel will blend seamlessly with the room's soft hues and provide a clean slate for the art.
+
+2. **Bed:**
+   - **Colour:** Soft lavender with a white frame.
+   - **Style:** Modern with a touch of vintage, featuring a tufted headboard.
+   - **Reasoning:** Lavender is soothing and coordinates well with pink walls. The white frame ties in with the furniture theme.
+
+3. **Wardrobe:**
+   - **Colour:** White with pastel pink accents.
+   - **Style:** Classic with moulded panels and gentle curves.
+   - **Reasoning:** Adding pastel pink accents on the wardrobe doors creates cohesion with the walls.
+
+4. **Small Table:**
+   - **Colour:** Light oak.
+   - **Style:** Contemporary.
+   - **Reasoning:** Matches the flooring, tying the elements of the room together.
+
+5. **Stool:**
+   - **Colour:** Soft grey.
+   - **Style:** Retro-inspired with a cushioned seat.
+   - **Reasoning:** The grey introduces another neutral tone, adding balance and contrast without overpowering the room.
+
+6. **Nightstand:**
+   - **Colour:** White.
+   - **Style:** Simple, with a single drawer and a bottom shelf.
+   - **Reasoning:** Matches the bed frame and wardrobe, enhancing the cohesiveness of the room.
+
+7. **Bookshelf:**
+   - **Colour:** White.
+   - **Style:** Open shelving unit with a clean and straightforward design.
+   - **Reasoning:** Keeps the focus on the books and decorative items while coordinating with other white furniture.
+
+8. **Storage Ottoman:**
+   - **Colour:** Soft lavender.
+   - **Style:** Upholstered with a tufted top.
+   - **Reasoning:** Matches the bed, provides additional storage, and enhances the room's colour scheme.
+
+9. **Painting:**
+   - **Colour:** Varied (dependent on the girl's artwork).
+   - **Style:** Personal.
+   - **Reasoning:** Reflects her personality and serves as a focal point of creativity in the room.
+
+10. **Plant:**
+    - **Colour:** Green.
+    - **Style:** Potted in a pastel pink pot.
+    - **Reasoning:** Adds a fresh, natural element, and the pink pot ties in with the wall colour.
+
+11. **Lamp:**
+    - **Colour:** White base with a light pastel pink shade.
+    - **Style:** Modern, with a sleek, minimalist design.
+    - **Reasoning:** Complements the bedside nightstand and fits within the room's colour palette.
+
+12. **Picture:**
+    - **Colour:** Varied (family photo or favourite imagery).
+    - **Style:** White frame.
+    - **Reasoning:** Personal touch adds warmth to the space, the white frame fits with the other furniture.
+
+13. **Clock:**
+    - **Colour:** Soft pastel blue.
+    - **Style:** Vintage-inspired, round clock with roman numerals.
+    - **Reasoning:** Adds a complementary colour to the room without clashing, providing a nice contrast and additional interest.
+
+14. **Mirror:**
+    - **Colour:** White frame with decorative detailing.
+    - **Style:** Oval with vintage charm.
+    - **Reasoning:** Adds light and the illusion of space, fits the room’s style, and complements other white furniture pieces.
+
+15. **Jewelry Box:**
+    - **Colour:** Soft pastel pink with silver detailing.
+    - **Style:** Classic, with multiple compartments.
+    - **Reasoning:** Functional and adds decorative appeal, matching the room's colour scheme.
+
+16. **Rug:**
+    - **Colour:** Soft pastel pink and white striped.
+    - **Style:** Plush, area rug.
+    - **Reasoning:** Adds comfort and ties the room together with its matching colour scheme.
+
+### Summary:
+By choosing a soft pastel pink paint for the walls and a light oak wood floor, the overall aesthetic is cohesive, warm, and
+

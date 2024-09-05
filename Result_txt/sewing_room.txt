@@ -1,0 +1,128 @@
+prompt: A sewing room.
+room_width: 4
+room_length: 7
+cutting table: {'position': [2.99075341, 3.31773745, 1.54964673], 'width': 1.5, 'length': 1}
+sewing machine table: {'position': [0.30119544, 2.25568633, -1.57109678], 'width': 1.2, 'length': 0.6}
+shelving unit: {'position': [0.25006724, 4.79370572, 4.71232162], 'width': 2, 'length': 0.5}
+rolling cart: {'position': [3.80000006, 6.25066944, 7.85398182], 'width': 0.7, 'length': 0.4}
+desk chair: {'position': [1.85363142, 2.14523939, 3.08928058], 'width': 0.5, 'length': 0.5}
+ironing board: {'position': [3.23404976, 0.64803524, 1.58058381], 'width': 1.3, 'length': 0.4}
+additional shelving unit: {'position': [2.09370388, 6.54311003, 2.64850105], 'width': 1, 'length': 0.5}
+storage cabinet: {'position': [0.29896231, 6.43108834, 4.71221232], 'width': 1, 'length': 0.6}
+cutting_mat: {'position': [2.81080073, 3.32733139, 1.575291], 'width': 1.5, 'length': 1}
+task_lamp: {'position': [3.40924656, 3.67817396, 1.57545812], 'width': 0.2, 'length': 0.2}
+pin_cushion: {'position': [0.46221043, 2.25239478, -1.56997463], 'width': 0.1, 'length': 0.1}
+thread_holder: {'position': [0.1495997, 2.55684215, 9.42482157], 'width': 0.2, 'length': 0.1}
+organizer_bin: {'position': [0.31211299, 2.25755778, -1.57139832], 'width': 0.3, 'length': 0.2}
+inspiration_board: {'position': [0.04999269, 2.25571858, 4.71238274], 'width': 1.2, 'length': 0.1}
+baskets: {'position': [0.23902903, 4.57008292, 4.71318406], 'width': 0.4, 'length': 0.3}
+fabric_boxes: {'position': [0.26194875, 5.02419118, 4.70764713], 'width': 0.5, 'length': 0.4}
+wall_hooks: {'position': [0.04959886, 6.42964432, 4.71481522], 'width': 0.5, 'length': 0.1}
+pendant_light: {'position': [2.00033212, 3.50016263, 14.13712296], 'width': 0.5, 'length': 0.5}
+clock: {'position': [0.05000398, 3.85740197, 4.71238728], 'width': 0.3, 'length': 0.1}
+window: {'position': (1.7199999999999998, 7, 3.141592653589793), 'width': 1.2, 'length': 0.1}
+window1: {'position': (4, 3.5, 1.5707963267948966), 'width': 1.4, 'length': 0.1}
+door: {'position': (0.6200000000000001, 0, 0), 'width': 0.9, 'length': 0.1}
+socket: {'position': (0, 2.13, 4.71238898038469), 'width': 0.15, 'length': 0.1}
+socket2: {'position': (4, 4.869999999999999, 1.5707963267948966), 'width': 0.15, 'length': 0.1}
+socket3: {'position': (3.1550000000000002, 7, 3.141592653589793), 'width': 0.15, 'length': 0.1}
+style:  
+Sure! Let's design a cohesive and aesthetically pleasing sewing room based on your description:
+
+### Walls
+- **Colour**: Light pastel green. This colour is soothing, which is ideal for a creative workspace.
+- **Wallpaper or Paint**: Opt for paint as it's easier to maintain and can withstand any possible fabric dye splashes better than wallpaper. The light pastel green will help keep the room bright and light.
+
+### Floor
+- **Material**: Hardwood. It's durable and easy to clean, which is essential in a workspace.
+- **Colour**: A light oak. This will complement the pastel green walls and provide a warm, natural foundation for the room.
+
+## Door: 
+- **Colour**:White with light oak accents to complement the floor and storage cabinet.
+- **Material**:A single solid door.
+- **Style**: The door should be sleek with a smooth finish, featuring a modern handle in brushed metal to match the task lamp. If opting for French doors, they can have clear or frosted glass panels to add elegance while maintaining privacy and allowing light to flow between rooms.
+
+## Windows: 
+- **Colour**:White to maintain consistency with the furniture and other room elements.
+- **Style**: Clean and modern, with minimalistic lines to ensure they blend seamlessly with the room’s overall aesthetic. The windows should have a simple, unobtrusive design to keep the focus on the creative workspace.
+
+
+### Objects in the Room
+1. **Cutting Table**
+   - **Colour**: White with a light oak edge to match the floor.
+   - **Style**: Modern with clean lines and plenty of workspace.
+
+2. **Sewing Machine Table**
+   - **Colour**: White to keep it cohesive with the cutting table.
+   - **Style**: Functional but elegant, with a couple of drawers for tools and accessories.
+
+3. **Shelving Unit**
+   - **Colour**: White to maintain a cohesive look.
+   - **Style**: Open shelves for display and storage, minimalistic design to keep the room feeling spacious.
+
+4. **Rolling Cart**
+   - **Colour**: White with pastel green drawers to tie in with the walls.
+   - **Style**: Multi-tiered, mobile, and practical for moving supplies around the room.
+
+5. **Desk Chair**
+   - **Colour**: White frame with a pastel green cushioned seat.
+   - **Style**: Ergonomic and comfortable for long sewing sessions.
+
+6. **Ironing Board**
+   - **Colour**: Light grey with a subtle pastel green pattern on the cover.
+   - **Style**: Foldable and easy to store.
+
+7. **Additional Shelving Unit**
+   - **Colour**: White, matching the other shelving unit.
+   - **Style**: Similar design as the existing shelving unit to keep it uniform.
+
+8. **Storage Cabinet**
+   - **Colour**: White with light oak detailing.
+   - **Style**: Classic, with doors to hide clutter and keep the room looking neat.
+
+9. **Cutting Mat**
+   - **Colour**: Pastel green, coinciding with the walls.
+   - **Style**: Large enough to cover a good portion of the cutting table, grid-lined for precision.
+
+10. **Task Lamp**
+    - **Colour**: White with a metal finish for a modern touch.
+    - **Style**: Adjustable arm for flexible lighting.
+
+11. **Pin Cushion**
+    - **Colour**: Pastel pink, for a soft contrast with the greens.
+    - **Style**: Traditional tomato pin cushion with a modern twist.
+
+12. **Thread Holder**
+    - **Colour**: White, matching the furniture.
+    - **Style**: Wall-mounted, with an organized display of colourful threads.
+
+13. **Organizer Bin**
+    - **Colour**: Clear plastic with pastel green lids.
+    - **Style**: Stackable and versatile for different supplies.
+
+14. **Inspiration Board**
+    - **Colour**: Natural cork with a white frame.
+    - **Style**: Large enough to pin up sketches, fabric swatches, and ideas.
+
+15. **Baskets**
+    - **Colour**: Natural woven fibres for a touch of texture.
+    - **Style**: Various sizes for different storage needs.
+
+16. **Fabric Boxes**
+    - **Colour**: Pastel colours (green, pink, and blue) to add a bit of soft visual interest.
+    - **Style**: Sturdy and uniform in size, stackable.
+
+17. **Wall Hooks**
+    - **Colour**: White metal.
+    - **Style**: Sleek and simple, placed strategically for maximum utility.
+
+18. **Pendant Light**
+    - **Colour**: White exterior with a wooden accent to align with the flooring.
+    - **Style**: Modern and minimalistic, with a focus on providing ample light.
+
+19. **Clock**
+    - **Colour**: White with pastel green hands.
+    - **Style**: Modern, with a simple and clear face for easy reading.
+
+All elements in the room are designed to create a bright, clean, and cohesive workspace that enhances creativity while maintaining a tranquil atmosphere.
+
