@@ -45,7 +45,7 @@ def t_valid(positions, room):
             total_val += 100*(max(0, corner[0] - room.width)**2 + max(0, corner[1] - room.length)**2)
             total_val += 100*(max(0, -corner[0])**2 + max(0, -corner[1])**2)
 
-        ## no overlap
+        ## no overlap with doors or windows
         if nan_check(cs):
             continue
 
@@ -69,7 +69,7 @@ def t_valid(positions, room):
 
         ## Wall objects must be on the wall
         if typ == 'wall':
-            product = ((x- l/2)**2 + (theta - 3*np.pi/2)**2) # west wall, x = 0, theta = 3pi/2
+            product = ((x - l/2)**2 + (theta - 3*np.pi/2)**2) # west wall, x = 0, theta = 3pi/2
             product *= ((room.length - l/2 - y)**2 + (theta - np.pi)**2) # north wall, y = room.length, theta = pi
             product *= ((room.width - x - l/2)**2 + (theta - np.pi/2)**2) # east wall, x = room.width, theta = pi/2
             product *= ((y - l/2)**2 + theta**2) # south wall, y = 0, theta = 0

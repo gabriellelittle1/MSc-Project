@@ -2,6 +2,7 @@ import numpy as np
 from Class_Structures import * 
 from shapely.geometry import Polygon
 from Individual import *
+from Global import * 
 
 @safe_execution
 def io_next_to(positions, room, object1_index, object2_index, side1 = None, side2 = None):
@@ -80,13 +81,15 @@ def io_next_to(positions, room, object1_index, object2_index, side1 = None, side
             val += np.linalg.norm(direction3)**2 + (t)**2 + 0.1 * np.linalg.norm(point5 - point6)**2
         elif t > 1: 
             val += np.linalg.norm(direction4)**2 + (t - 1)**2 + 0.1 * np.linalg.norm(point5 - point6)**2
-        elif t >= 0 and t <= 1:
-            val += 0.1 * np.linalg.norm(point5 - point6)**2
+        else:
+            #val += 0.01 * np.linalg.norm(point5 - point6)**2
+            distance = np.linalg.norm(np.cross(direction5, direction3)) / np.linalg.norm(direction5)
+            val += distance**2
         if (side1 == 'front' and side2 == 'front') or (side1 == 'front' and side2 == 'back') or (side1 == 'back' and side2 == 'front') or (side1 == 'back' and side2 == 'back'):
             val += 10*np.linalg.norm(point5 - point6)**2
         if np.linalg.norm(t*direction5) < dim_shorter/2: 
             val += 10*(dim_shorter/2 - np.linalg.norm(t*direction5))**2
-        if np.linalg.norm((1 - t)*direction5) < dim_shorter/2:
+        elif np.linalg.norm((1 - t)*direction5) < dim_shorter/2:
             val += 10*(dim_shorter/2 - np.linalg.norm((1 - t)*direction5))**2
         else: 
             distance = np.linalg.norm(np.cross(direction5, direction3)) / np.linalg.norm(direction5)
@@ -384,7 +387,7 @@ def io_surround(positions, room, central_object_index, object_indices):
     pos = pos[indices, :]
 
     center_of_mass = np.mean(pos[:, :2], axis = 0)
-    #val += (center_of_mass[0] - center_x)**2 + (center_of_mass[1] - center_y)**2 # center of mass of all the objects
+    val += (center_of_mass[0] - center_x)**2 + (center_of_mass[1] - center_y)**2 # center of mass of all the objects
 
 
     ## Need to check if any of the sides are too close to walls. 
@@ -422,18 +425,18 @@ def io_surround(positions, room, central_object_index, object_indices):
     for i in range(num): 
         for j in range(len(sides)*i, len(sides)*(i+1)):
             obj_per_sides[j%len(sides)].append(object_indices[j])
-            val += 2*io_next_to(positions, room, object_indices[j], central_object_index, side1 = 'front', side2 = sides[j%len(sides)])
+            val += 3*io_next_to(positions, room, object_indices[j], central_object_index, side1 = 'front', side2 = sides[j%len(sides)])
     
     new_sides = []
     index = len(sides)*num
     if center_obj.width >= center_obj.length:
         if 'back' in sides: 
             new_sides.append('back')
-        elif 'front' in sides:
+        if 'front' in sides:
             new_sides.append('front')
-        elif 'left' in sides:
+        if 'left' in sides:
             new_sides.append('left')
-        elif 'right' in sides:
+        if 'right' in sides:
             new_sides.append('right')
     else: 
         if 'left' in sides:
@@ -444,18 +447,15 @@ def io_surround(positions, room, central_object_index, object_indices):
             new_sides.append('back')
         if 'front' in sides:
             new_sides.append('front')
-
     for i in range(remaining):
         obj_per_sides[i].append(object_indices[index + i])
-        val += 2*io_next_to(positions, room, object_indices[index + i], central_object_index, side1 = 'front', side2 = new_sides[i])
-
+        val += 3*io_next_to(positions, room, object_indices[index + i], central_object_index, side1 = 'front', side2 = new_sides[i])
+        
     for side in obj_per_sides: 
-        for i in range(len(side)):
-            for j in range(i + 1, len(side)):
-                val += io_away_from(positions, room, i, j, 0.1)
-
+        if len(side) == 1:
+            val += io_facing(positions, room, side[0], central_object_index, False)
+    val += no_overlap(positions, room)
     return val
-
 
 
 @safe_execution
