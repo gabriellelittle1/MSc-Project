@@ -230,45 +230,6 @@ def on_top_corner(positions, room, tertiary_index, other_index, corner = 'tl'):
     
     return val 
 
-def on_wall_above_central(positions, room, tertiary_index, other_index): 
-
-    """ This function ensures that the tertiary object is placed on the wall above the central object.
-        This would be used for placing a painting on the wall above a desk, for example.
-        
-        Args:
-        positions: list of floats, x, y, theta values for all objects in the room
-        room: rectangular Room object
-        tertiary_index: int, index of the tertiary object in the room.tertiary_objects list
-        other_index: int, index of the central object in the room.moving_objects list
-    """
-
-    if room.tertiary_objects[tertiary_index].tertiary != 'wall':
-        return 0
-    
-    ## I want this function to act as: "on wall but close to this point"
-    val = 0
-    x, y, theta = room.moving_objects[other_index].position
-    object_x, object_y, object_theta = positions[3*tertiary_index: 3*tertiary_index + 3]    
-    w, l = room.tertiary_objects[tertiary_index].width, room.tertiary_objects[tertiary_index].length
-
-    tl, tr, br, bl = corners(x, y, theta, room.moving_objects[other_index].width, room.moving_objects[other_index].length)
-    # Find the wall closest to the back of the object 
-    back_mid = np.array([0.5*(tl[0] + tr[0]), 0.5*(tl[1] + tr[1])])
-
-    wall_distances = np.array([back_mid[0]**2, back_mid[1]**2, (room.width - back_mid[0])**2, (room.length - back_mid[1])**2])
-    wall = np.argmin(wall_distances)
-
-    ## Now we need to set the object to be on the wall, and to set the object to be on that wall 
-    if wall == 0: # (x = 0, therefore west wall, set orientation to be 3pi/2)
-        val += (object_x)**2 + (object_y - back_mid[1])**2 + (object_theta - 3*np.pi/2)**2
-    elif wall == 1: # (y = 0, therefore south wall, set orientation to be 0)
-        val += (object_y)**2 + (object_x - back_mid[0])**2 + (object_theta)**2
-    elif wall == 2: # (x = room.width, therefore east wall, set orientation to be pi/2)
-        val += (object_x - room.width)**2 + (object_y - back_mid[1])**2 + (object_theta - np.pi/2)**2
-    else: # (y = room.length, therefore north wall, set orientation to be pi)
-        val += (object_y - room.length)**2 + (object_x - back_mid[0])**2 + (object_theta - np.pi)**2
-    
-    return 20*val
 
 def on_wall_near(positions, room, tertiary_index, other_index): 
 
@@ -286,7 +247,7 @@ def on_wall_near(positions, room, tertiary_index, other_index):
         return 0
 
     val = 0
-    x, y, theta = room.moving_objects[other_index].position
+    x, y, _ = room.moving_objects[other_index].position
     object_x, object_y, object_theta = positions[3*tertiary_index: 3*tertiary_index + 3]
     w, l = room.tertiary_objects[tertiary_index].width, room.tertiary_objects[tertiary_index].length
     product = ((object_x - l/2)**2 + (object_theta - 3*np.pi/2)**2) # west wall, x = 0, theta = 3pi/2

@@ -1,0 +1,133 @@
+prompt: A home office that is 5m x 3m.
+room_width: 5
+room_length: 3
+desk: {'position': array([ 1.29584569,  0.34984078, 12.56584741]), 'width': 1.5, 'length': 0.7}
+bookshelf: {'position': array([3.01892783, 2.85021321, 3.1417608 ]), 'width': 1, 'length': 0.3}
+armchair: {'position': array([3.9222286 , 1.64811844, 1.01562376]), 'width': 0.8, 'length': 0.8}
+desk chair: {'position': array([ 2.89346686,  0.29999998, 12.56637061]), 'width': 0.6, 'length': 0.6}
+filing cabinet: {'position': array([0.19899028, 0.31405361, 6.28722161]), 'width': 0.4, 'length': 0.5}
+side table: {'position': array([3.37646953, 1.14484874, 4.5720392 ]), 'width': 0.5, 'length': 0.5}
+floor lamp: {'position': array([2.30108358, 1.07575203, 6.32303502]), 'width': 0.3, 'length': 0.3}
+window: {'position': (5, 1.5, 1.5707963267948966), 'width': 1, 'length': 0.1}
+window0: {'position': (0, 1.5, 4.71238898038469), 'width': 1, 'length': 0.1}
+door: {'position': (1.31, 3, 3.141592653589793), 'width': 0.9, 'length': 0.1}
+socket: {'position': (3.955, 3, 3.141592653589793), 'width': 0.15, 'length': 0.1}
+socket1: {'position': (1.5299999999999998, 0, 0), 'width': 0.15, 'length': 0.1}
+socket2: {'position': (5, 2.07, 1.5707963267948966), 'width': 0.15, 'length': 0.1}
+socket3: {'position': (0, 0.645, 4.71238898038469), 'width': 0.15, 'length': 0.1}
+computer: {'position': array([ 1.29597928,  0.34962008, 12.56626474]), 'width': 0.4, 'length': 0.3}
+desklamp: {'position': array([1.67059897, 0.17483223, 4.71237602]), 'width': 0.2, 'length': 0.2}
+wallcalendar: {'position': array([1.29566313e+00, 4.99716628e-02, 2.42232457e-07]), 'width': 1.0, 'length': 0.1}
+decorativebox: {'position': array([0.19916079, 0.31405478, 6.28398011]), 'width': 0.3, 'length': 0.3}
+smallplant: {'position': array([3.01893404, 2.8509432 , 3.14162752]), 'width': 0.2, 'length': 0.2}
+throwpillow: {'position': array([3.92243811, 1.64800737, 1.4566141 ]), 'width': 0.5, 'length': 0.5}
+wallart: {'position': array([4.94637865, 2.3500038 , 1.57072035]), 'width': 0.6, 'length': 0.1}
+tablelamp: {'position': array([3.37642437, 1.14483968, 4.6842553 ]), 'width': 0.25, 'length': 0.25}
+arearug: {'position': array([ 3.92147807,  1.64790626, 12.56641035]), 'width': 2.0, 'length': 1.5}
+ceilinglight: {'position': array([2.50001189, 1.50001154, 6.28319538]), 'width': 0.5, 'length': 0.5}
+style: ### Description of a Home Office (5m x 3m)
+
+#### Walls
+- **Colour**: Soft sage green
+- **Material**: Matte paint for a serene and calming atmosphere
+- **Details**: Possibly an accent wall with subtle geometric wallpaper in similar sage tones to add depth and interest without overwhelming the space.
+
+#### Windows and Doors
+- **Windows**: Modern double-hung windows with black aluminium frames and white interior trim
+  - **Window Treatments**: Light, sheer white curtains to allow for natural daylight, paired with blackout roller shades for versatility
+- **Doors**: Modern panel door with a frosted glass panel
+  - **Colour**: Satin white to seamlessly blend with the window trim
+
+#### Flooring
+- **Material**: Engineered hardwood
+- **Colour**: Warm, medium-toned walnut
+  - **Details**: Adds natural warmth and a touch of luxury to the room
+
+### Objects in the Room
+
+1. **Desk**
+   - **Colour**: Light oak
+   - **Style**: Scandinavian, with clean lines and minimalistic design
+   - **Details**: Spacious enough to accommodate a computer and other essential items
+
+2. **Bookshelf**
+   - **Colour**: White
+   - **Style**: Modern, open-shelving design to keep the space light and airy
+   - **Details**: Adjustable shelves to fit books and decorative items
+
+3. **Armchair**
+   - **Colour**: Muted grey
+   - **Style**: Mid-century modern with tapered wooden legs in walnut
+   - **Details**: Upholstered in a durable, soft fabric for comfort during breaks
+
+4. **Desk Chair**
+   - **Colour**: White with chrome legs
+   - **Style**: Ergonomic and modern
+   - **Details**: Adjustable height and lumbar support for long working hours
+
+5. **Filing Cabinet**
+   - **Colour**: White
+   - **Style**: Sleek and minimalistic with handle-less drawers
+   - **Details**: Rolls under the desk to save space when not in use
+
+6. **Side Table**
+   - **Colour**: Light oak to match the desk
+   - **Style**: Scandinavian with open storage space beneath
+   - **Details**: Perfect for placing the decorative box or small plant
+
+7. **Floor Lamp**
+   - **Colour**: Matte black with brass accents
+   - **Style**: Industrial chic with an adjustable arm
+   - **Details**: Provides focused lighting near the armchair for reading
+
+8. **Computer**
+   - **Colour**: Sleek black monitor with a silver stand
+   - **Style**: Modern and slim
+   - **Details**: Complements the desk's minimalistic aesthetic
+
+9. **Desklamp**
+   - **Colour**: Brushed nickel
+   - **Style**: Contemporary, with an adjustable arm
+   - **Details**: Provides direct light on the desk surface
+
+10. **Wall Calendar**
+    - **Colour**: Black and white grid pattern
+    - **Style**: Modern and functional
+    - **Details**: Adds a touch of practicality to the wall while maintaining the room's aesthetic
+
+11. **Decorative Box**
+    - **Colour**: White with grey patterns
+    - **Style**: Modern and subtle
+    - **Details**: Perfect for storing small office supplies or personal items
+
+12. **Small Plant**
+    - **Colour**: Green with a white ceramic pot
+    - **Style**: Simple and fresh
+    - **Details**: Adds a touch of greenery to the room for a more inviting feel
+
+13. **Throw Pillow**
+    - **Colour**: Soft, charcoal grey with a subtle geometric pattern
+    - **Style**: Modern and comfortable
+    - **Details**: Enhances the armchair's comfort and adds a layer of texture
+
+14. **Wall Art**
+    - **Colour**: Black and white abstract print
+    - **Style**: Modern and minimalistic
+    - **Details**: Framed in a thin black frame to tie in with the window frames
+
+15. **Table Lamp**
+    - **Colour**: White base with a light grey shade
+    - **Style**: Modern and simplistic
+    - **Details**: Perfect for the side table, providing additional ambient light
+
+16. **Area Rug**
+    - **Colour**: Neutral tones with a subtle, textured pattern
+    - **Style**: Scandinavian-inspired, with a soft, comfortable feel
+    - **Details**: Large enough to fit under the desk and chair, adding a cozy layer to the hardwood floors
+
+17. **Ceiling Light**
+    - **Colour**: Matte black with brass accents
+    - **Style**: Industrial chic
+    - **Details**: Provides ample overhead lighting, designed to complement the floor lamp and other brass accents in the room
+
+By coordinating both the colours and styles of these items, the room will maintain a cohesive and harmonious atmosphere, conducive to productivity and comfort.

@@ -9,6 +9,7 @@ import copy
 from shapely.geometry import Polygon, Point
 from Individual import get_position
 import matplotlib.colors as mcolors
+import matplotlib.lines as lines
 
 def TR(x, y, theta, w, l):
     return (x + w/2 * np.cos(theta) + l/2 * np.sin(theta), y + w/2 * np.sin(theta) - l/2 * np.cos(theta))
@@ -333,7 +334,7 @@ class Object:
             index : int, index of the object in the room's object list (optional, only used for moving_objects)
             position: tuple (x, y, theta), where x, y are the coordinates of the center of the 
                       object and theta is the orientation of the object in radians.
-            tertiary: string, one of "wall" or "floor" (optional, only used for tertiary_objects) which determines the type of teriary object
+            tertiary: string, one of "wall", "floor", "table", "ceiling" (optional, only used for tertiary_objects) which determines the type of teriary object
         """
 
         self.position = position
@@ -462,14 +463,22 @@ class Room:
         return counter
     
     
-    def draw(self, draw_regions = False, buffers = False, ax = None, level = 2, arrows = False):
+    def draw(self, draw_regions = False, buffers = False, ax = None, level = 2, arrows = False, key = False):
 
         """ Draws the room with all the objects in it."""
         show = True
-        if ax is None: 
+        if ax is None and not key: 
             show = False
             fig, ax = plt.subplots(figsize = (10, 10))
             ax.set_xlim(-1, self.width + 1)
+            ax.set_ylim(-1, self.length + 1)
+            ax.set_aspect('equal')
+            ax.grid(linestyle = '--')
+        
+        elif ax is None and key: 
+            show = False
+            fig, ax = plt.subplots(figsize = (10, 10))
+            ax.set_xlim(-2, self.width + 1)
             ax.set_ylim(-1, self.length + 1)
             ax.set_aspect('equal')
             ax.grid(linestyle = '--')
@@ -600,8 +609,10 @@ class Room:
 
                 cs = np.array(obj.corners()) # TL, TR, BR, BL
                 front_mid = 3*((cs[2, :] + cs[3, :]) / 2 - obj.position[:2])/4
-                if level == 2 or level == 0:
+                if (level == 2 or level == 0) and not key:
                     ax.text(obj.position[0] - 0.5*front_mid[0], obj.position[1]-0.5*front_mid[1], obj.name, fontsize=12)
+                elif (level == 2 or level == 0) and key:
+                    ax.text(obj.position[0] - 0.5*front_mid[0], obj.position[1]-0.5*front_mid[1], str(obj.index), fontsize=12) 
 
                 if (arrows and level == 2) or (arrows and level == 0): 
                     ax.arrow(obj.position[0]-0.5*front_mid[0], obj.position[1]- 0.5*front_mid[1], front_mid[0], front_mid[1], head_width=0.1, head_length=0.1, fc=line.get_color(), ec=line.get_color())
@@ -610,34 +621,62 @@ class Room:
                     cs = obj.back_corners()
                     for corner in cs:
                         ax.plot(corner[0], corner[1], color = line.get_color(), marker = 'o')
+            if key and level == 0: 
+                handles = []
+                for i in range(len(self.moving_objects)):
+                    custom_text = lines.Line2D([], [], color='none', marker='None', linestyle='None', label= str(i) + ": " + self.moving_objects[i].name)
+                    handles += [custom_text]
+                # Add custom handles to the legend
+                ax.legend(handles = handles, loc='upper left', title="Objects")
+
 
         # Draw the objects
         if self.tertiary_objects:
             for obj in self.tertiary_objects:
                 rectangle = patches.Rectangle(obj.position[:2]  - np.array([obj.width/2, obj.length/2]), obj.width, obj.length, linewidth=2, edgecolor='none', facecolor='none', angle=np.rad2deg(obj.position[2]), rotation_point='center')
                 ax.add_patch(rectangle)
+                cs = np.array(obj.corners()) # TL, TR, BR, BL
+                front_mid = 3*((cs[2, :] + cs[3, :]) / 2 - obj.position[:2])/4
+                left_mid = 3*((cs[3, :] + cs[0, :]) / 2 - obj.position[:2])/4
                 if level == 2 or level == 1: 
                     rectangle.set_edgecolor('b')  # Use the line's color for the rectangle
                 else:
                     rectangle.set_edgecolor(lighten_color('b', 0.8))
-                if level == 2 or level == 1:
+                if (level == 2 or level == 1) and not key:
                     ax.text(obj.position[0] - 0.5*front_mid[0], obj.position[1]-0.5*front_mid[1], obj.name, fontsize=12)
-                cs = np.array(obj.corners()) # TL, TR, BR, BL
-                front_mid = 3*((cs[2, :] + cs[3, :]) / 2 - obj.position[:2])/4
+                elif (level == 2 or level == 1) and key: 
+                    ax.text(obj.position[0] + 0.5*left_mid[0], obj.position[1]+0.5*left_mid[1], str(obj.index + len(self.moving_objects)), fontsize=12)
                 if (arrows and level == 2) or (arrows and level == 1): 
                     ax.arrow(obj.position[0]-0.5*front_mid[0], obj.position[1]- 0.5*front_mid[1], front_mid[0], front_mid[1], head_width=0.1, head_length=0.1, fc='b', ec='b')
-
-                if not arrows: 
+                if not arrows and (level == 2 or level == 1): 
                     cs = obj.back_corners()
                     for corner in cs:
                         ax.plot(corner[0], corner[1], color = 'b', marker = 'o')
+
+                if key and (level == 1): 
+                    handles = []
+                    for i in range(len(self.tertiary_objects)):
+                        custom_text = lines.Line2D([], [], color='b', marker='None', linestyle='None', label= str(i + len(self.moving_objects)) + ": " + self.tertiary_objects[i].name)
+                        handles += [custom_text]
+                    # Add custom handles to the legend
+                    ax.legend(handles = handles, loc='upper left', title="Objects")
+        
+        if key and level == 2: 
+            handles = []
+            for i in range(len(self.moving_objects)):
+                custom_text = lines.Line2D([], [], color='none', marker='None', linestyle='None', label= str(i) + ": " + self.moving_objects[i].name)
+                handles += [custom_text]
+            for i in range(len(self.tertiary_objects)): 
+                custom_text = lines.Line2D([], [], color='b', marker='None', linestyle='None', label= str(i + len(self.moving_objects)) + ": " + self.tertiary_objects[i].name)
+                handles += [custom_text]
+            # Add custom handles to the legend
+            ax.legend(handles = handles, loc='upper left', title="Objects")
 
         if self.fixed_objects:
             for obj in self.fixed_objects:
                 if obj.name == 'window':
                     rect = patches.Rectangle(obj.position[:2] - np.array([obj.width/2, obj.length/2]), obj.width, obj.length, linewidth=5, edgecolor='r', facecolor='none', angle=np.rad2deg(obj.position[2]), rotation_point='center')
                     ax.add_patch(rect)
-                    #ax.text(obj.position[0], obj.position[1], obj.name, fontsize=10)
                 elif obj.name == 'door':
                     wedge = patches.Wedge(center=obj.position[:2], r=obj.width, 
                                             theta1=np.rad2deg(obj.position[2]), theta2=np.rad2deg(obj.position[2]) + 90, linewidth=3, edgecolor='r', facecolor='none')

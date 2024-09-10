@@ -62,19 +62,6 @@ def on_top_corner(positions, room, tertiary_index, other_index, corner = 'tl'):
 
     return
 
-def on_wall_above_central(positions, room, tertiary_index, other_index): 
-
-    """ This function ensures that the tertiary object is placed on the wall above the central object.
-        This would be used for placing a painting on the wall above a desk, for example.
-        
-        Args:
-        positions: list of floats, x, y, theta values for all objects in the room
-        room: rectangular Room object
-        tertiary_index: int, index of the tertiary object in the room.tertiary_objects list
-        other_index: int, index of the central object in the room.moving_objects list
-    """
-    return 
-
 def on_wall_near(positions, room, tertiary_index, other_index): 
 
     """ This function ensures that the tertiary object is placed on the wall near the central object.

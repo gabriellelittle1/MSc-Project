@@ -373,53 +373,67 @@ def io_surround(positions, room, central_object_index, object_indices):
 
     val = 0
 
-    center_x, center_y, center_theta = get_position(positions, room, central_object_index)
     center_obj = room.moving_objects[central_object_index]
+    center_x, center_y, center_theta = center_obj.position
 
     other_length = room.moving_objects[object_indices[0]].length 
+    other_width = room.moving_objects[object_indices[0]].width
 
     pos = np.array(positions).reshape(-1, 3)
     indices = [positions_index(room, i)//3 for i in object_indices]
     pos = pos[indices, :]
 
     center_of_mass = np.mean(pos[:, :2], axis = 0)
-    val += (center_of_mass[0] - center_x)**2 + (center_of_mass[1] - center_y)**2 # center of mass of all the objects
+    #val += (center_of_mass[0] - center_x)**2 + (center_of_mass[1] - center_y)**2 # center of mass of all the objects
 
 
     ## Need to check if any of the sides are too close to walls. 
     cs = corners(center_x, center_y, center_theta, center_obj.width, center_obj.length) # TL, TR, BR, BL
     sides = [[cs[0], cs[1]],  [cs[2], cs[3]], [cs[1], cs[2]], [cs[3], cs[0]]] # back, front, right, left
-    wall_distances = np.zeros((4, 4)) # each row is a side, each column is a wall 
+    wall_distances = np.zeros((4, 4)) # each row is a side, each column is a wall
+    lengthways = []
+    widthways = []
     for i in range(4): 
-        for j in range(2):
-            side = sides[i][j]
-            wall_distances[i, :] += 0.5 * np.array([side[0]**2, side[1]**2, (room.width - side[0])**2, (room.length - side[1])**2])
-    
+        side1, side2 = sides[i]
+        side1_distances = 0.5 * np.array([side1[0]**2, side1[1]**2, (room.width - side1[0])**2, (room.length - side1[1])**2])
+        side2_distances = 0.5 * np.array([side2[0]**2, side2[1]**2, (room.width - side2[0])**2, (room.length - side2[1])**2])
+        if np.abs(np.min(side1_distances) - np.min(side2_distances)) < 0.1: 
+            lengthways.append(i)
+        else:
+            widthways.append(i)
+
+        wall_distances[i,:] = (side1_distances + side2_distances)
+
     wall_distances = np.min(wall_distances, axis = 1)
     sides = ['back', 'front', 'right', 'left']
     inds = []
-    for i in range(4): 
-        if wall_distances[i] >= 0.2 + other_length: 
-            inds.append(i)
 
+    for i in lengthways: 
+        if wall_distances[i] >= 0.05 + other_length: 
+            inds.append(i)
+    for i in widthways: 
+        if wall_distances[i] >= 0.05 + other_width/2: 
+            inds.append(i)
     sides = [sides[i] for i in inds]
+    obj_per_sides = [[] for i in range(len(sides))]
     num = len(object_indices) // len(sides)
     remaining = len(object_indices) % len(sides)
     
     for i in range(num): 
         for j in range(len(sides)*i, len(sides)*(i+1)):
-            val += io_next_to(positions, room, object_indices[j], central_object_index, side1 = 'front', side2 = sides[j])
+            obj_per_sides[j%len(sides)].append(object_indices[j])
+            val += 2*io_next_to(positions, room, object_indices[j], central_object_index, side1 = 'front', side2 = sides[j%len(sides)])
     
     new_sides = []
     index = len(sides)*num
     if center_obj.width >= center_obj.length:
         if 'back' in sides: 
             new_sides.append('back')
-        if 'front' in sides:
+        elif 'front' in sides:
             new_sides.append('front')
-        if 'left' in sides:
+        elif 'left' in sides:
             new_sides.append('left')
-        if 'right' in sides:
+        elif 'right' in sides:
             new_sides.append('right')
     else: 
         if 'left' in sides:
@@ -432,12 +446,16 @@ def io_surround(positions, room, central_object_index, object_indices):
             new_sides.append('front')
 
     for i in range(remaining):
-        val += io_next_to(positions, room, object_indices[index + i], central_object_index, side1 = 'front', side2 = new_sides[i])
-    
-    for i in range(len(object_indices)):
-        val += io_facing(positions, room, object_indices[i], central_object_index)
+        obj_per_sides[i].append(object_indices[index + i])
+        val += 2*io_next_to(positions, room, object_indices[index + i], central_object_index, side1 = 'front', side2 = new_sides[i])
+
+    for side in obj_per_sides: 
+        for i in range(len(side)):
+            for j in range(i + 1, len(side)):
+                val += io_away_from(positions, room, i, j, 0.1)
 
     return val
+
 
 
 @safe_execution

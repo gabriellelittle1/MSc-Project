@@ -1,0 +1,107 @@
+prompt: A bedroom that is 3.225m x 4.5m.
+room_width: 3.225
+room_length: 4.5
+bed: {'position': array([2.2262497 , 2.43293006, 1.567673  ]), 'width': 1.4, 'length': 2.0}
+wardrobe: {'position': array([0.28852658, 3.86203684, 4.697218  ]), 'width': 1.2, 'length': 0.6}
+desk: {'position': array([ 1.89981357,  0.30243281, -6.27415409]), 'width': 1.2, 'length': 0.6}
+nightstand: {'position': array([3.02336633, 1.47924252, 1.57734743]), 'width': 0.5, 'length': 0.4}
+dresser: {'position': array([2.9800069 , 3.63141031, 7.84351204]), 'width': 1.0, 'length': 0.5}
+shoe rack: {'position': array([0.15      , 2.74005582, 4.7123889 ]), 'width': 0.8, 'length': 0.3}
+desk chair: {'position': array([1.84046417, 1.00523408, 3.33308701]), 'width': 0.6, 'length': 0.6}
+bookshelf: {'position': array([0.72485259, 0.26014385, 5.73790366]), 'width': 0.8, 'length': 0.3}
+window: {'position': (1.6125, 0, 0), 'width': 1, 'length': 0.1}
+door: {'position': (0, 1.54, 4.71238898038469), 'width': 0.8, 'length': 0.1}
+socket: {'position': (2.2275, 4.5, 3.141592653589793), 'width': 0.15, 'length': 0.05}
+socket0: {'position': (3.225, 1.38, 1.5707963267948966), 'width': 0.15, 'length': 0.05}
+socket1: {'position': (2.5350000000000006, 0, 0), 'width': 0.15, 'length': 0.05}
+table lamp: {'position': array([3.02324108, 1.47929807, 1.57236204]), 'width': 0.2, 'length': 0.2}
+painting: {'position': array([3.17515975, 2.4297116 , 1.57080437]), 'width': 1.0, 'length': 0.1}
+mirror: {'position': array([3.17517124, 3.62879336, 1.57080759]), 'width': 0.6, 'length': 0.1}
+laptop: {'position': array([ 2.05542158,  0.30726325, -6.28825174]), 'width': 0.4, 'length': 0.3}
+table lamp2: {'position': array([ 1.75501867,  0.29774446, -6.2847303 ]), 'width': 0.2, 'length': 0.2}
+cork board: {'position': array([ 2.56250002e+00,  4.99246767e-02, -3.92541040e-07]), 'width': 0.8, 'length': 0.1}
+area rug: {'position': array([1.7037612 , 2.46738618, 7.9196814 ]), 'width': 2.0, 'length': 1.5}
+style: ### Room Description
+
+#### Walls
+- **Colour**: Soft, warm white (like a creamy off-white)
+- **Material**: Paint, with one accent wall that could have a subtle, textured wallpaper in a neutral pattern to add depth and interest without overwhelming the space.
+
+#### Windows and Doors
+- **Windows**: 
+  - **Style**: Modern double-hung with simple, clean lines
+  - **Colour**: White frames with clear glass panes
+- **Doors**: 
+  - **Style**: Simple paneled door
+  - **Colour**: Warm white to match the walls for a cohesive look
+
+#### Floor
+- **Material**: Hardwood or high-quality laminate for durability and aesthetic appeal
+- **Colour**: Light oak finish, providing warmth and a neutral backdrop that works well with various styles and colours.
+
+### Objects Description
+
+1. **Bed**
+   - **Style**: Modern platform bed with a minimalist design
+   - **Colour**: Light grey upholstered headboard with a light wood frame matching the floor
+
+2. **Wardrobe**
+   - **Style**: Sleek and contemporary with mirrored doors to enhance light and space
+   - **Colour**: White with silver handles to blend with the walls and add a touch of elegance
+
+3. **Desk**
+   - **Style**: Modern simple design with clean lines and minimal details
+   - **Colour**: White surface with light wood legs to harmonize with the wardrobe and floor
+
+4. **Nightstand**
+   - **Style**: Functional and compact, matching the bed frame
+   - **Colour**: Light wood with a single drawer and open shelf, matching the bed frame
+
+5. **Dresser**
+   - **Style**: Contemporary with ample storage
+   - **Colour**: White with light wood accents on the top and knobs, blending with other furniture pieces
+
+6. **Shoe Rack**
+   - **Style**: Simple and functional
+   - **Colour**: Light wood, consistent with the floor and other wooden elements in the room
+
+7. **Desk Chair**
+   - **Style**: Ergonomic with a modern aesthetic
+   - **Colour**: White with light grey cushion for comfort and cohesion
+
+8. **Bookshelf**
+   - **Style**: Open and minimalist
+   - **Colour**: Light wood to match the other wooden elements in the room
+
+### Accessories
+
+1. **Table Lamp (Nightstand)**
+   - **Style**: Modern with a cylindrical shape
+   - **Colour**: White ceramic base with a light grey fabric shade
+
+2. **Table Lamp (Desk)**
+   - **Style**: Sleek and functional
+   - **Colour**: Brushed silver base with a white shade
+
+3. **Painting**
+   - **Style**: Abstract with soothing pastel colours
+   - **Colour**: Mix of soft blues, pinks, and greens to add a splash of colour without overwhelming the space
+
+4. **Mirror**
+   - **Style**: Full-length with a simple frame
+   - **Colour**: White frame to blend with the walls and wardrobe
+
+5. **Laptop**
+   - **Style**: Sleek and modern
+   - **Colour**: Silver, typically neutral and minimalist in design
+
+6. **Cork Board**
+   - **Style**: Functional with a simple frame
+   - **Colour**: Natural cork with a white frame to blend seamlessly with the wall
+
+7. **Area Rug**
+   - **Style**: Soft, plush, and inviting
+   - **Colour**: Light grey with a subtle pattern to add texture and comfort underfoot without clashing with the floor
+
+### Summary
+The overall room design focuses on a harmonious blend of soft whites, light woods, and subtle accents that convey a modern, minimalist, and calming atmosphere. Every element is chosen to create a cohesive look that is both functional and aesthetically pleasing.

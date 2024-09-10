@@ -84,7 +84,7 @@ style:
    - **Material**: Wood with a painted finish.
    - **Style**: Simple and elegant, with minimalistic lines.
    - **Reasoning**: Matches the armchair for a coherent look.
-
+ $
 7. **Additional Bookcase**
    - **Colour**: Dark mahogany
    - **Material**: Wood
@@ -135,7 +135,7 @@ style:
 
 16. **Globe**
     - **Colour**: Antique (muted colours with gold accents)
-    - **Style**: Vintage, with wooden
+    - **Style**: Vintage, with wooden base
 
 17. **Rug**
     - **Colour**: Cream and sage green

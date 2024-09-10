@@ -1,0 +1,116 @@
+prompt: A bedroom that is 5m x 5m.
+room_width: 5
+room_length: 5
+bed: {'position': array([3.9999877 , 2.32318509, 7.85397096]), 'width': 1.6, 'length': 2}
+wardrobe: {'position': array([0.30007141, 1.10201888, 4.71234282]), 'width': 1.5, 'length': 0.6}
+desk: {'position': array([0.91992235, 4.69988938, 3.14160925]), 'width': 1.2, 'length': 0.6}
+nightstand: {'position': array([4.79999947, 3.37318435, 1.57072396]), 'width': 0.5, 'length': 0.4}
+dresser: {'position': array([3.42236931, 4.75007748, 3.14165091]), 'width': 1, 'length': 0.5}
+floor lamp: {'position': array([4.69165902, 0.30632343, 7.06204969]), 'width': 0.4, 'length': 0.4}
+shoe rack: {'position': array([1.20671848e+00, 1.50070311e-01, 3.27432774e-04]), 'width': 0.8, 'length': 0.3}
+storage bench: {'position': array([2.20677292, 0.19993694, 6.28315955]), 'width': 1.2, 'length': 0.4}
+desk chair: {'position': array([1.83210677, 3.29776518, 6.6579669 ]), 'width': 0.5, 'length': 0.5}
+bookshelf: {'position': array([2.40673586, 4.84989404, 3.14214222]), 'width': 0.8, 'length': 0.3}
+window: {'position': (1.3599999999999999, 5, 3.141592653589793), 'width': 1.2, 'length': 0.1}
+window0: {'position': (3.26, 0, 0), 'width': 1.2, 'length': 0.1}
+door: {'position': (0, 2.9499999999999997, 4.71238898038469), 'width': 0.9, 'length': 0.1}
+socket: {'position': (2.98, 5, 3.141592653589793), 'width': 0.2, 'length': 0.1}
+socket1: {'position': (5, 1.54, 1.5707963267948966), 'width': 0.2, 'length': 0.1}
+socket2: {'position': (0.58, 0, 0), 'width': 0.2, 'length': 0.1}
+socket3: {'position': (0, 4.42, 4.71238898038469), 'width': 0.2, 'length': 0.1}
+painting: {'position': array([4.95007612, 2.32317453, 1.57079632]), 'width': 1.2, 'length': 0.1}
+lamp: {'position': array([4.79999579, 3.37318442, 1.57078166]), 'width': 0.3, 'length': 0.3}
+jewelry_box: {'position': array([3.42236947, 4.75007709, 3.14160447]), 'width': 0.3, 'length': 0.2}
+computer: {'position': array([0.91992457, 4.69989135, 3.14159592]), 'width': 0.4, 'length': 0.25}
+clock: {'position': array([0.45999986, 4.9500899 , 3.14159265]), 'width': 0.5, 'length': 0.1}
+rug: {'position': array([2.99998792, 2.32319615, 1.57079417]), 'width': 2.0, 'length': 1.5}
+chandelier: {'position': array([2.50000028, 2.5       , 9.42477832]), 'width': 0.8, 'length': 0.8}
+style: ## Room Description
+
+### Walls
+- **Colour:** Soft, neutral tones to create a calming atmosphere, such as a light beige or pale grey. 
+- **Material:** Painted walls with a matte finish, contributing to a clean and modern aesthetic. Alternatively, one accent wall could feature subtle, textured wallpaper in a complementary color for an added layer of sophistication.
+
+### Windows
+- **Style:** Large, floor-to-ceiling windows to let in ample natural light, framed with sleek, white trim for a modern touch.
+- **Colour:** White frames to match the trim and bring cohesiveness to the room design.
+
+### Doors
+- **Style:** Simple, modern panel doors with minimal detailing to keep the look clean and cohesive.
+- **Colour:** Smooth white, consistent with the window frames and trim.
+
+### Floor
+- **Material:** Light oak hardwood flooring for a natural, warm touch.
+- **Colour:** A light, natural finish to contrast beautifully with the neutral walls while maintaining the room's airy feel.
+
+### Objects
+
+1. **Bed**
+   - **Colour:** Upholstered in a soft, grey fabric.
+   - **Style:** Modern platform bed with clean lines, minimalistic.
+
+2. **Wardrobe**
+   - **Colour:** Matte white to blend seamlessly with the walls.
+   - **Style:** Contemporary, with sleek, handle-less doors for a streamlined look.
+
+3. **Desk**
+   - **Colour:** White with light oak accents.
+   - **Style:** Minimalist Scandinavian design, featuring a simple and functional structure.
+
+4. **Nightstand**
+   - **Colour:** Light oak matching the floor.
+   - **Style:** Small, with a drawer or two for storage, modern with simple lines.
+
+5. **Dresser**
+   - **Colour:** White with light oak top.
+   - **Style:** Matching the wardrobe and bedside table for cohesion, modern with clean lines.
+
+6. **Floor Lamp**
+   - **Colour:** Matte black base with a white or beige shade.
+   - **Style:** Modern and sleek, adding a touch of contrast to the room.
+
+7. **Shoe Rack**
+   - **Colour:** Light oak.
+   - **Style:** Simple and practical, low-profile to match the floor and other wooden elements.
+
+8. **Storage Bench**
+   - **Colour:** Upholstered in grey fabric to match the bed, with light oak legs.
+   - **Style:** Functional and modern, positioned perhaps at the end of the bed.
+
+9. **Desk Chair**
+   - **Colour:** White with light oak legs, upholstered in grey fabric.
+   - **Style:** Ergonomically designed for comfort, cohesive with the desk and the rest of the furniture.
+
+10. **Bookshelf**
+    - **Colour:** White with light oak accents.
+    - **Style:** Tall and slim, Scandinavian style to match the desk.
+
+11. **Painting**
+    - **Colour(s):** Subtle shades that complement the room’s palette, such as soft blues, greys, and whites.
+    - **Style:** Modern abstract or serene landscape, framed in light oak.
+
+12. **Lamp (on bedside table or dresser)**
+    - **Colour:** White or soft pastel, with a light oak base.
+    - **Style:** Minimalistic and modern, coordination with the floor lamp.
+
+13. **Jewelry Box**
+    - **Colour:** Light grey or white.
+    - **Style:** Simple, modern with clean lines, possibly with a light oak lid.
+
+14. **Computer**
+    - **Colour:** Sleek silver or space grey.
+    - **Style:** Modern, likely contributing a sharp, tech-savvy touch to the desk area.
+
+15. **Clock**
+    - **Colour:** White with light oak accents.
+    - **Style:** Wall-mounted or small desktop, modern and functional.
+
+16. **Rug**
+    - **Colour:** Soft shades like light grey or beige.
+    - **Style:** Large enough to fit under the bed and nightstands, plush and comfortable, with a subtle pattern.
+
+17. **Chandelier**
+    - **Colour:** Matte black or brushed nickel with white frosted glass.
+    - **Style:** Modern and elegant, acting as a focal point while tying in other black accent pieces like the floor lamp.
+
+By employing this cohesive design strategy, the room remains coordinated, feeling spacious, serene, and inviting, driven by a modern, minimalistic, yet comfortable aesthetic.

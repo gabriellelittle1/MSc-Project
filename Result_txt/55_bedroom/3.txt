@@ -1,0 +1,120 @@
+prompt: A bedroom that is 5m x 5m.
+room_width: 5
+room_length: 5
+bed: {'position': array([1.96033009, 1.00100521, 6.28142752]), 'width': 1.6, 'length': 2.0}
+wardrobe: {'position': array([3.06471792, 4.70028026, 3.14198651]), 'width': 1.5, 'length': 0.6}
+chair: {'position': array([4.71272753, 4.56288207, 7.85622451]), 'width': 0.6, 'length': 0.6}
+nightstand 1: {'position': array([0.31143409, 0.20390269, 6.26674797]), 'width': 0.5, 'length': 0.4}
+nightstand 2: {'position': array([3.45724684e+00, 1.96605414e-01, 1.76172463e-03]), 'width': 0.5, 'length': 0.4}
+dresser: {'position': array([1.71456859, 4.75000031, 3.1415936 ]), 'width': 1.2, 'length': 0.5}
+shoe rack: {'position': array([0.15000021, 3.21199904, 4.71238962]), 'width': 0.8, 'length': 0.3}
+desk: {'position': array([4.29251855, 4.06704115, 8.70732913]), 'width': 1.2, 'length': 0.6}
+desk chair: {'position': array([ 3.79002235,  3.42589937, -0.53663362]), 'width': 0.6, 'length': 0.6}
+window: {'position': (1.3, 5, 3.141592653589793), 'width': 1, 'length': 0.1}
+window0: {'position': (3.7, 5, 3.141592653589793), 'width': 1, 'length': 0.1}
+door: {'position': (5, 2.4599999999999995, 1.5707963267948966), 'width': 0.9, 'length': 0.1}
+socket: {'position': (0.54, 0, 0), 'width': 0.1, 'length': 0.1}
+socket1: {'position': (0, 1.52, 4.71238898038469), 'width': 0.1, 'length': 0.1}
+socket2: {'position': (4.46, 5, 3.141592653589793), 'width': 0.1, 'length': 0.1}
+lamp: {'position': array([0.31143447, 0.20390213, 6.27989712]), 'width': 0.3, 'length': 0.3}
+clock: {'position': array([3.45724610e+00, 1.96603856e-01, 3.52184058e-04]), 'width': 0.15, 'length': 0.1}
+painting: {'position': array([4.94404285, 0.49020854, 1.56765279]), 'width': 1, 'length': 0.1}
+rug: {'position': array([1.962088  , 2.00100262, 6.28283331]), 'width': 2.5, 'length': 2.5}
+mirror: {'position': array([2.49843226, 4.95007591, 3.14159264]), 'width': 1.5, 'length': 0.1}
+desk_lamp: {'position': array([4.2925177 , 4.06703964, 9.27412467]), 'width': 0.2, 'length': 0.2}
+photo: {'position': array([1.71456727, 4.75000088, 3.14159264]), 'width': 0.3, 'length': 0.1}
+plant: {'position': array([0.14999969, 3.21199951, 4.71238907]), 'width': 0.2, 'length': 0.2}
+bowl: {'position': array([4.165091  , 2.10999458, 7.85401723]), 'width': 0.3, 'length': 0.3}
+wall_clock: {'position': array([4.9500903 , 4.29308679, 1.57079632]), 'width': 0.5, 'length': 0.1}
+style: Certainly! Let's create a cohesive and aesthetically pleasing bedroom design based on your specifications.
+
+**Walls:**
+- **Colour**: Soft, muted pastel such as a warm light beige or dusty rose.
+- **Wallpaper/Paint**: Smooth matte paint with a subtle texture in the same colour.
+
+**Windows and Doors:**
+- **Style**: Classic with a minimalistic touch.
+- **Windows**: White painted wooden frames with a simple trim around them.
+- **Doors**: White painted wooden doors with a slight panel design to add dimension.
+
+**Floor:**
+- **Material**: Hardwood.
+- **Colour**: Light oak or a soft grey to keep the room feeling airy and spacious.
+
+**Objects:**
+
+1. **Bed:**
+   - **Colour**: Neutral beige with a wooden frame that matches the light oak floor.
+   - **Style**: Modern with clean lines and a minimalist headboard.
+
+2. **Wardrobe:**
+   - **Colour**: Soft white.
+   - **Style**: Classic with simple, straight lines and subtle paneling.
+
+3. **Chair:**
+   - **Colour**: Light grey cushioning with wooden legs matching the bed frame.
+   - **Style**: Scandinavian minimalist.
+
+4. **Nightstand 1 & Nightstand 2:**
+   - **Colour**: Light oak to match the floor and bed frame.
+   - **Style**: Simple with a single drawer and an open shelf below.
+
+5. **Dresser:**
+   - **Colour**: Soft white to match the wardrobe.
+   - **Style**: Classic with slight curves and modest silver handles.
+
+6. **Shoe Rack:**
+   - **Colour**: White.
+   - **Style**: Functional and minimal with clean lines.
+
+7. **Desk:**
+   - **Colour**: Light oak.
+   - **Style**: Modern with clean lines and sufficient workspace.
+
+8. **Desk Chair:**
+   - **Colour**: Light grey cushioning with wooden legs, matching the other chair.
+   - **Style**: Scandinavian minimalist.
+
+9. **Lamp:**
+   - **Colour**: Soft white base with a beige linen lampshade.
+   - **Style**: Transitional and elegant.
+
+10. **Clock:**
+    - **Colour**: White with black hands.
+    - **Style**: Modern and sleek.
+
+11. **Painting:**
+    - **Colour**: A mix of soft pastels to complement the wall colour.
+    - **Style**: Abstract with a hint of minimalism.
+
+12. **Rug:**
+    - **Colour**: Light grey with a subtle geometric pattern.
+    - **Material**: Soft wool.
+    - **Style**: Contemporary.
+
+13. **Mirror:**
+    - **Frame Colour**: Soft white or light oak.
+    - **Style**: Large, rectangular, and minimalistic.
+
+14. **Desk Lamp:**
+    - **Colour**: Brushed metal with a white shade.
+    - **Style**: Modern and functional.
+
+15. **Photo:**
+    - **Frame Colour**: Light wood or white.
+    - **Style**: Simple and clean.
+
+16. **Plant:**
+    - **Pot Colour**: White ceramic.
+    - **Style**: Adds a touch of nature, modern and serene.
+
+17. **Bowl:**
+    - **Colour**: Soft pastel, such as light blue or dusty pink.
+    - **Material**: Ceramic.
+    - **Style**: Contemporary.
+
+18. **Wall Clock:**
+    - **Colour**: White with black hands and minimalist design.
+    - **Style**: Modern.
+
+This configuration ensures the objects are cohesive and match the overall aesthetic of the room, creating a serene and inviting bedroom space.

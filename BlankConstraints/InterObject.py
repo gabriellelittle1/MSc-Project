@@ -10,6 +10,7 @@ from shapely.geometry import Polygon
 
 
 def io_next_to(positions, room, object1_index, object2_index, side1 = None, side2 = None):
+    ## DO NOT USE THIS WITH io_surround, IT WILL BE REDUNDANT OR CONTRADICTORY.
     """ This function ensures that two objects are next to each other in a room. 
         This should only be used when necessary e.g. for nightstands and a bed, or a desk and desk chair. 
         This should not be used for dining chairs around a table or similar relationship, for that use io_surround.
