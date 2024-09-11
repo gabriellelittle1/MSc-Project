@@ -399,12 +399,13 @@ def ind_central(positions, room, object_index, both = False):
     lower_y, upper_y = room.length/3, 2*room.length/3
     mid_x, mid_y = room.width/2, room.length/2
 
-    x, y, _ = get_position(positions, room, object_index)
+    x, y, theta = get_position(positions, room, object_index)
     if both: 
         val = min(x - lower_x, 0.0)**2 + min(upper_x - x, 0.0)**2 + min(y - lower_y, 0.0)**2 + min(upper_y - y, 0.0)**2 + 0.01*((x - mid_x)**2 + (y - mid_y)**2)
     else: 
         val = (min(x - lower_x, 0.0) + min(upper_x - x, 0.0))*(min(y - lower_y, 0.0) + min(upper_y - y, 0.0))
 
+    val += (np.sin(2*theta)**2)/5
     return val
 
 @safe_execution
