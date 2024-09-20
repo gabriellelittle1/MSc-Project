@@ -1,0 +1,151 @@
+prompt: A bunker for a survivalist.
+room_width: 8
+room_length: 10
+bed: {'position': (7.000183466959028, 4.569930525821721, 1.5710117598188882), 'width': 1.6, 'length': 2}
+refrigerator: {'position': (0.39827066814028644, 9.649872004114625, 3.1431104810163153), 'width': 0.8, 'length': 0.7}
+toilet: {'position': (0.20064530632294583, 0.2984948221421922, 0.006269383935221917), 'width': 0.4, 'length': 0.6}
+sofa: {'position': (0.449219558713896, 4.944479994531504, 4.711625475062478), 'width': 2, 'length': 0.9}
+nightstand: {'position': (7.749957255187554, 5.6201021903052295, 1.5709226970563257), 'width': 0.5, 'length': 0.5}
+dining table: {'position': (5.178118918077455, 8.33122152165895, 1.4770843039550048), 'width': 1.2, 'length': 0.8}
+dining chair: {'position': (4.464035471975874, 8.026492811271124, 4.887721433160415), 'width': 0.45, 'length': 0.5}
+dining chair0: {'position': (4.187914100590183, 7.4619628318811655, 6.160979942668754), 'width': 0.45, 'length': 0.5}
+dining chair1: {'position': (4.425064532646289, 8.513956703187674, 4.610268787471676), 'width': 0.45, 'length': 0.5}
+dining chair2: {'position': (5.9551923378912, 8.794331901942492, 2.9446616850678042), 'width': 0.45, 'length': 0.5}
+shower stall: {'position': (5.256790336580217, 0.4999999931025917, 6.283185291228298), 'width': 1, 'length': 1}
+sink: {'position': (0.24999999540003642, 2.6255602632229262, 4.7123889710122295), 'width': 0.5, 'length': 0.5}
+coffee table: {'position': (1.170332191080384, 6.124451745949588, 4.768091568046206), 'width': 1, 'length': 0.5}
+bookshelf: {'position': (0.15000000195942256, 7.010757784876211, 4.712388974554806), 'width': 0.8, 'length': 0.3}
+door: {'position': (4.5, 10, 3.141592653589793), 'width': 1, 'length': 0.1}
+door3: {'position': (8, 7.2, 1.5707963267948966), 'width': 1, 'length': 0.1}
+socket: {'position': (0, 3.04, 4.71238898038469), 'width': 0.2, 'length': 0.1}
+socket4: {'position': (0, 6.96, 4.71238898038469), 'width': 0.2, 'length': 0.1}
+socket5: {'position': (4.0, 0, 0), 'width': 0.2, 'length': 0.1}
+table lamp: {'position': (0.6936228458345148, 0.37710968328955374, 3.1415927256641503), 'width': 0.3, 'length': 0.3}
+painting: {'position': (7.195946709597883, 0.049999993768275845, 6.283185300097304), 'width': 0.6, 'length': 0.1}
+chandelier: {'position': (6.447946574272922, 1.1941800943146441, 1.8707320137423267e-07), 'width': 0.5, 'length': 0.5}
+fruit bowl: {'position': (7.749793470294615, 2.159720343301303, 6.283185201926656), 'width': 0.3, 'length': 0.3}
+mirror: {'position': (7.94999999388251, 9.681254220733456, 1.5707963198759924), 'width': 0.5, 'length': 0.1}
+soap dispenser: {'position': (5.419715413430738, 2.122500985248413, 1.5707964448919345), 'width': 0.1, 'length': 0.1}
+television: {'position': (7.949999992382501, 5.405365263376454, 1.5707963197448045), 'width': 1.2, 'length': 0.1}
+plant: {'position': (2.859490795368533, 8.983203163539867, 3.1415926463907997), 'width': 0.3, 'length': 0.3}
+table lamp6: {'position': (6.021830153886256, 3.350047705140158, 4.712388965821123), 'width': 0.3, 'length': 0.3}
+style: Given the description of a survivalist bunker, it's important to create an environment that is both practical for long-term living and has a coherent aesthetic to make the space feel homely and secure. Here's a detailed breakdown addressing each aspect, ensuring all items within the room match the survivalist theme:
+
+### Wall Colour and Material
+**Colour:** Soft grey
+**Material:** High-durability paint
+**Explanation:** Soft grey offers a neutral and calming atmosphere while the high-durability paint ensures the walls are easy to clean and maintain. This basic and functional aesthetic fits a survivalist theme well.
+
+### Windows and Doors
+**Windows:**
+- **Style:** Reinforced small horizontal windows
+- **Colour:** Matte black frames
+**Explanation:** Reinforced windows add a layer of security, essential for a survivalist bunker. The matte black frames provide a modern yet industrial look that complements the overall theme.
+
+**Doors:**
+- **Style:** Heavy-duty steel security doors
+- **Colour:** Matte black
+**Explanation:** These doors offer both security and a sleek, industrial look that matches the windows and overall bunker aesthetic.
+
+### Floor Material and Colour
+**Material:** Polished concrete
+**Colour:** Light grey
+**Explanation:** Polished concrete is durable, low-maintenance, and fits the survivalist aesthetic. The light grey colour keeps the room feeling spacious and blends well with the wall colour.
+
+### Objects Breakdown
+1. **Bed**
+   - **Colour:** Navy blue bed frame with olive green bedding
+   - **Style:** Minimalist, sturdy metal frame
+   - **Explanation:** The colours are practical and subdued, fitting the utilitarian theme.
+
+2. **Refrigerator**
+   - **Colour:** Matte black
+   - **Style:** Modern, compact
+   - **Explanation:** A sleek, compact refrigerator that fits seamlessly into the survivalist environment.
+
+3. **Toilet**
+   - **Colour:** White
+   - **Style:** Simple, modern
+   - **Explanation:** A no-fuss design that prioritizes functionality.
+
+4. **Sofa**
+   - **Colour:** Dark grey
+   - **Style:** Modern, low-profile with durable fabric
+   - **Explanation:** A comfortable yet practical choice for the bunker.
+
+5. **Nightstand**
+   - **Colour:** Dark walnut
+   - **Style:** Simple, boxy design
+   - **Explanation:** Provides storage space and matches the minimalist aesthetic.
+
+6. **Dining Table**
+   - **Colour:** Natural wood 
+   - **Style:** Rustic, sturdy
+   - **Explanation:** A communal gathering place with a robust design.
+
+7. **Dining Chairs (x4)**
+   - **Colour:** Dark grey with black metal frames
+   - **Style:** Industrial
+   - **Explanation:** Durable and matching the dining table's rustic style.
+
+8. **Shower Stall**
+   - **Colour:** Clear glass with matte black fixtures
+   - **Style:** Modern
+   - **Explanation:** Sleek, functional design that ensures an open feel.
+
+9. **Sink**
+   - **Colour:** White with matte black fixtures
+   - **Style:** Modern, under-mounted
+   - **Explanation:** Clean and practical, matching the shower stall fixtures.
+
+10. **Coffee Table**
+    - **Colour:** Dark walnut
+    - **Style:** Simple, rectangular
+    - **Explanation:** Matches the nightstand and supports a cohesive look.
+
+11. **Bookshelf**
+    - **Colour:** Dark walnut
+    - **Style:** Open shelving unit
+    - **Explanation:** Provides storage without feeling too heavy or cluttered.
+
+12. **Table Lamp (x2)**
+    - **Colour:** Matte black base with white shade
+    - **Style:** Modern, minimalist
+    - **Explanation:** Matching pair that provides practical lighting.
+
+13. **Painting**
+    - **Colour:** Neutral tones with hints of green and blue
+    - **Style:** Abstract
+    - **Explanation:** Adds a touch of personal expression and colour to the otherwise neutral space.
+
+14. **Chandelier**
+    - **Colour:** Black metal with Edison bulbs
+    - **Style:** Industrial
+    - **Explanation:** Creates focal lighting and matches the overall industrial theme.
+
+15. **Fruit Bowl**
+    - **Colour:** Stainless steel
+    - **Style:** Modern
+    - **Explanation:** Simple and practical addition for the dining table.
+
+16. **Mirror**
+    - **Colour:** Matte black frame
+    - **Style:** Modern, rectangular
+    - **Explanation:** Adds depth to the room and fits the colour scheme.
+
+17. **Soap Dispenser**
+    - **Colour:** Matte black
+    - **Style:** Simple, modern
+    - **Explanation:** Completes the look with other bathroom fixtures.
+
+18. **Television**
+    - **Colour:** Black 
+    - **Style:** Flat screen, wall-mounted
+    - **Explanation:** Provides entertainment while maintaining a sleek design.
+
+19. **Plant**
+    - **Colour:** Green leaves in a dark grey pot
+    - **Style:** Realistic artificial plant
+    - **Explanation:** Adds a touch of nature and freshness to the bunker.
+
+By focusing on a cohesive colour palette of greys, blacks, navies, and natural wood tones, along with minimalistic and industrial-style furnishings, the room captures the survivalist essence while ensuring comfort and practicality.

@@ -58,7 +58,7 @@ def io_next_to(positions, room, object1_index, object2_index, side1 = None, side
         direction1 = np.array([point2[0] - point1[0], point2[1] - point1[1]]) # side1
         direction2 = np.array([point4[0] - point3[0], point4[1] - point3[1]]) # side2
 
-        angle_diff = np.arccos(np.dot(direction1, direction2)/(max(np.linalg.norm(direction1), 1e-6)*max(np.linalg.norm(direction2), 1e-6)))
+        angle_diff = np.arccos(np.clip(np.dot(direction1, direction2)/(max(np.linalg.norm(direction1), 1e-6)*max(np.linalg.norm(direction2), 1e-6)), -1, 1))
         val += 2 * np.sin(angle_diff)**2
 
         if np.linalg.norm(direction1) > np.linalg.norm(direction2):
@@ -176,7 +176,7 @@ def io_parallel(positions, room, object1_index, object2_index):
     _, _, theta1 = get_position(positions, room, object1_index)
     _, _, theta2 = get_position(positions, room, object2_index)
      
-    return (theta1 - theta2)**2  
+    return ((theta1%(2*np.pi)) - (theta2%(2*np.pi)))**2  
 
 @safe_execution
 def io_facing(positions, room, object1_index, object2_index, both = False):
@@ -233,7 +233,7 @@ def io_under_central(positions, room, object1_index, object2_index):
     x1, y1, theta1 = get_position(positions, room, object1_index)
     x2, y2, theta2 = get_position(positions, room, object2_index)
 
-    val = ((x1 - x2)**2 + (y1 - y2)**2  + (theta1 - theta2)**2)
+    val = ((x1 - x2)**2 + (y1 - y2)**2  + ((theta1%(2*np.pi)) - (theta2%(2*np.pi)))**2)
     return val 
 
 @safe_execution
@@ -282,7 +282,7 @@ def io_on(positions, room, object1_index, object2_index):
         return total_lengths - lengths_on_rug
 
 @safe_execution
-def io_infront(positions, room, object1_index, object2_index, dist = 0.8):
+def io_infront(positions, room, object1_index, object2_index, dist = 0.8, parallel = False):
     """ The function p_infront ensures that object1 is in front of object2 (both moving_objects i.e. not windows or doors). E.g a coffee table should be in front of a sofa....
 
         Args:
@@ -307,8 +307,10 @@ def io_infront(positions, room, object1_index, object2_index, dist = 0.8):
     mid2front /= np.linalg.norm(mid2front)
 
     projection = mid_front + (dist + min(obj1.width, obj1.length)/2) * mid2front
-    val = (projection[0] - x1)**2 + (projection[1] - y1)**2
-    return val
+    val = (projection[0] - x1)**2 + (projection[1] - y1)**2 
+    if parallel == True: 
+        val += 3*((theta1%(2*np.pi) - (theta2%(2*np.pi)))**2)
+    return 4*val
 
 @safe_execution
 def io_perp(positions, room, object1_index, object2_index, center_object_index = None):
@@ -349,7 +351,7 @@ def io_perp(positions, room, object1_index, object2_index, center_object_index =
         val += (np.linalg.norm(BA) - np.sqrt(t1**2 + t2**2))**2 
         val += min(0.0, t1)**2 + min(0.0, t2)**2 # t1 and t2 should be bigger than 0 
         val += min(0.0, lim - np.sqrt(t1**2+ t2**2))**2 # t1 and t2 should not be too big
-        val += ((max(theta1, theta2) - min(theta1, theta2)) - np.pi/2)**2 ## thetas should be pi/2 apart
+        val += ((max((theta1%(2*np.pi)), (theta2%(2*np.pi))) - min((theta1%(2*np.pi)), (theta2%(2*np.pi)))) - np.pi/2)**2 ## thetas should be pi/2 apart
     else: 
         center_obj = room.moving_objects[center_object_index]
         lim = np.sqrt((center_obj.width)**2 + (center_obj.length)**2)
@@ -359,7 +361,7 @@ def io_perp(positions, room, object1_index, object2_index, center_object_index =
         C = np.array([x1, y1]) + t1 * dir1 
         val += (C[0] - x3)**2 + (C[1] - y3)**2 # C should be the center of the center object
         val += min(0.0, lim - np.sqrt(t1**2+ t2**2))**2 # t1 and t2 should not be too big
-        val += ((max(theta1, theta2) - min(theta1, theta2)) - np.pi/2)**2 ## thetas should be pi/2 apart
+        val += ((max((theta1%(2*np.pi)), (theta2%(2*np.pi))) - min((theta1%(2*np.pi)), (theta2%(2*np.pi)))) - np.pi/2)**2 ## thetas should be pi/2 apart
     return val
 
 @safe_execution

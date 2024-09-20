@@ -172,7 +172,7 @@ def on_top_central(positions, room, tertiary_index, other_index):
     x, y, theta = room.moving_objects[other_index].position
     object_x, object_y, object_theta = positions[3*tertiary_index: 3*tertiary_index + 3]
     w, l = room.tertiary_objects[tertiary_index].width, room.tertiary_objects[tertiary_index].length
-    val = (object_x - x)**2 + (object_y - y)**2 + (object_theta - theta)**2
+    val = (object_x - x)**2 + (object_y - y)**2 + ((object_theta%(2*np.pi)) - (theta%(2*np.pi)))**2
 
     return val
 
@@ -254,7 +254,7 @@ def on_wall_near(positions, room, tertiary_index, other_index):
     product *= ((room.length - l/2 - object_y)**2 + (object_theta - np.pi)**2) # north wall, y = room.length, theta = pi
     product *= ((room.width - object_x - l/2)**2 + (object_theta - np.pi/2)**2) # east wall, x = room.width, theta = pi/2
     product *= ((object_y - l/2)**2 + object_theta**2) # south wall, y = 0, theta = 0
-    val -= 5*product
+    #val -= 5*product
 
     wall_distances = [x**2, (room.width - x)**2, y**2, (room.length - y)**2]
     wall_1 = np.argmin(wall_distances[:2])
@@ -265,7 +265,7 @@ def on_wall_near(positions, room, tertiary_index, other_index):
 
     ## on wall (must be on the wall)
     obj_wall_distances = [(object_x - l/2)**2, (room.width - l/2 - object_x)**2, (object_y - l/2)**2, (room.length - l/2 - object_y)**2]
-    angles = [(object_theta - 3*np.pi/2)**2, (object_theta - np.pi/2)**2, (object_theta)**2, (object_theta - np.pi)**2]
+    angles = [((object_theta%(2*np.pi)) - 3*np.pi/2)**2, ((object_theta%(2*np.pi)) - np.pi/2)**2, (object_theta%(2*np.pi))**2, ((object_theta%(2*np.pi)) - np.pi)**2]
     product = (obj_wall_distances[wall_1] + angles[wall_1])*(obj_wall_distances[wall_2] + angles[wall_2])
     val += product * 100
 

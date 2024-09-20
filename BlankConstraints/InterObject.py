@@ -82,7 +82,7 @@ def io_facing(positions, room, object1_index, object2_index, both = False):
     """
     return
 
-def io_infront(positions, room, object1_index, object2_index, dist = 0.8):
+def io_infront(positions, room, object1_index, object2_index, dist = 0.8, parallel = False):
     """ This function ensures that object1 is in front of object2 (both moving_objects i.e. not windows or doors).
         E.g a coffee table should be in front of a sofa. 
 
@@ -93,6 +93,8 @@ def io_infront(positions, room, object1_index, object2_index, dist = 0.8):
         object2_index: int, Object object
         dist: float, desired distance between two objects. E.g. if its a sofa and a coffee table, the distance should be around 0.8m, 
                                                             if its a sofa and a fireplace, the distance should be around 2m/2.5m.
+        parallel: bool, if True, object1 will be parallel to object2. This would be used for a coffee table in front of a sofa, 
+                    but not for a sofa in front of a fireplace.
     """
 
     return

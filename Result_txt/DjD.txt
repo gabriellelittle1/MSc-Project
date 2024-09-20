@@ -1,0 +1,112 @@
+prompt: A Pharoah's tomb.
+room_width: 10
+room_length: 12
+sarcophagus: {'position': array([ 4.88928892,  6.58929837, -7.85545071]), 'width': 2.5, 'length': 3.5}
+offering table: {'position': array([ 0.49986569,  6.56778829, -1.57066724]), 'width': 2, 'length': 1}
+canopic chest: {'position': array([ 9.50010919,  6.60283439, 14.13720058]), 'width': 1.5, 'length': 1}
+ceremonial throne: {'position': array([ 7.45217296,  1.22049102, 31.40762624]), 'width': 1, 'length': 1.5}
+funerary stela: {'position': (1.5140177764434044, 3.256072760921705, 4.526522508201082), 'width': 1, 'length': 0.5}
+incense burner stand: {'position': (3.999630974432551, 11.702652832788889, 6.281712784960794), 'width': 0.5, 'length': 0.5}
+libation vessel: {'position': (0.34974882665071033, 5.217754661683746, 4.712539471777933), 'width': 0.7, 'length': 0.7}
+storage jar: {'position': (9.580576726721597, 11.27376344774703, 1.6696435870678847), 'width': 0.5, 'length': 0.5}
+storage jar0: {'position': (9.577180063788358, 11.775887969336031, 1.6696781749099776), 'width': 0.5, 'length': 0.5}
+storage jar1: {'position': (9.07904692820429, 11.726071399024724, 3.2424256650918295), 'width': 0.5, 'length': 0.5}
+waiting bench: {'position': (9.749470308723003, 5.102606623130219, 1.570735664269283), 'width': 1.5, 'length': 0.5}
+guardian statue: {'position': (8.633362789350977, 2.4895846592322606, 6.151728316959521), 'width': 1, 'length': 1}
+door: {'position': (5.75, 12, 3.141592653589793), 'width': 1.5, 'length': 0.1}
+door2: {'position': (4.25, 0, 0), 'width': 1.5, 'length': 0.1}
+wall_mural: {'position': (7.950001548303794, 11.94998319454564, 3.1415915272023147), 'width': 4.0, 'length': 0.1}
+oil_lamp: {'position': (1.5140689402056342, 3.2561804912105714, 4.675126295382405), 'width': 0.3, 'length': 0.3}
+religious_tapestry: {'position': (9.935152291507723, 11.822272121416477, 1.6796182440968406), 'width': 3.0, 'length': 0.1}
+small_ankh_statue: {'position': (0.4997445483903276, 6.567759245810178, 4.712408670468186), 'width': 0.2, 'length': 0.2}
+ancient_map_scroll: {'position': (3.5499994521450615, 11.949989045168143, 3.141592187137609), 'width': 1.0, 'length': 0.1}
+decorative_carved_box: {'position': (9.580698937309664, 11.273870579963136, 1.590594235988405), 'width': 0.5, 'length': 0.5}
+pharoahs_portrait: {'position': (9.949989744579973, 1.2204914211704039, 1.5707963199677653), 'width': 1.5, 'length': 0.1}
+golden_candle_holder: {'position': (9.74942617908849, 5.102518395379663, 1.5707620113026834), 'width': 0.2, 'length': 0.2}
+style: Certainly! Let's create a coherent and atmospheric Pharaoh's tomb based on the description.
+
+### Walls:
+- **Colour**: The walls of the tomb are painted in a warm, sandy beige colour that can mimic the natural stone and sandstone typically found in ancient Egyptian tombs.
+- **Material**: The walls are covered with detailed hieroglyphs and vibrant murals depicting scenes of the Pharaoh's life and the gods, framed by carved stone reliefs. There's no wallpaper, as ancient Egyptian tombs were decorated with intricate wall art and carvings.
+  
+### Windows and Doors:
+- **Windows**: Traditional Egyptian tombs rarely had windows due to their purpose. If we include small openings, they would be narrow slits (clerestory windows) high on the walls, framed in dark, aged wood with lattice designs, covered with muslin to soften incoming light. No glass, in keeping with the period authenticity.
+- **Doors**: The door to the tomb is a grand stone slab with intricately carved symbols and golden accents. The frame is dark wood, adorned with gold leaf and lapis lazuli inlays.
+
+### Floor:
+- **Material and Colour**: The floor is made of smooth, polished limestone with a light, creamy hue. It’s adorned with occasional inlaid patterns using darker stones, such as basalt, forming geometric and symbolic motifs.
+
+### Objects:
+1. **Sarcophagus**:
+   - **Colour**: Rich gold with lapis lazuli, carnelian, and turquoise inlays.
+   - **Style**: Elaborately decorated with hieroglyphs, symbols of protection, and images of deities.
+
+2. **Offering Table**:
+   - **Colour**: Dark wood (cedar or ebony) with gold accents.
+   - **Style**: Low and wide, with intricate carvings on the sides depicting offerings.
+
+3. **Canopic Chest**:
+   - **Colour**: Golden with vibrant blue and green gemstones.
+   - **Style**: Rectangular, with depictions of the four sons of Horus.
+
+4. **Ceremonial Throne**:
+   - **Colour**: Gold with red and blue fabric upholstery.
+   - **Style**: High back, with armrests carved with lion heads, and legs with clawed feet.
+
+5. **Funerary Stela**:
+   - **Colour**: Sandstone hue, with painted inscriptions in red and black.
+   - **Style**: Tall, rectangular, with a rounded top, featuring carved reliefs of the Pharaoh.
+
+6. **Incense Burner Stand**:
+   - **Colour**: Bronze with a patina.
+   - **Style**: Tall and slender, with intricate openwork designs on the base.
+
+7. **Libation Vessel**:
+   - **Colour**: Polished gold.
+   - **Style**: Shaped like a small jar with a spout, decorated with engraved scenes.
+
+8. **Storage Jars** (x3):
+   - **Colour**: Earthy tones – brown, beige, and terracotta.
+   - **Style**: Large, rounded, with narrow necks, simple but functional designs.
+
+9. **Waiting Bench**:
+   - **Colour**: Dark wood with cushions in deep red fabric.
+   - **Style**: Simple, with low wooden legs and a padded seat.
+
+10. **Guardian Statue**:
+    - **Colour**: Black stone (obsidian) with gold accents.
+    - **Style**: Depicting the god Anubis, standing in a protective pose.
+
+11. **Wall Mural**:
+    - **Colour**: Multicoloured (predominantly blue, green, red, gold).
+    - **Style**: Depicting deities, the Pharaoh's journey to the afterlife, and daily life scenes.
+
+12. **Oil Lamp**:
+    - **Colour**: Bronze with intricate engravings.
+    - **Style**: Small, shaped like a saucer with a handle, and an open flame holder.
+
+13. **Religious Tapestry**:
+    - **Colour**: Rich blue and gold.
+    - **Style**: Hanging on the wall, depicting a scene of divine worship.
+
+14. **Small Ankh Statue**:
+    - **Colour**: Gold.
+    - **Style**: Simple but iconic, standing on a small base.
+
+15. **Ancient Map Scroll**:
+    - **Colour**: Aged parchment (yellowed with time).
+    - **Style**: Rolled up, with a decorative golden case.
+
+16. **Decorative Carved Box**:
+    - **Colour**: Dark wood with gold inlays.
+    - **Style**: Small, rectangular, with detailed carvings of pharaonic symbols.
+
+17. **Pharaoh's Portrait**:
+    - **Colour**: Rich colours – predominantly gold, lapis lazuli, and carnation red.
+    - **Style**: Painted on wood, framed in gold, depicting the Pharaoh in traditional garb.
+
+18. **Golden Candle Holder**:
+    - **Colour**: Pure gold.
+    - **Style**: Tall and slender, with places for multiple candles, adorned with small carvings.
+
+In summary, the room is resplendent with warm, earthy tones interspersed with vibrant golds, blues, and reds, ensuring a cohesive look that fits the grandeur and sacredness of a Pharaoh's tomb. The objects chosen not only enhance the atmosphere but also remain true to ancient Egyptian styles and materials.

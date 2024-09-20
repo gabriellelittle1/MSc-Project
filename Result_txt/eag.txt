@@ -1,0 +1,106 @@
+prompt: A bedroom that is 6x5.
+room_width: 6
+room_length: 5
+bed: {'position': array([ 0.99370338,  2.85125332, -1.56341427]), 'width': 1.5, 'length': 2}
+wardrobe: {'position': array([5.69283452, 0.7795148 , 1.57751899]), 'width': 1.5, 'length': 0.6}
+desk: {'position': array([5.61177068, 4.03451977, 7.93563362]), 'width': 1.2, 'length': 0.6}
+armchair: {'position': array([2.442581  , 3.69980383, 4.87130109]), 'width': 0.8, 'length': 0.8}
+nightstand: {'position': array([0.22596256, 1.84399988, 4.70853202]), 'width': 0.5, 'length': 0.45}
+chest of drawers: {'position': array([5.75      , 2.39855618, 1.57079633]), 'width': 1, 'length': 0.5}
+shoe rack: {'position': array([ 3.46266537e+00,  1.50000003e-01, -4.83011713e-09]), 'width': 0.8, 'length': 0.3}
+desk chair: {'position': array([5.01079756, 3.98810231, 7.92643306]), 'width': 0.6, 'length': 0.6}
+filing cabinet: {'position': array([5.775     , 3.22464519, 1.57079632]), 'width': 0.4, 'length': 0.45}
+side table: {'position': array([3.2011418 , 3.15123927, 6.41694786]), 'width': 0.5, 'length': 0.5}
+floor lamp: {'position': array([3.73020197, 4.61571789, 1.63296687]), 'width': 0.35, 'length': 0.35}
+window: {'position': (6, 2.5, 1.5707963267948966), 'width': 1, 'length': 0.1}
+door: {'position': (0.51, 0, 0), 'width': 0.9, 'length': 0.1}
+socket: {'position': (0, 1.54, 4.71238898038469), 'width': 0.2, 'length': 0.1}
+socket0: {'position': (4.159999999999999, 5, 3.141592653589793), 'width': 0.2, 'length': 0.1}
+painting: {'position': array([0.05002063, 2.85090646, 4.71238982]), 'width': 1.0, 'length': 0.1}
+table_lamp_1: {'position': array([0.22568455, 1.84417738, 4.71159531]), 'width': 0.2, 'length': 0.2}
+mirror: {'position': array([5.94998026, 3.4500243 , 1.57128326]), 'width': 0.8, 'length': 0.1}
+monitor: {'position': array([5.78483514, 3.74914053, 1.57087493]), 'width': 0.6, 'length': 0.1}
+clock: {'position': array([5.61133789, 4.94993857, 3.14159237]), 'width': 0.3, 'length': 0.1}
+table_lamp_2: {'position': array([  3.18394266,   3.15219769, -31.3895336 ]), 'width': 0.2, 'length': 0.2}
+plant: {'position': array([  3.36153643,   3.04502243, -10.99598987]), 'width': 0.15, 'length': 0.15}
+chandelier: {'position': array([ 2.99997062,  2.49964885, -4.71236244]), 'width': 1.0, 'length': 1.0}
+style: Sure, let's create a detailed and cohesive description for your bedroom:
+
+1. **Walls:**
+   - **Colour:** Soft, neutral tone like Light Grey.
+   - **Material:** High-quality matte paint to provide a smooth finish.
+
+2. **Windows and Doors:**
+   - **Windows:**
+     - **Style:** Classic, white-framed double-hung windows.
+     - **Colour:** White frames with simple sheer white curtains for a light and airy feel.
+   - **Doors:**
+     - **Style:** Solid wood door with a simple panel design.
+     - **Colour:** White to match the window frames, ensuring a cohesive look throughout the room.
+
+3. **Floor:**
+   - **Material:** Hardwood.
+   - **Colour:** Warm, medium-toned oak to add a natural and inviting warmth to the room.
+
+4. **Objects:**
+   - **Bed:**
+     - **Colour:** White linen headboard with grey bedding.
+     - **Style:** Modern with clean lines.
+   - **Wardrobe:**
+     - **Colour:** White to blend seamlessly with the walls.
+     - **Style:** Minimalistic with sleek silver handles.
+   - **Desk:**
+     - **Colour:** White with light wood tabletop matching the floor.
+     - **Style:** Scandinavian, simple and functional.
+   - **Armchair:**
+     - **Colour:** Light grey fabric with wooden legs matching the floor.
+     - **Style:** Modern and comfortable with a slightly curved backrest.
+   - **Nightstand:**
+     - **Colour:** White with a light wood top.
+     - **Style:** Scandinavian with a drawer and open shelf.
+   - **Chest of Drawers:**
+     - **Colour:** White with light wood handles.
+     - **Style:** Matching the nightstand and desk for cohesion.
+   - **Shoe Rack:**
+     - **Colour:** White metal.
+     - **Style:** Simple and functional.
+   - **Desk Chair:**
+     - **Colour:** Light grey fabric with a chrome base.
+     - **Style:** Ergonomic and modern.
+   - **Filing Cabinet:**
+     - **Colour:** White metal.
+     - **Style:** Sleek and practical.
+   - **Side Table:**
+     - **Colour:** Light wood top with white legs.
+     - **Style:** Matching the nightstand and chest of drawers for consistency.
+   - **Floor Lamp:**
+     - **Colour:** White metal stand with a light grey lampshade.
+     - **Style:** Minimalistic and functional.
+
+5. **Decor Items:**
+   - **Painting:**
+     - **Colour:** Soft, neutral colours like beige and light blue.
+     - **Style:** Abstract, to add a touch of modern art.
+   - **Table Lamp 1:**
+     - **Colour:** White base with a light grey shade.
+     - **Style:** Simple and modern.
+   - **Mirror:**
+     - **Colour:** White frame.
+     - **Style:** Large rectangular, leaning against the wall for a more airy and spacious feel.
+   - **Monitor:**
+     - **Colour:** Black screen with a white frame.
+     - **Style:** Sleek and modern.
+   - **Clock:**
+     - **Colour:** White with silver hands.
+     - **Style:** Minimalistic wall clock.
+   - **Table Lamp 2:**
+     - **Colour:** White with a light grey shade.
+     - **Style:** Matching the first table lamp for consistency.
+   - **Plant:**
+     - **Colour:** Green leaves in a white pot.
+     - **Style:** Simple potted plant to add a touch of nature.
+   - **Chandelier:**
+     - **Colour:** White with a touch of silver.
+     - **Style:** Modern, minimalistic chandelier for an elegant touch.
+
+This cohesive design ensures all elements harmonize to create an inviting, functional, and stylish bedroom.

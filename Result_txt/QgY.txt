@@ -1,0 +1,140 @@
+prompt: A bedroom that is 7x7.
+room_width: 7
+room_length: 7
+bed 1: {'position': array([1.62120441, 5.96038639, 3.22562467]), 'width': 1.4, 'length': 2}
+wardrobe: {'position': array([5.17334276, 0.29639618, 6.27920954]), 'width': 1.5, 'length': 0.6}
+desk: {'position': array([6.70559703, 1.21773818, 1.58753122]), 'width': 1.2, 'length': 0.6}
+chair: {'position': array([5.83112764, 2.05628911, 1.5312761 ]), 'width': 0.5, 'length': 0.5}
+nightstand 1: {'position': array([2.51976291, 6.75      , 9.42477796]), 'width': 0.5, 'length': 0.5}
+nightstand 2: {'position': array([0.57231538, 6.74999999, 3.14159275]), 'width': 0.5, 'length': 0.5}
+dresser: {'position': array([ 1.12102945e+00,  2.49999997e-01, -4.85068888e-09]), 'width': 1, 'length': 0.5}
+desk chair: {'position': array([6.14423931, 1.20966308, 4.72323395]), 'width': 0.5, 'length': 0.5}
+bookshelf: {'position': array([6.85      , 2.48301508, 1.57079631]), 'width': 0.8, 'length': 0.3}
+armchair: {'position': array([6.09999946, 3.9606446 , 3.1415942 ]), 'width': 0.8, 'length': 0.8}
+side table: {'position': array([6.74999977, 3.96194509, 1.57079691]), 'width': 0.5, 'length': 0.5}
+door: {'position': (0, 4.0, 4.71238898038469), 'width': 1, 'length': 0.1}
+window: {'position': (2.4, 0, 0), 'width': 1.5, 'length': 0.1}
+socket: {'position': (0, 5.57, 4.71238898038469), 'width': 0.1, 'length': 0.1}
+socket0: {'position': (7, 1.4300000000000002, 1.5707963267948966), 'width': 0.1, 'length': 0.1}
+bedroom rug: {'position': array([  1.70560337,   4.96520145, -28.26613606]), 'width': 2.0, 'length': 1.5}
+table lamp: {'position': array([  2.51948968,   6.74935722, -34.55744169]), 'width': 0.3, 'length': 0.3}
+alarm clock: {'position': array([0.57328215, 6.74945415, 3.1421808 ]), 'width': 0.2, 'length': 0.1}
+desk lamp: {'position': array([  6.85955836,   0.88028628, -17.2758984 ]), 'width': 0.2, 'length': 0.2}
+computer monitor: {'position': array([   6.62278259,    1.22959148, -105.24035448]), 'width': 0.5, 'length': 0.3}
+pen holder: {'position': array([  6.82283068,   1.21969921, -10.99287958]), 'width': 0.1, 'length': 0.1}
+books: {'position': array([  6.74946666,   3.96126995, -67.5442712 ]), 'width': 0.3, 'length': 0.2}
+painting: {'position': array([1.62093839, 6.94997755, 3.1415927 ]), 'width': 1.0, 'length': 0.1}
+clock: {'position': array([6.94999366, 1.21786946, 1.57079627]), 'width': 0.5, 'length': 0.1}
+framed artwork: {'position': array([6.94998598, 3.96021619, 1.57079632]), 'width': 0.8, 'length': 0.1}
+chandelier: {'position': array([3.49939522, 3.49972291, 1.5706051 ]), 'width': 1.0, 'length': 1.0}
+style: Given your description of a 7m x 7m bedroom with various objects, here's a cohesive design plan:
+
+---
+
+### Walls:
+- **Colour:** A soft, soothing dove grey.
+- **Wall Material:** Matte paint with a subtle textured finish. One feature wall adorned with elegant, patterned wallpaper in light silver tones to add depth and interest.
+
+### Windows:
+- **Style:** Floor-to-ceiling French windows to allow ample natural light.
+- **Colour:** Classic white frames to keep things fresh and airy.
+- **Window Treatments:** Sheer white curtains with an additional layer of heavier grey curtains for a touch of elegance and practicality.
+
+### Doors:
+- **Style:** Traditional paneled door.
+- **Colour:** Painted in a matching soft dove grey to blend seamlessly with the walls.
+
+### Floor:
+- **Material:** Light oak hardwood.
+- **Colour:** Natural light oak with a satin finish for a warm, inviting feel.
+
+### Objects:
+
+1. **Bed 1:** 
+   - **Colour:** Upholstered in soft, light grey fabric with a tufted headboard.
+   - **Style:** Modern with clean lines.
+
+2. **Wardrobe:** 
+   - **Colour:** White with brushed nickel handles.
+   - **Style:** Sleek and minimalist to blend with the light walls and floor.
+
+3. **Desk:** 
+   - **Colour:** White tabletop with light oak legs and accents.
+   - **Style:** Scandinavian - simple and functional design.
+
+4. **Chair:** 
+   - **Colour:** Light oak with white upholstered seat.
+   - **Style:** Mid-century modern.
+
+5. **Nightstand 1 & 2:** 
+   - **Colour:** White with light oak legs.
+   - **Style:** Contemporary with clean lines.
+
+6. **Dresser:** 
+   - **Colour:** White with light oak accents.
+   - **Style:** Traditional with a modern twist.
+
+7. **Desk Chair:**
+   - **Colour:** Upholstered in light grey fabric with a white frame.
+   - **Style:** Ergonomic and modern.
+
+8. **Bookshelf:** 
+   - **Colour:** Light oak.
+   - **Style:** Open shelving in a ladder design.
+
+9. **Armchair:** 
+   - **Colour:** Upholstered in a soft grey fabric.
+   - **Style:** Contemporary with a slightly curved back for comfort.
+
+10. **Side Table:** 
+    - **Colour:** Light oak with a white top.
+    - **Style:** Multifunctional and minimalist.
+
+### Additional Items:
+
+1. **Bedroom Rug:** 
+   - **Colour:** Light grey with a subtle geometric pattern.
+   - **Material:** Soft wool.
+   - **Style:** Modern.
+
+2. **Table Lamp:** 
+   - **Colour:** White with a brushed nickel base.
+   - **Style:** Contemporary.
+
+3. **Alarm Clock:** 
+   - **Colour:** White with a digital display.
+   - **Style:** Modern.
+
+4. **Desk Lamp:** 
+   - **Colour:** White with chrome accents.
+   - **Style:** Sleek and functional.
+
+5. **Computer Monitor:** 
+   - **Colour:** Black.
+   - **Style:** Professional and minimal.
+
+6. **Pen Holder:** 
+   - **Colour:** White ceramic.
+   - **Style:** Simple and functional.
+
+7. **Books:** 
+   - **Colour:** Various, but with cohesive white and grey dust covers.
+   - **Style:** Neatly arranged.
+
+8. **Painting:** 
+   - **Colour:** Soft, muted blue and grey tones.
+   - **Style:** Abstract.
+
+9. **Clock:** 
+   - **Colour:** White with a grey border.
+   - **Style:** Modern and simple.
+
+10. **Framed Artwork:**
+    - **Colour:** Black and white photography.
+    - **Style:** Modern with sleek black frames.
+
+11. **Chandelier:** 
+    - **Colour:** Brushed nickel with clear glass accents.
+    - **Style:** Elegant with a modern twist, adjustable for brightness.
+
+This cohesive design ensures all items integrate seamlessly, while the soft grey and natural wood tones create a calm, inviting atmosphere perfect for a bedroom.

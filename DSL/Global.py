@@ -131,6 +131,8 @@ def balanced(positions, room):
         room: rectangular Room object
     """
     
+    if positions.shape[0] == 3: 
+        return 0
     objs = room.moving_objects
     room_x, room_y = room.width/2, room.length/2
     av_x, av_y = 0.0, 0.0

@@ -1,0 +1,137 @@
+prompt: An office for a bestselling writer in New York who likes to write Fantasy books.
+room_width: 4
+room_length: 5
+desk: {'position': array([  0.40000001,   3.77881854, -26.70353751]), 'width': 1.5, 'length': 0.8}
+armchair: {'position': array([3.33062432, 0.441346  , 6.27961738]), 'width': 0.9, 'length': 0.9}
+bookshelf: {'position': array([  3.79999995,   3.0206773 , -17.27875967]), 'width': 1.2, 'length': 0.4}
+desk chair: {'position': array([1.05399073, 3.77220668, 1.54423449]), 'width': 0.5, 'length': 0.5}
+filing cabinet: {'position': array([0.30000618, 4.72882813, 4.71242104]), 'width': 0.4, 'length': 0.6}
+floor lamp: {'position': array([3.82294452e+00, 1.14325366e+00, 1.71504052e-03]), 'width': 0.4, 'length': 0.4}
+side table: {'position': array([2.63300362e+00, 1.19453339e+00, 5.18814330e-04]), 'width': 0.5, 'length': 0.5}
+storage cabinet: {'position': array([ 3.1079445 ,  4.74999995, 53.407075  ]), 'width': 1.0, 'length': 0.5}
+small bookshelf: {'position': array([3.84997935, 4.02068482, 1.57074578]), 'width': 0.8, 'length': 0.3}
+window: {'position': (1.4, 5, 3.141592653589793), 'width': 1, 'length': 0.1}
+window0: {'position': (2.0, 0, 0), 'width': 1, 'length': 0.1}
+door: {'position': (0, 1.31, 4.71238898038469), 'width': 0.9, 'length': 0.1}
+socket: {'position': (4, 1.045, 1.5707963267948966), 'width': 0.15, 'length': 0.1}
+socket1: {'position': (3.5400000000000005, 5, 3.141592653589793), 'width': 0.15, 'length': 0.1}
+socket2: {'position': (0, 3.4699999999999998, 4.71238898038469), 'width': 0.15, 'length': 0.1}
+clock: {'position': array([0.04999999, 3.49330673, 4.71238897]), 'width': 0.3, 'length': 0.1}
+artwork: {'position': array([3.03116787, 4.94999999, 3.14159265]), 'width': 1.0, 'length': 0.1}
+lamp: {'position': array([1.05399023, 3.77220702, 1.56548352]), 'width': 0.2, 'length': 0.2}
+monitor: {'position': array([0.30000657, 4.72882721, 4.71239541]), 'width': 0.5, 'length': 0.2}
+plant: {'position': array([3.14063477, 3.7916407 , 6.28318523]), 'width': 0.2, 'length': 0.2}
+bookends: {'position': array([3.36031197, 3.05205901, 4.712389  ]), 'width': 0.15, 'length': 0.15}
+shelf: {'position': array([3.94975805, 3.02068794, 1.57079636]), 'width': 1.0, 'length': 0.1}
+chandelier: {'position': array([1.60403262, 2.02399597, 1.57079605]), 'width': 1.0, 'length': 1.0}
+frame: {'position': array([1.1154041 , 2.26041648, 1.57079608]), 'width': 0.3, 'length': 0.1}
+mousepad: {'position': array([3.06652749, 1.69930038, 3.14159269]), 'width': 0.3, 'length': 0.2}
+style: **Room Description:**
+
+**Walls:**
+The walls are painted in a rich, warm, deep forest green to create a cozy and fantasy-like environment. The paint has a matte finish, which avoids reflective glare and promotes an absorbing, creative atmosphere. One accent wall, behind the desk, features a mural of a mystical forest scene, adding an extra layer of inspiration for fantasy writing.
+
+**Windows and Doors:**
+The windows are styled with dark wood frames to match the cozy aesthetic. They have leaded glass panes, creating a classic, almost medieval look. Heavy, emerald green velvet curtains hang from wrought iron rods adding drama and luxury.
+The door is similarly styled in dark wood with intricate carving details reminiscent of an old castle door, fitted with a black wrought iron handle.
+
+**Floor:**
+The floor is made of dark stained oak wood, creating a solid and robust foundation for the room. A large, plush rug in a deep burgundy with intricate gold and green patterns sits in the center of the room, encompassing a sense of royalty and fantasy.
+
+**Objects:**
+
+1. **Desk:**
+   - Colour: Dark mahogany
+   - Style: Victorian with intricate carvings and brass handles on the drawers.
+   - It has a large, polished surface to facilitate writing and organizing space.
+
+2. **Armchair:**
+   - Colour: Deep burgundy leather
+   - Style: Chesterfield, with button tufting and brass nailhead trim.
+   - It is both comfortable and luxurious, perfect for reading or contemplating new plot lines.
+
+3. **Bookshelf:**
+   - Colour: Dark mahogany to match the desk.
+   - Style: Tall and wide, with adjustable shelves and a regal, classic design.
+   - It's filled with books, artifacts, and collectibles that inspire fantasy writing.
+   
+4. **Desk Chair:**
+   - Colour: Dark brown leather with brass studs.
+   - Style: Ergonomic but with classic lines and dark wood elements.
+   - Provides support for long writing sessions.
+
+5. **Filing Cabinet:**
+   - Colour: Matching the dark mahogany of the desk.
+   - Style: Victorian, with brass handles and detailing.
+   - It fits under the desk and has multiple drawers for organization.
+
+6. **Floor Lamp:**
+   - Colour: Bronze
+   - Style: Tiffany-style lamp with a stained glass shade that casts a warm, inviting light.
+   - Adds a whimsical touch and is perfect for late-night writing sessions.
+
+7. **Side Table:**
+   - Colour: Dark mahogany
+   - Style: Simple yet elegant with subtle carvings.
+   - It sits next to the armchair, holding a lamp and several books.
+
+8. **Storage Cabinet:**
+   - Colour: Dark mahogany with glass front doors.
+   - Style: Slightly rustic with a medieval vibe.
+   - Used to store manuscripts, office supplies, and other essentials.
+
+9. **Small Bookshelf:**
+   - Colour: Dark mahogany
+   - Style: A shorter, more compact version of the main bookshelf.
+   - Perfect for current projects and special references close at hand.
+   
+10. **Clock:**
+    - Colour: Brass
+    - Style: Antique-style with Roman numerals.
+    - It's both functional and aesthetic, sitting prominently on the wall.
+
+11. **Artwork:**
+    - Medium: Oil paintings and prints.
+    - Style: Depicting fantasy worlds, castles, and mythical creatures.
+    - Framed in dark wood or gold frames, adding to the rich aesthetic of the room.
+
+12. **Lamp:**
+    - Colour: Bronze base with a green glass shade.
+    - Style: Banker's lamp, adding a classic touch to the desk.
+
+13. **Monitor:**
+    - Colour: Black.
+    - Style: Modern but thin and sleek to not disrupt the old-fashioned aesthetic.
+    - You can imagine it fades into the background when not in use.
+
+14. **Plant:**
+    - Type: Potted fern.
+    - Container: Dark ceramic pot.
+    - Adds a touch of nature and freshness to the room, fitting with the fantasy theme.
+
+15. **Bookends:**
+    - Colour: Bronze.
+    - Style: Shaped like mythical creatures (dragons or unicorns).
+    - Functional and thematic detail enhancing the fantasy vibe.
+
+16. **Shelf:**
+    - Colour: Dark mahogany.
+    - Style: Floating shelves with carved brackets for additional storage or display items.
+    - They hold various trinkets and knick-knacks.
+
+17. **Chandelier:**
+    - Colour: Bronze with crystal accents.
+    - Style: Vintage, with candle-like light bulbs and intricate detailing.
+    - It adds elegance and a touch of opulence to the ceiling.
+
+18. **Frame:**
+    - Colour: Dark wood or gold.
+    - Style: Ornate, antique style.
+    - Frames inspiring quotes, diplomas or other significant documents.
+
+19. **Mousepad:**
+    - Colour: Dark green leather.
+    - Style: Simple and functional but blends seamlessly with the desk.
+
+**Conclusion:**
+All these elements together create a cohesive, warm, and inspiring space that embraces the essence of a fantasy writer’s sanctuary. The dark woods, rich fabrics, and thematic details ensure a whimsical yet professional environment, perfect for crafting bestsellers.

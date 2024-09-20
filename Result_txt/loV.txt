@@ -1,0 +1,125 @@
+prompt: A bedroom for Ron Weasley.
+room_width: 4
+room_length: 5
+bed: {'position': array([ 2.14404918e+00,  1.00000017e+00, -3.59700217e-07]), 'width': 1.2, 'length': 2}
+desk: {'position': array([3.40216047, 4.7000002 , 3.14159289]), 'width': 1.2, 'length': 0.6}
+wardrobe: {'position': array([0.3000001 , 3.95962794, 4.71238847]), 'width': 1.5, 'length': 0.6}
+nightstand: {'position': array([3.72148429, 1.5470269 , 0.15900861]), 'width': 0.5, 'length': 0.4}
+additional nightstand: {'position': array([1.29403527, 0.20000045, 6.28329395]), 'width': 0.5, 'length': 0.4}
+desk chair: {'position': array([ 3.70000013,  4.09999921, 14.13716386]), 'width': 0.6, 'length': 0.6}
+bookshelf: {'position': array([3.84999999, 2.60886141, 1.57079629]), 'width': 0.8, 'length': 0.3}
+shoe rack: {'position': array([ 2.02016818,  4.85      , 78.53981634]), 'width': 0.8, 'length': 0.3}
+chest of drawers: {'position': array([1.05154356, 4.74999999, 3.14159264]), 'width': 0.9, 'length': 0.5}
+window: {'position': (0, 1.7, 4.71238898038469), 'width': 1, 'length': 0.1}
+window0: {'position': (2.5999999999999996, 5, 3.141592653589793), 'width': 1, 'length': 0.1}
+door: {'position': (4, 0.41, 1.5707963267948966), 'width': 0.9, 'length': 0.1}
+socket: {'position': (1.62, 0, 0), 'width': 0.2, 'length': 0.1}
+socket1: {'position': (0.86, 5, 3.141592653589793), 'width': 0.2, 'length': 0.1}
+socket2: {'position': (4, 3.94, 1.5707963267948966), 'width': 0.2, 'length': 0.1}
+computer: {'position': array([ 3.39139756e+00,  4.84196119e+00, -1.54619720e+05]), 'width': 0.3, 'length': 0.2}
+desk lamp: {'position': array([3.69076368e+00, 4.87202969e+00, 1.41858287e+05]), 'width': 0.2, 'length': 0.2}
+table lamp: {'position': array([ 3.20645869e+00,  1.87870406e+00, -8.12431323e+04]), 'width': 0.2, 'length': 0.2}
+alarm clock: {'position': array([1.26728803e+00, 1.73488590e-01, 4.53357202e+03]), 'width': 0.1, 'length': 0.1}
+painting: {'position': array([ 1.06399280e+00,  4.94452981e-01, -7.71860767e+04]), 'width': 0.1, 'length': 1.0}
+corkboard: {'position': array([ 2.00737451e+00,  4.70733378e+00, -5.40960116e+04]), 'width': 0.1, 'length': 0.6}
+mirror: {'position': array([ 1.07712707e+00,  4.50327082e+00, -1.77548377e+05]), 'width': 0.1, 'length': 1.0}
+bookends: {'position': array([ 3.88466460e+00,  2.64916740e+00, -1.94209438e+05]), 'width': 0.1, 'length': 0.1}
+chandelier: {'position': array([ 1.94606549e+00,  2.45608095e+00, -2.40364562e+05]), 'width': 0.5, 'length': 0.5}
+rug: {'position': array([ 1.79013982e+00,  2.75208406e+00, -4.31714115e+06]), 'width': 2.0, 'length': 3.0}
+style: Sure, let's create a cohesive and thematic room for Ron Weasley.
+
+**Walls:**
+1. **Colour:** Warm, rustic terracotta or a muted red shade, reminiscent of his Gryffindor pride.
+2. **Material:** Painted walls with a subtle texture that gives an old-world, homey feel. No wallpaper, to keep it simple and cozy as befitting Ron's personality.
+
+**Windows and Doors:**
+1. **Windows:**
+   - **Style:** Classic, wooden sash windows with a traditional medieval touch.
+   - **Colour:** A deep mahogany stain.
+2. **Doors:**
+   - **Style:** Classic wooden door with paneled design to match the rustic charm of the room.
+   - **Colour:** Mahogany to match the windows, ensuring consistency in the wooden elements.
+
+**Floor:**
+1. **Material:** Solid wooden floorboards.
+2. **Colour:** Warm oak with a rich patina, slightly distressed to give a lived-in, comfortable feel.
+
+**Objects:**
+
+1. **Bed:**
+   - **Colour:** Dark wood, matching the windows and door, with a headboard and footboard.
+   - **Style:** Traditional four-poster bed with Gryffindor-themed bedding in red and gold.
+   
+2. **Desk:**
+   - **Colour:** Dark wood with a polished surface.
+   - **Style:** Sturdy and practical with small drawers, reflecting a vintage, timeless look.
+
+3. **Wardrobe:**
+   - **Colour:** Dark wood, consistent with other furniture.
+   - **Style:** Large, classic wardrobe with paneled doors and antique brass handles.
+
+4. **Nightstand:**
+   - **Colour:** Dark wood, matching the bed.
+   - **Style:** Simple, with a single drawer and a small shelf beneath.
+
+5. **Additional Nightstand:**
+   - **Colour:** Dark wood.
+   - **Style:** Matches the other nightstand to ensure symmetry.
+
+6. **Desk Chair:**
+   - **Colour:** Wooden with cushioned seat in a deep burgundy.
+   - **Style:** Traditional style with a high back, slightly curved for comfort.
+
+7. **Bookshelf:**
+   - **Colour:** Mahogany, matching the windows and door.
+   - **Style:** Open shelves with a sturdy base, filled with a mix of school books, Quidditch paraphernalia, and collectibles.
+
+8. **Shoe Rack:**
+   - **Colour:** Dark wood.
+   - **Style:** Low profile, functional, and tucked neatly beside the wardrobe.
+
+9. **Chest of Drawers:**
+   - **Colour:** Dark wood.
+   - **Style:** Large and spacious, with brass knobs matching the wardrobe handles.
+
+10. **Computer:**
+    - **Colour:** Sleek black.
+    - **Style:** Modern laptop to add functionality, though likely secondary to Ron's magical interests.
+
+11. **Desk Lamp:**
+    - **Colour:** Brass with a green glass shade.
+    - **Style:** Vintage banker’s lamp for a touch of classic style.
+
+12. **Table Lamp:**
+    - **Colour:** Deep red ceramic base with a cream fabric shade.
+    - **Style:** Simple and warm, placed on the nightstand for reading before bed.
+
+13. **Alarm Clock:**
+    - **Colour:** Brass with a vintage design.
+    - **Style:** Old-fashioned with a loud bell, fitting an eclectic mix of old and new.
+
+14. **Painting:**
+    - **Colour/Style:** A Gryffindor house crest or a subtle wizard-themed artwork in warm tones.
+    - **Style:** Framed in a dark wood frame to maintain consistency.
+
+15. **Corkboard:**
+    - **Colour:** Natural cork with a wooden frame.
+    - **Style:** Practical and functional, placed above the desk for notes and photos.
+
+16. **Mirror:**
+    - **Colour:** Dark wood frame.
+    - **Style:** Large and ornate, hung on the wall opposite the window to reflect light and space.
+
+17. **Bookends:**
+    - **Colour/Style:** Quidditch-themed metal bookends in gold finish.
+    - **Style:** Adding a personal touch to his bookshelf.
+
+18. **Chandelier:**
+    - **Colour:** Dark metal with candle-shaped bulbs.
+    - **Style:** Rustic Hogwarts-style chandelier hanging from the centre of the ceiling, providing warm lighting.
+
+19. **Rug:**
+    - **Colour:** Deep burgundy with gold accents.
+    - **Style:** Large area rug under the bed, softening the wooden floor and adding warmth to the room.
+
+Through these elements, Ron Weasley’s bedroom comes to life with a cohesive mix of rustic charm, warm colours, and subtle nods to his Gryffindor legacy and life as a wizard.
