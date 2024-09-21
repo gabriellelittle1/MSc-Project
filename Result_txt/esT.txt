@@ -1,0 +1,136 @@
+prompt: A nursery.
+room_width: 4
+room_length: 5
+crib: {'position': (0.34592630184481354, 0.8082391413667324, 4.710690458233908), 'width': 1.4, 'length': 0.7}
+changing table: {'position': (0.30091665312820615, 2.9546113635438673, 4.713547558786044), 'width': 1.0, 'length': 0.6}
+playpen: {'position': (3.250606260906308, 3.0533850598746333, 1.5708247316494524), 'width': 1.5, 'length': 1.5}
+rocking chair: {'position': (1.204252875424343, 0.51934924393114, 0.9541228636117269), 'width': 0.8, 'length': 0.9}
+nightstand: {'position': (0.6387653609048657, 1.7216199989759597, 6.156500488003573), 'width': 0.5, 'length': 0.4}
+diaper pail: {'position': (0.2879408286041708, 2.3045724503955465, 4.7137032628983615), 'width': 0.3, 'length': 0.3}
+laundry hamper: {'position': (0.19818618983685815, 4.805279342430343, 3.1416687914552597), 'width': 0.4, 'length': 0.4}
+toy chest: {'position': (2.1291762477914564, 3.0648940032083813, 4.7124110484874), 'width': 0.8, 'length': 0.4}
+activity mat: {'position': (2.615476579910641, 1.7033552115701904, 4.712405336984985), 'width': 1.2, 'length': 1.2}
+window: {'position': (4, 2.5, 1.5707963267948966), 'width': 1.5, 'length': 0.1}
+window0: {'position': (0, 2.5, 4.71238898038469), 'width': 1.5, 'length': 0.1}
+door: {'position': (1.6, 5, 3.141592653589793), 'width': 1, 'length': 0.1}
+socket: {'position': (4, 1.03, 1.5707963267948966), 'width': 0.1, 'length': 0.1}
+socket1: {'position': (0, 3.97, 4.71238898038469), 'width': 0.1, 'length': 0.1}
+socket2: {'position': (2.78, 5, 3.141592653589793), 'width': 0.1, 'length': 0.1}
+socket3: {'position': (1.22, 0, 0), 'width': 0.1, 'length': 0.1}
+table lamp: {'position': (0.6389246284233391, 1.7216857735615598, 6.2575544517443085), 'width': 0.2, 'length': 0.2}
+wall art: {'position': (0.05000715780164843, 0.8082382658362873, 4.712390158898153), 'width': 0.5, 'length': 0.1}
+mobile: {'position': (0.3459422330892445, 0.8078686679206635, 3.1414997763235775), 'width': 0.4, 'length': 0.4}
+wall shelves: {'position': (0.050014559736669434, 3.60000157138893, 4.712357551699138), 'width': 0.6, 'length': 0.1}
+diaper organizer: {'position': (0.2993950861081796, 2.9546663480140256, 4.7126032263197555), 'width': 0.4, 'length': 0.4}
+ceiling mobile: {'position': (3.2507881740513844, 3.0533880240498137, 4.712439840291189), 'width': 0.6, 'length': 0.6}
+toy baskets: {'position': (2.129081108499835, 3.064908919049351, 4.712406027380808), 'width': 0.4, 'length': 0.4}
+wall stickers: {'position': (3.1784609152767023, 0.04999056688761559, 6.283184524662108), 'width': 1.0, 'length': 0.1}
+style: Certainly! Here is an organized design concept for the nursery:
+
+**Walls:**
+- **Colour:** Soft pastel green. 
+- **Material:** Paint.
+- **Details:** Create an accent wall with subtle, whimsical wall stickers—perhaps featuring cute animals or nature-inspired designs. Other walls can be kept plain with some wall art and a ceiling mobile for additional interest.
+
+**Windows and Doors:**
+- **Windows:**
+  - **Style:** Classic cottage style with white wooden frames.
+  - **Colour:** White.
+  - **Detail:** Add light, sheer curtains in a pastel colour like soft yellow or light grey, to allow natural light to softly filter through.
+- **Doors:**
+  - **Style:** Solid panel door with minimal detailing.
+  - **Colour:** White.
+  - **Detail:** Consider a soft green or pastel yellow door knob for a touch of playfulness.
+
+**Floor:**
+- **Material:** Hardwood for durability and easy cleaning.
+- **Colour:** Warm, light oak with a slight matte finish to add coziness and make the room feel inviting.
+- **Addition:** Place a large nursery rug featuring a playful yet subtle pattern in earthy tones or soft pastels to add warmth and comfort.
+
+**Objects:**
+1. **Crib:**
+   - **Colour:** White.
+   - **Style:** Modern with clean lines and perhaps a touch of Scandinavian simplicity.
+   - **Detail:** Adorn with soft, pastel green and white bedding to match the walls.
+
+2. **Changing Table:**
+   - **Colour:** White or light grey.
+   - **Style:** Functional and sturdy, with easy-access storage.
+   - **Detail:** Top with a changing pad that has a matching cover to coordinate with the nursery's colour scheme.
+
+3. **Playpen:**
+   - **Colour:** Light grey or white.
+   - **Style:** Safe, simple design with breathable mesh sides for visibility and airflow.
+   - **Detail:** Include a few soft toys or a small activity mat within to entertain the baby.
+
+4. **Rocking Chair:**
+   - **Colour:** Light grey upholstery with white wooden frame.
+   - **Style:** Classic design for comfort, perhaps with a removable cushion that coordinates with the room’s theme.
+   - **Detail:** Add a small, pastel-colored cushion or throw for additional comfort.
+
+5. **Nightstand:**
+   - **Colour:** White or light pastel green.
+   - **Style:** Compact with a drawer for storage, matching the crib and changing table.
+   - **Detail:** A small table lamp in a coordinating pastel colour sits on top.
+
+6. **Diaper Pail:**
+   - **Colour:** White.
+   - **Style:** Simple, functional, and unobtrusive.
+   - **Detail:** Place it near the changing table for easy access.
+
+7. **Laundry Hamper:**
+   - **Colour:** Soft beige or light pastel beige.
+   - **Style:** Made of durable fabric or woven material with a soft lining inside.
+   - **Detail:** Keep it well-coordinated with the room's overall theme.
+
+8. **Toy Chest:**
+   - **Colour:** White with light pastel green accents.
+   - **Style:** Classic, easy to open with child-friendly safety features.
+   - **Detail:** Labels or small icons to indicate contents can be cute and functional.
+
+9. **Activity Mat:**
+   - **Colour:** Soft pastel colours matching the overall scheme (green, grey, yellow).
+   - **Style:** Padded, with developmental activities built-in.
+   - **Detail:** Lay it in a spacious part of the room for easy playtime access.
+
+10. **Table Lamp:**
+    - **Colour:** Soft pastel yellow or grey.
+    - **Style:** Modern with a small, simple shade for diffused light.
+    - **Detail:** Positioned on the nightstand for easy nighttime use.
+
+11. **Wall Art:**
+    - **Colour:** Soft hues, maybe a mix of pastels and whites.
+    - **Style:** Whimsical, featuring calming images like animals, nature scenes, or simple geometric patterns.
+    - **Detail:** Hang one or two pieces on plain walls to add interest without overwhelming.
+
+12. **Mobile:**
+    - **Colour:** Pastels matching the room (green, yellow, white).
+    - **Style:** Fun and interactive with hanging stars, animals, or clouds.
+    - **Detail:** Hang it above the crib for baby to enjoy.
+
+13. **Wall Shelves:**
+    - **Colour:** White.
+    - **Style:** Simple and functional, closely matching other furniture.
+    - **Detail:** Use them to display baby books, soft toys, and small decorative items.
+
+14. **Diaper Organizer:**
+    - **Colour:** Light grey.
+    - **Style:** Functional, perhaps hanging on the wall near the changing table for easy access.
+    - **Detail:** Organize with labelled sections for convenience.
+
+15. **Ceiling Mobile:**
+    - **Colour:** Soft pastels (match the wall mobile).
+    - **Style:** Delicate and visually engaging with similar elements to the crib mobile.
+    - **Detail:** Ensure it’s securely attached and safe.
+
+16. **Toy Baskets:**
+    - **Colour:** Woven natural fibres or matching pastel fabric baskets.
+    - **Style:** Practical and easy to lift and move.
+    - **Detail:** Store at the bottom of the shelves or in the closet for easy access.
+
+17. **Wall Stickers:**
+    - **Colour:** Coordinated pastel shades.
+    - **Style:** Soft, playful designs scattered on the accent wall.
+    - **Detail:** Keep them at a height visible to the baby for engagement.
+
+This cohesive design ensures a soothing, playful, and functional nursery that is both visually appealing and practical for both baby and caregivers.
